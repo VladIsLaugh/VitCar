@@ -1,0 +1,32 @@
+{
+  "Metadata": {
+    "title": "VitAuto — Import Cars from USA",
+    "description": "Full-cycle import of cars from US auctions Copart and IAAI to Ukraine"
+  },
+  "Home": {
+    "title": "VitAuto — Import Cars from USA"
+  },
+  "Calculator": {
+    "title": "Cost Calculator"
+  },
+  "Cars": {
+    "title": "Car Catalog"
+  },
+  "Auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password"
+  },
+  "Dashboard": {
+    "Garage": {
+      "title": "My Garage"
+    },
+    "Saved": {
+      "title": "Saved"
+    },
+    "Finance": {
+      "title": "Finance"
+    }
+  }
+}
