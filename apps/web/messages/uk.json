@@ -1,0 +1,32 @@
+{
+  "Metadata": {
+    "title": "VitAuto — Імпорт авто з США",
+    "description": "Повний цикл імпорту автомобілів з американських аукціонів Copart та IAAI в Україну"
+  },
+  "Home": {
+    "title": "VitAuto — Імпорт авто з США"
+  },
+  "Calculator": {
+    "title": "Калькулятор вартості"
+  },
+  "Cars": {
+    "title": "Каталог автомобілів"
+  },
+  "Auth": {
+    "signIn": "Увійти",
+    "signUp": "Зареєструватись",
+    "email": "Email",
+    "password": "Пароль"
+  },
+  "Dashboard": {
+    "Garage": {
+      "title": "Мій гараж"
+    },
+    "Saved": {
+      "title": "Збережені"
+    },
+    "Finance": {
+      "title": "Фінанси"
+    }
+  }
+}
