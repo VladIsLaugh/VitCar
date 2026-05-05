@@ -10,7 +10,15 @@ const compat = new FlatCompat({ baseDirectory: __dirname });
 
 export default [
   {
-    ignores: ['node_modules/**', '.next/**', 'dist/**'],
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'dist/**',
+      'next-env.d.ts',
+      '*.config.mjs',
+      '*.config.js',
+      '*.config.ts',
+    ],
   },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   prettierConfig,

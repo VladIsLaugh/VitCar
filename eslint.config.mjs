@@ -12,6 +12,7 @@ export default tseslint.config(
       '**/coverage/**',
       '**/prisma/migrations/**',
       '**/*.config.mjs',
+      '**/next-env.d.ts',
     ],
   },
   js.configs.recommended,
@@ -23,5 +24,5 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
     },
-  },
+  }
 );
