@@ -23,8 +23,8 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
-      - name: Wait for deployment
-        run: sleep 30
+      - name: Wait for Railway to start
+        run: sleep 45
 
       - name: Smoke test — health endpoint
         run: |

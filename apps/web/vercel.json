@@ -1,0 +1,6 @@
+{
+  "installCommand": "cd ../.. && corepack disable && npm install -g pnpm@9.15.0 && pnpm install --frozen-lockfile",
+  "buildCommand": "cd ../.. && pnpm turbo run build --filter=@vitauto/web",
+  "outputDirectory": ".next",
+  "framework": "nextjs"
+}
