@@ -2,6 +2,56 @@
 
 Car auction platform monorepo built with Turborepo, Next.js 15, and NestJS.
 
+## Live URLs
+
+| Service           | URL                                     |
+| ----------------- | --------------------------------------- |
+| Frontend (Vercel) | _configure in Vercel UI → update here_  |
+| API (Railway)     | _configure in Railway UI → update here_ |
+| API health check  | `GET <railway-url>/api/health`          |
+
+## Deployment
+
+### Vercel (Next.js frontend)
+
+1. Go to [vercel.com/new](https://vercel.com/new) → **Import Git Repository** → select `VladIsLaugh/VitCar`
+2. **Root Directory**: `apps/web`
+3. **Framework Preset**: Next.js (auto-detected)
+4. **Build Command**: leave blank (uses `vercel.json`)
+5. **Output Directory**: leave blank (uses `vercel.json`)
+6. **Environment Variables** → add:
+   - `NEXT_PUBLIC_API_URL` = your Railway API URL (e.g. `https://vitauto-api.up.railway.app`)
+7. Click **Deploy**
+
+Every push to `main` auto-deploys production. Every PR gets a unique preview URL.
+
+### Railway (NestJS API + PostgreSQL + Redis)
+
+1. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo** → select `VladIsLaugh/VitCar`
+2. In the created service → **Settings** → set **Root Directory** to `/` (repo root — `railway.json` handles everything)
+3. **Add Plugin** → **PostgreSQL** — Railway auto-sets `DATABASE_URL`
+4. **Add Plugin** → **Redis** — Railway auto-sets `REDIS_URL`
+5. In the API service **Variables**, add:
+   - `NODE_ENV` = `production`
+   - `JWT_ACCESS_SECRET` = _(generate with `openssl rand -hex 32`)_
+   - `JWT_REFRESH_SECRET` = _(generate with `openssl rand -hex 32`)_
+   - `FRONTEND_URL` = your Vercel URL
+6. **First deploy**: after the first build, run migrations once from your local machine:
+   ```bash
+   DATABASE_URL="<railway-postgres-url>" pnpm --filter=api migrate:prod
+   ```
+
+### GitHub Secrets (for CI/CD pipelines)
+
+Add these in **Settings → Secrets and variables → Actions**:
+
+| Secret                | Value                                                 |
+| --------------------- | ----------------------------------------------------- |
+| `RAILWAY_TOKEN`       | Railway dashboard → Account Settings → Tokens         |
+| `RAILWAY_SERVICE_ID`  | Railway project → API service → Settings → Service ID |
+| `API_URL`             | e.g. `https://vitauto-api.up.railway.app`             |
+| `NEXT_PUBLIC_API_URL` | same as `API_URL`                                     |
+
 ## Structure
 
 ```
@@ -64,19 +114,19 @@ pnpm --filter @vitauto/shared-types build
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start all apps in development mode |
-| `pnpm build` | Build all packages and apps |
-| `pnpm lint` | Lint all packages via Turborepo |
-| `pnpm type-check` | Type-check all packages |
-| `pnpm format` | Format all files with Prettier |
-| `pnpm format:check` | Check formatting without writing |
-| `pnpm clean` | Remove all build artifacts |
-| `pnpm db:migrate` | Run Prisma migrations |
-| `pnpm db:studio` | Open Prisma Studio (GUI on :5555) |
-| `pnpm db:generate` | Regenerate Prisma Client |
-| `pnpm db:reset` | Reset database and re-run migrations |
+| Command             | Description                          |
+| ------------------- | ------------------------------------ |
+| `pnpm dev`          | Start all apps in development mode   |
+| `pnpm build`        | Build all packages and apps          |
+| `pnpm lint`         | Lint all packages via Turborepo      |
+| `pnpm type-check`   | Type-check all packages              |
+| `pnpm format`       | Format all files with Prettier       |
+| `pnpm format:check` | Check formatting without writing     |
+| `pnpm clean`        | Remove all build artifacts           |
+| `pnpm db:migrate`   | Run Prisma migrations                |
+| `pnpm db:studio`    | Open Prisma Studio (GUI on :5555)    |
+| `pnpm db:generate`  | Regenerate Prisma Client             |
+| `pnpm db:reset`     | Reset database and re-run migrations |
 
 ## Database (Docker)
 
@@ -99,11 +149,13 @@ docker-compose down -v
 ### `@vitauto/shared-types`
 
 Shared TypeScript types used by both frontend and backend:
+
 - `auth.types.ts` — User, Auth tokens, Login/Register DTOs
 - `lot.types.ts` — Car lot, auction types, filters
 - `order.types.ts` — Orders, payments, shipping
 
 Import in any app:
+
 ```typescript
 import { User, CarLot, Order } from '@vitauto/shared-types';
 ```
@@ -127,15 +179,16 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`, `ci`
 
 Runs on every PR to `main`. Jobs run in parallel where possible:
 
-| Job | What it does |
-|-----|-------------|
-| `lint` | `pnpm lint` — ESLint across all workspaces |
-| `type-check` | `pnpm type-check` — TypeScript across all workspaces |
-| `build` | `pnpm build` — full monorepo build (runs after lint + type-check pass) |
+| Job          | What it does                                                           |
+| ------------ | ---------------------------------------------------------------------- |
+| `lint`       | `pnpm lint` — ESLint across all workspaces                             |
+| `type-check` | `pnpm type-check` — TypeScript across all workspaces                   |
+| `build`      | `pnpm build` — full monorepo build (runs after lint + type-check pass) |
 
 ### Deploy Pipeline (`.github/workflows/deploy.yml`)
 
 Runs on every push to `main`:
+
 - **API** → deploys to Railway via Railway CLI
 - **Web** → deploys automatically via Vercel GitHub integration (no action needed)
 - **Smoke test** → `curl` to `/api/health` after Railway deploy
@@ -144,16 +197,17 @@ Runs on every push to `main`:
 
 Add these in **Settings → Secrets and variables → Actions**:
 
-| Secret | Description |
-|--------|-------------|
-| `RAILWAY_TOKEN` | Railway API token — get from Railway dashboard → Account Settings → Tokens |
-| `RAILWAY_SERVICE_ID` | Railway service ID for the API — get from Railway project → service settings |
-| `API_URL` | Production API base URL, e.g. `https://api.vitauto.com` |
-| `NEXT_PUBLIC_API_URL` | Public API URL used during Next.js build, e.g. `https://api.vitauto.com` |
+| Secret                | Description                                                                  |
+| --------------------- | ---------------------------------------------------------------------------- |
+| `RAILWAY_TOKEN`       | Railway API token — get from Railway dashboard → Account Settings → Tokens   |
+| `RAILWAY_SERVICE_ID`  | Railway service ID for the API — get from Railway project → service settings |
+| `API_URL`             | Production API base URL, e.g. `https://api.vitauto.com`                      |
+| `NEXT_PUBLIC_API_URL` | Public API URL used during Next.js build, e.g. `https://api.vitauto.com`     |
 
 ### Branch Protection (main)
 
 Configure in **Settings → Branches → Add rule** for `main`:
+
 - ✅ Require status checks to pass: `Lint`, `Type Check`, `Build`
 - ✅ Require branches to be up to date before merging
 - ✅ Require pull request reviews before merging
