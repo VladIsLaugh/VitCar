@@ -1,15 +1,13 @@
 # Railway Nixpacks configuration for NestJS API
-# This file is used by Railway when deploying from the monorepo root.
-# The railway.json build/start commands take precedence over this file.
+# Each entry in cmds becomes a separate Docker RUN instruction.
+# Chain all commands that depend on each other into a single string.
 
 [phases.setup]
 nixPkgs = ["nodejs_20"]
 
 [phases.install]
 cmds = [
-  "corepack disable",
-  "npm install -g pnpm@9.15.0",
-  "pnpm install --frozen-lockfile"
+  "corepack disable && npm install -g pnpm@9.15.0 && pnpm install --frozen-lockfile",
 ]
 
 [phases.build]
