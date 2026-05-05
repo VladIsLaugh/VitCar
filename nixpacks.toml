@@ -1,14 +1,11 @@
 # Railway Nixpacks configuration for NestJS API
-# Each entry in cmds becomes a separate Docker RUN instruction.
-# Chain all commands that depend on each other into a single string.
+# pnpm is installed via Nix so it is available system-wide in all phases.
 
 [phases.setup]
-nixPkgs = ["nodejs_20"]
+nixPkgs = ["nodejs_20", "nodePackages_latest.pnpm"]
 
 [phases.install]
-cmds = [
-  "corepack disable && npm install -g pnpm@9.15.0 && pnpm install --frozen-lockfile",
-]
+cmds = ["pnpm install --frozen-lockfile"]
 
 [phases.build]
 cmds = ["pnpm turbo run build --filter=@vitauto/api"]
