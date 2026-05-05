@@ -10,6 +10,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@sentry/nextjs": "^8.0.0",
     "@vitauto/shared-types": "workspace:*",
     "clsx": "^2.1.1",
     "next": "^15.3.1",
