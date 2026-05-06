@@ -1,3 +1,4 @@
+import './instrument';
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
@@ -20,13 +21,13 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: true,
-    }),
+    })
   );
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
   const port = process.env.PORT ?? 3001;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   logger.log(`API running on: http://localhost:${port}/api`);
 }
 
