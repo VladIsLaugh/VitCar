@@ -39,24 +39,24 @@ pnpm db:reset          # prisma migrate reset
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | Next.js 15 (App Router), React 19, TypeScript |
-| Styling | Tailwind CSS v4 (`@theme` block, NOT tailwind.config.js) |
-| Components | shadcn/ui (copied into `components/ui/`, Radix-based) |
-| Font | Geist (via `next/font/google`, NOT Inter) |
-| State | Zustand (client state), TanStack Query (server state) |
-| Forms | react-hook-form + zod |
-| i18n | next-intl, locales: `uk` (default), `en`, URLs: `/uk/...` `/en/...` |
-| Backend | NestJS, TypeScript, Prisma ORM |
-| Database | PostgreSQL 16 |
-| Cache | Redis 7 |
-| Queues | BullMQ (on Redis) |
-| Auth | JWT (15min access in memory) + HttpOnly cookie refresh (30d), Passport.js |
-| Email | Resend |
-| Notifications | Telegram Bot API |
-| Monitoring | Sentry |
-| Hosting | Vercel (web) + Railway (api + db + redis) |
+| Layer         | Technology                                                                |
+| ------------- | ------------------------------------------------------------------------- |
+| Frontend      | Next.js 15 (App Router), React 19, TypeScript                             |
+| Styling       | Tailwind CSS v4 (`@theme` block, NOT tailwind.config.js)                  |
+| Components    | shadcn/ui (copied into `components/ui/`, Radix-based)                     |
+| Font          | Geist (via `next/font/google`, NOT Inter)                                 |
+| State         | Zustand (client state), TanStack Query (server state)                     |
+| Forms         | react-hook-form + zod                                                     |
+| i18n          | next-intl, locales: `uk` (default), `en`, URLs: `/uk/...` `/en/...`       |
+| Backend       | NestJS, TypeScript, Prisma ORM                                            |
+| Database      | PostgreSQL 16                                                             |
+| Cache         | Redis 7                                                                   |
+| Queues        | BullMQ (on Redis)                                                         |
+| Auth          | JWT (15min access in memory) + HttpOnly cookie refresh (30d), Passport.js |
+| Email         | Resend                                                                    |
+| Notifications | Telegram Bot API                                                          |
+| Monitoring    | Sentry                                                                    |
+| Hosting       | Vercel (web) + Railway (api + db + redis)                                 |
 
 ---
 
@@ -88,19 +88,23 @@ vitauto/
 ## Code Conventions
 
 ### TypeScript
+
 - `strict: true` everywhere
 - Shared types in `packages/shared-types` — never duplicate DTOs
 - No `any` — use `unknown` and narrow
 
 ### Git commits (required for Jira smart commits)
+
 ```
 CAR-123 feat(scope): description
 CAR-123 fix(auth): handle expired refresh token
 CAR-123 chore(deps): update prisma to 5.x
 ```
+
 Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`
 
 ### NestJS patterns
+
 - One module per feature (`auth`, `users`, `calculator`, etc.)
 - DTOs with `class-validator` decorators
 - `@CurrentUser()` decorator for authenticated user
@@ -108,23 +112,26 @@ Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`
 - All mutations auto-logged via `AuditInterceptor`
 
 ### Next.js patterns
+
 - Server Components by default — add `'use client'` only when needed
 - `generateMetadata()` for dynamic SEO metadata
 - `revalidate = 600` for ISR on lot detail pages
 - No `localStorage` for auth tokens — access token in memory only
 
 ### Tailwind v4
+
 ```css
 /* Correct — use CSS variables in @theme block */
 @theme {
-  --color-primary: #0A2540;
-  --color-accent: #10B981;
+  --color-primary: #0a2540;
+  --color-accent: #10b981;
 }
 
 /* Wrong — no tailwind.config.js theme extension */
 ```
 
 ### i18n
+
 - All UI strings via `useTranslations()` (client) or `getTranslations()` (server)
 - Never hardcode Ukrainian or English text in JSX
 - Add keys to BOTH `uk.json` and `en.json` — CI will fail otherwise
@@ -134,12 +141,14 @@ Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`
 ## Architecture Decisions
 
 **Auth flow:**
+
 - Access token: in-memory React state (XSS protection)
 - Refresh token: HttpOnly Secure SameSite=Lax cookie
 - On 401: axios interceptor auto-calls `/auth/refresh`, retries request
 - Middleware checks cookie presence only (not JWT validity — server does that)
 
 **Calculation Engine (critical):**
+
 - All rates in DB (`CalculationSettings`), never hardcoded
 - Each `Calculation` stores a `settingsSnapshot` — changing rates never affects past calculations
 - Excise is calculated in EUR then converted to USD via NBU rate
@@ -148,10 +157,12 @@ Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`
 - Full formula spec: see Jira CAR-56
 
 **Notifications:**
+
 - Single `NotificationService.notify(userId, eventType, payload)` — fans out to in-app + email + Telegram based on user settings
 - Delivery via BullMQ queues (async, with retry)
 
 **Lots catalog:**
+
 - Historical sold lots only ([bidfax.info](http://bidfax.info) scraper)
 - Scraper runs daily via BullMQ cron at 10:00 Kyiv
 - `carSize = 'small' | 'big'` affects sea shipping price only — not land delivery
@@ -164,6 +175,7 @@ Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`
 See `.env.example` in each app. Required before running:
 
 **`apps/api/.env`:**
+
 ```
 DATABASE_URL
 REDIS_URL
@@ -177,6 +189,7 @@ FRONTEND_URL=http://localhost:3000
 ```
 
 **`apps/web/.env.local`:**
+
 ```
 NEXT_PUBLIC_API_URL=http://localhost:3001/api
 NEXT_PUBLIC_SENTRY_DSN
@@ -190,6 +203,7 @@ SENTRY_AUTH_TOKEN
 ```
 Guest → Client → Manager → Admin
 ```
+
 - `Guest`: calculator, catalog (no save)
 - `Client`: dashboard, garage, saved, finance
 - `Manager`: admin panel (orders only), cannot change settings
@@ -209,6 +223,19 @@ Guest → Client → Manager → Admin
 
 ---
 
+## Environments
+
+| Environment    | Frontend                             | API                                               | Deploy trigger     |
+| -------------- | ------------------------------------ | ------------------------------------------------- | ------------------ |
+| **production** | https://vit-car.vercel.app           | https://vitauto-api-production.up.railway.app/api | push to `main`     |
+| **stage**      | Vercel preview for `phase-*`         | https://vitauto-api-stage.up.railway.app/api      | push to `phase-*`  |
+| **dev**        | Vercel preview (auto URL per branch) | https://vitauto-api-dev.up.railway.app/api        | push to `claude/*` |
+
+Each environment has its own Railway service, PostgreSQL database, and Redis instance.
+`APP_ENV` variable is set per service (`production` / `stage` / `dev`) and surfaced at `GET /api/health`.
+
+---
+
 ## Jira
 
 Project: `CAR` at `vladvit19.atlassian.net`
@@ -216,5 +243,6 @@ Project: `CAR` at `vladvit19.atlassian.net`
 Commit format links automatically: `CAR-29 feat(setup): init monorepo`
 
 Current sprints:
+
 - Sprint 1 (active): Foundation — monorepo, NestJS, Next.js, CI/CD, Vercel deploy, design tokens
 - Sprint 2 (next): Auth + Landing + Calculator Engine
