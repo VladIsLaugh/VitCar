@@ -52,6 +52,25 @@
     "privacy": "Privacy",
     "terms": "Terms"
   },
+  "Common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "back": "Back",
+    "continue": "Continue",
+    "cars": "{count, plural, one {car} other {cars}}",
+    "days": "{count, plural, one {day} other {days}}",
+    "orders": "{count, plural, one {order} other {orders}}"
+  },
+  "Landing": {
+    "hero": {
+      "title": "Cars from the USA, turnkey — with the price to the cent before you bid.",
+      "subtitle": "Enter the parameters — see a breakdown of every stage.",
+      "ctaPrimary": "Get exact quote",
+      "ctaSecondary": "Browse ready cars"
+    }
+  },
   "Dashboard": {
     "Garage": {
       "title": "My Garage"
