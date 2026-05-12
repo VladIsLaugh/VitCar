@@ -26,6 +26,13 @@ export async function generateMetadata({ params }: Pick<Props, 'params'>): Promi
   return {
     title: t('title'),
     description: t('description'),
+    alternates: {
+      languages: {
+        uk: 'https://vitauto.ua/uk',
+        en: 'https://vitauto.ua/en',
+        'x-default': 'https://vitauto.ua/uk',
+      },
+    },
   };
 }
 
