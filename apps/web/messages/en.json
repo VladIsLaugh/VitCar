@@ -18,6 +18,40 @@
     "email": "Email",
     "password": "Password"
   },
+  "Nav": {
+    "howItWorks": "How it works",
+    "cases": "Cases",
+    "calculator": "Calculator",
+    "faq": "FAQ",
+    "contacts": "Contacts",
+    "signIn": "Sign In",
+    "calculate": "Calculate",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "Footer": {
+    "desc": "Digital full-cycle operator for car imports from US auctions. Transparent pricing, real timelines, turnkey cost.",
+    "product": "Product",
+    "company": "Company",
+    "contacts": "Contacts",
+    "calculator": "Calculator",
+    "howItWorks": "How it works",
+    "cases": "Cases",
+    "dashboard": "Personal Dashboard",
+    "tracker": "Order Tracker",
+    "about": "About us",
+    "team": "Team",
+    "partners": "Partners",
+    "careers": "Careers",
+    "agreement": "Service Agreement",
+    "cities": "Kyiv · Lviv · Odesa",
+    "copyright": "© 2026 VitAuto. All rights reserved.",
+    "companyId": "Company ID: [placeholder]",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
   "Dashboard": {
     "Garage": {
       "title": "My Garage"

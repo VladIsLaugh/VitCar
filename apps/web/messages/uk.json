@@ -18,6 +18,40 @@
     "email": "Email",
     "password": "Пароль"
   },
+  "Nav": {
+    "howItWorks": "Як це працює",
+    "cases": "Кейси",
+    "calculator": "Калькулятор",
+    "faq": "FAQ",
+    "contacts": "Контакти",
+    "signIn": "Увійти",
+    "calculate": "Розрахувати",
+    "openMenu": "Відкрити меню",
+    "closeMenu": "Закрити меню",
+    "language": "Мова",
+    "theme": "Тема"
+  },
+  "Footer": {
+    "desc": "Digital full-cycle оператор імпорту авто з аукціонів США. Прозорі цифри, реальні строки, ціна під ключ.",
+    "product": "Продукт",
+    "company": "Компанія",
+    "contacts": "Контакти",
+    "calculator": "Калькулятор",
+    "howItWorks": "Як це працює",
+    "cases": "Кейси",
+    "dashboard": "Особистий кабінет",
+    "tracker": "Order Tracker",
+    "about": "Про нас",
+    "team": "Команда",
+    "partners": "Партнери",
+    "careers": "Кар'єра",
+    "agreement": "Договір про послуги",
+    "cities": "Київ · Львів · Одеса",
+    "copyright": "© 2026 VitAuto. Усі права захищені.",
+    "companyId": "ID компанії: [placeholder]",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
   "Dashboard": {
     "Garage": {
       "title": "Мій гараж"
