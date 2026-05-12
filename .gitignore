@@ -36,6 +36,9 @@ pnpm-debug.log*
 coverage
 .nyc_output
 
+# Claude Code — local session state (credentials, per-session permissions)
+.claude/settings.local.json
+
 # Prisma
 *.db
 *.db-journal
