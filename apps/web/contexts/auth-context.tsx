@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Restore session on mount
   useEffect(() => {
     refreshTokens().finally(() => setIsLoading(false));
-  }, []);
+  }, [refreshTokens]);
 
   return (
     <AuthContext.Provider value={{ user, accessToken, isLoading, login, logout, refreshTokens }}>

@@ -29,7 +29,7 @@ export default function AuthCallbackPage() {
         router.replace('/dashboard');
       })
       .catch(() => router.replace('/auth/login'));
-  }, []);
+  }, [login, params, router]);
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-primary">

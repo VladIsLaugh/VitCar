@@ -30,7 +30,7 @@ export default function VerifyEmailPage() {
         setTimeout(() => router.replace('/dashboard'), 1500);
       })
       .catch(() => setStatus('error'));
-  }, []);
+  }, [login, params, router]);
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-primary px-4">
