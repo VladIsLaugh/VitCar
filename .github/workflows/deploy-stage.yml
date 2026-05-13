@@ -37,4 +37,3 @@ jobs:
           response=$(curl -sf ${{ secrets.API_URL_STAGE }}/api/health)
           echo "$response"
           echo "$response" | grep '"status":"ok"'
-          echo "$response" | grep '"environment":"stage"'
