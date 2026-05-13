@@ -20,7 +20,7 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Deploy to Stage
-        run: railway up --service=vitauto-api-stage --detach
+        run: railway up --service=vitauto-api --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGE }}
 
