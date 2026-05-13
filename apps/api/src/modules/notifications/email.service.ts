@@ -31,4 +31,25 @@ export class EmailService {
       this.logger.error(`Failed to send verification email to ${email}: ${error.message}`);
     }
   }
+
+  async sendPasswordResetEmail(email: string, token: string): Promise<void> {
+    const frontendUrl = this.config.get<string>('FRONTEND_URL', 'https://vit-car.vercel.app');
+    const url = `${frontendUrl}/auth/reset-password?token=${token}`;
+
+    const { error } = await this.resend.emails.send({
+      from: 'VitAuto <noreply@vitauto.ua>',
+      to: email,
+      subject: 'Reset your password — VitAuto',
+      html: `
+        <p>You requested a password reset for your VitAuto account.</p>
+        <p>Click the link below to set a new password (valid 1 hour):</p>
+        <p><a href="${url}">Reset password</a></p>
+        <p>If you did not request this, you can safely ignore this email.</p>
+      `,
+    });
+
+    if (error) {
+      this.logger.error(`Failed to send password reset email to ${email}: ${error.message}`);
+    }
+  }
 }
