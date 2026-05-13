@@ -261,6 +261,19 @@ Guest → Client → Manager → Admin
 
 ---
 
+## Environments
+
+| Environment    | Frontend                             | API                                               | Deploy trigger     |
+| -------------- | ------------------------------------ | ------------------------------------------------- | ------------------ |
+| **production** | https://vit-car.vercel.app           | https://vitauto-api-production.up.railway.app/api | push to `main`     |
+| **stage**      | Vercel preview for `phase-*`         | https://vitauto-api-stage.up.railway.app/api      | push to `phase-*`  |
+| **dev**        | Vercel preview (auto URL per branch) | https://vitauto-api-dev.up.railway.app/api        | push to `claude/*` |
+
+Each environment has its own Railway service, PostgreSQL database, and Redis instance.
+`APP_ENV` variable is set per service (`production` / `stage` / `dev`) and surfaced at `GET /api/health`.
+
+---
+
 ## Jira
 
 Project: `CAR` at `vladvit19.atlassian.net`

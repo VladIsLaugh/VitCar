@@ -1,0 +1,40 @@
+name: Deploy — Stage
+
+on:
+  push:
+    branches:
+      - 'phase-*'
+
+concurrency:
+  group: deploy-stage
+  cancel-in-progress: false
+
+jobs:
+  deploy-api:
+    name: Deploy API to Stage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Stage
+        run: railway up --service=vitauto-api --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGE }}
+
+  smoke-test:
+    name: Smoke Test Stage
+    needs: deploy-api
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for deployment
+        run: sleep 45
+
+      - name: Health check
+        run: |
+          response=$(curl -sf ${{ secrets.API_URL_STAGE }}/api/health)
+          echo "$response"
+          echo "$response" | grep '"status":"ok"'
+          echo "$response" | grep '"environment":"stage"'
