@@ -5,6 +5,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { CalculatorModule } from './modules/calculator/calculator.module';
 import { DebugModule } from './modules/debug/debug.module';
+import { PrismaModule } from './modules/prisma/prisma.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -14,6 +15,7 @@ import configuration from './config/configuration';
       envFilePath: '.env',
       load: [configuration],
     }),
+    PrismaModule,
     HealthModule,
     AuthModule,
     UsersModule,
