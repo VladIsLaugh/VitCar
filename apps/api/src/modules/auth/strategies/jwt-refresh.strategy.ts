@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { StrategyOptionsWithRequest } from 'passport-jwt';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import type { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import type { Request } from 'express';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
-  constructor(config: ConfigService) {
+  constructor(@Inject(ConfigService) config: ConfigService) {
     const options: StrategyOptionsWithRequest = {
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) =>
