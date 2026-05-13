@@ -1,7 +1,162 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  BadRequestException,
+  UnauthorizedException,
+  ForbiddenException,
+} from '@nestjs/common';
+import type { JwtService } from '@nestjs/jwt';
+import type { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcryptjs';
+import * as crypto from 'crypto';
 import type { PrismaService } from '../prisma/prisma.service';
+import type { EmailService } from '../notifications/email.service';
+import type { RegisterDto } from './dto/register.dto';
+import type { LoginDto } from './dto/login.dto';
+
+const BCRYPT_ROUNDS = 12;
+const VERIFY_TOKEN_TTL_HOURS = 24;
+const REFRESH_TOKEN_TTL_DAYS = 30;
+
+export interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface AuthResponse extends TokenPair {
+  user: { id: string; email: string; firstName: string | null; role: string };
+}
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwt: JwtService,
+    private readonly config: ConfigService,
+    private readonly email: EmailService
+  ) {}
+
+  async register(dto: RegisterDto): Promise<{ message: string }> {
+    const existing = await this.prisma.user.findUnique({ where: { email: dto.email } });
+    if (existing) {
+      throw new ConflictException('This email is already in use');
+    }
+
+    const passwordHash = await bcrypt.hash(dto.password, BCRYPT_ROUNDS);
+
+    const user = await this.prisma.user.create({
+      data: {
+        email: dto.email,
+        passwordHash,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        isVerified: false,
+      },
+    });
+
+    const token = crypto.randomUUID();
+    const expiresAt = new Date(Date.now() + VERIFY_TOKEN_TTL_HOURS * 60 * 60 * 1000);
+
+    await this.prisma.emailVerificationToken.create({
+      data: { token, userId: user.id, expiresAt },
+    });
+
+    await this.email.sendVerificationEmail(user.email, token);
+
+    return { message: 'Please verify your email. Check your inbox.' };
+  }
+
+  async verifyEmail(token: string): Promise<AuthResponse> {
+    const record = await this.prisma.emailVerificationToken.findUnique({
+      where: { token },
+      include: { user: true },
+    });
+
+    if (!record || record.expiresAt < new Date()) {
+      if (record) {
+        await this.prisma.emailVerificationToken.delete({ where: { token } });
+      }
+      throw new BadRequestException('Invalid or expired verification token');
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: record.userId },
+      data: { isVerified: true },
+    });
+
+    await this.prisma.emailVerificationToken.delete({ where: { token } });
+
+    return this.issueTokens(user);
+  }
+
+  async login(dto: LoginDto, userAgent?: string, ip?: string): Promise<AuthResponse> {
+    const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
+
+    if (!user || !user.passwordHash) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const passwordValid = await bcrypt.compare(dto.password, user.passwordHash);
+    if (!passwordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (!user.isVerified) {
+      throw new ForbiddenException({
+        message: 'Email not verified',
+        action: 'resend_verification',
+      });
+    }
+
+    if (!user.isActive) {
+      throw new ForbiddenException({
+        message: 'Account is blocked',
+        reason: user.blockedReason,
+      });
+    }
+
+    return this.issueTokens(user, userAgent, ip);
+  }
+
+  async getMe(userId: string) {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        avatarUrl: true,
+        role: true,
+        isVerified: true,
+        createdAt: true,
+      },
+    });
+    return user;
+  }
+
+  private async issueTokens(
+    user: { id: string; email: string; firstName: string | null; role: string },
+    userAgent?: string,
+    ip?: string
+  ): Promise<AuthResponse> {
+    const accessToken = this.jwt.sign({
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    });
+
+    const refreshToken = crypto.randomBytes(64).toString('hex');
+    const expiresAt = new Date(Date.now() + REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000);
+
+    await this.prisma.refreshToken.create({
+      data: { token: refreshToken, userId: user.id, expiresAt, userAgent, ip },
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      user: { id: user.id, email: user.email, firstName: user.firstName, role: user.role },
+    };
+  }
 }
