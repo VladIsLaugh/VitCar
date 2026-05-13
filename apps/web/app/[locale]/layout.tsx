@@ -1,29 +1,61 @@
-import { NextIntlClientProvider } from 'next-intl'
-import { getMessages, getTranslations } from 'next-intl/server'
-import type { Metadata } from 'next'
+import type { ReactNode } from 'react';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getTranslations } from 'next-intl/server';
+import { ThemeProvider } from 'next-themes';
+import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
+import '../globals.css';
+
+const inter = Inter({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 type Props = {
-  children: React.ReactNode
-  params: Promise<{ locale: string }>
-}
+  children: ReactNode;
+  params: Promise<{ locale: string }>;
+};
 
 export async function generateMetadata({ params }: Pick<Props, 'params'>): Promise<Metadata> {
-  const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'Metadata' })
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
 
   return {
     title: t('title'),
-    description: t('description')
-  }
+    description: t('description'),
+    alternates: {
+      languages: {
+        uk: 'https://vitauto.ua/uk',
+        en: 'https://vitauto.ua/en',
+        'x-default': 'https://vitauto.ua/uk',
+      },
+    },
+  };
 }
 
 export default async function LocaleLayout({ children, params }: Props) {
-  const { locale } = await params
-  const messages = await getMessages()
+  const { locale } = await params;
+  const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
-    </NextIntlClientProvider>
-  )
+    <html lang={locale} suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <Header />
+            {children}
+            <Footer />
+          </NextIntlClientProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
 }

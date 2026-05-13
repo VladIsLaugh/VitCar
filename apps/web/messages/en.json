@@ -18,6 +18,59 @@
     "email": "Email",
     "password": "Password"
   },
+  "Nav": {
+    "howItWorks": "How it works",
+    "cases": "Cases",
+    "calculator": "Calculator",
+    "faq": "FAQ",
+    "contacts": "Contacts",
+    "signIn": "Sign In",
+    "calculate": "Calculate",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "Footer": {
+    "desc": "Digital full-cycle operator for car imports from US auctions. Transparent pricing, real timelines, turnkey cost.",
+    "product": "Product",
+    "company": "Company",
+    "contacts": "Contacts",
+    "calculator": "Calculator",
+    "howItWorks": "How it works",
+    "cases": "Cases",
+    "dashboard": "Personal Dashboard",
+    "tracker": "Order Tracker",
+    "about": "About us",
+    "team": "Team",
+    "partners": "Partners",
+    "careers": "Careers",
+    "agreement": "Service Agreement",
+    "cities": "Kyiv · Lviv · Odesa",
+    "copyright": "© 2026 VitAuto. All rights reserved.",
+    "companyId": "Company ID: [placeholder]",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "Common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "back": "Back",
+    "continue": "Continue",
+    "cars": "{count, plural, one {car} other {cars}}",
+    "days": "{count, plural, one {day} other {days}}",
+    "orders": "{count, plural, one {order} other {orders}}"
+  },
+  "Landing": {
+    "hero": {
+      "title": "Cars from the USA, turnkey — with the price to the cent before you bid.",
+      "subtitle": "Enter the parameters — see a breakdown of every stage.",
+      "ctaPrimary": "Get exact quote",
+      "ctaSecondary": "Browse ready cars"
+    }
+  },
   "Dashboard": {
     "Garage": {
       "title": "My Garage"
