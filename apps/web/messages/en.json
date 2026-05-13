@@ -16,7 +16,10 @@
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "email": "Email",
-    "password": "Password"
+    "password": "Password",
+    "signInWithGoogle": "Sign in with Google",
+    "orContinueWith": "or continue with",
+    "callbackLoading": "Signing in with Google..."
   },
   "Nav": {
     "howItWorks": "How it works",

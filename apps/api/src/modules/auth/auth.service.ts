@@ -29,6 +29,14 @@ export interface AuthResponse extends TokenPair {
   user: { id: string; email: string; firstName: string | null; role: string };
 }
 
+export interface GoogleUser {
+  googleId: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  avatarUrl?: string;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -223,6 +231,44 @@ export class AuthService {
     await this.prisma.refreshToken.deleteMany({ where: { userId: record.userId } });
 
     return { message: 'Password updated successfully' };
+  }
+
+  async handleGoogleAuth(
+    googleUser: GoogleUser,
+    userAgent?: string,
+    ip?: string
+  ): Promise<AuthResponse> {
+    const { googleId, email, firstName, lastName, avatarUrl } = googleUser;
+
+    let user = await this.prisma.user.findUnique({ where: { googleId } });
+
+    if (!user) {
+      // Check if account with same email exists (link googleId to it)
+      const existing = await this.prisma.user.findUnique({ where: { email } });
+      if (existing) {
+        user = await this.prisma.user.update({
+          where: { id: existing.id },
+          data: { googleId, avatarUrl: avatarUrl ?? existing.avatarUrl },
+        });
+      } else {
+        user = await this.prisma.user.create({
+          data: {
+            email,
+            googleId,
+            firstName: firstName ?? null,
+            lastName: lastName ?? null,
+            avatarUrl: avatarUrl ?? null,
+            isVerified: true,
+          },
+        });
+      }
+    }
+
+    if (!user.isActive) {
+      throw new ForbiddenException({ message: 'Account is blocked', reason: user.blockedReason });
+    }
+
+    return this.issueTokens(user, userAgent, ip);
   }
 
   private async issueTokens(

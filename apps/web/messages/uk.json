@@ -16,7 +16,10 @@
     "signIn": "Увійти",
     "signUp": "Зареєструватись",
     "email": "Email",
-    "password": "Пароль"
+    "password": "Пароль",
+    "signInWithGoogle": "Увійти через Google",
+    "orContinueWith": "або продовжити через",
+    "callbackLoading": "Виконується вхід через Google..."
   },
   "Nav": {
     "howItWorks": "Як це працює",
