@@ -13,6 +13,8 @@ jobs:
   deploy-api:
     name: Deploy API to Dev
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
