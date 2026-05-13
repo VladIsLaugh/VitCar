@@ -29,11 +29,15 @@ jobs:
     needs: deploy-api
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for deployment
-        run: sleep 45
-
-      - name: Health check
+      - name: Health check (with retries)
         run: |
-          response=$(curl -sf ${{ secrets.API_URL_STAGE }}/api/health)
+          url="${{ secrets.API_URL_STAGE }}/api/health"
+          for i in 1 2 3 4 5 6 7 8; do
+            echo "Attempt $i / 8 — $(date -u)"
+            response=$(curl -sf "$url" 2>/dev/null) && break
+            echo "Not ready yet, waiting 15s..."
+            sleep 15
+          done
           echo "$response"
           echo "$response" | grep '"status":"ok"'
+          echo "$response" | grep '"environment":"stage"'
