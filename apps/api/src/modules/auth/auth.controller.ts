@@ -8,10 +8,11 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Inject,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
-import type { AuthService } from './auth.service';
+import { AuthService } from './auth.service';
 import type { RegisterDto } from './dto/register.dto';
 import type { LoginDto } from './dto/login.dto';
 import type { VerifyEmailDto } from './dto/verify-email.dto';
@@ -24,7 +25,7 @@ const REFRESH_COOKIE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(@Inject(AuthService) private readonly authService: AuthService) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
