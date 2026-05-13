@@ -281,4 +281,62 @@ describe('AuthService', () => {
       });
     });
   });
+
+  describe('handleGoogleAuth', () => {
+    const googleUser = {
+      googleId: 'g-123',
+      email: 'google@example.com',
+      firstName: 'Jane',
+      lastName: 'Smith',
+      avatarUrl: 'https://photo.example.com/jane.jpg',
+    };
+
+    it('logs in existing user matched by googleId', async () => {
+      prismaMock.user.findUnique.mockResolvedValueOnce(mockUser); // googleId lookup
+      prismaMock.refreshToken.create.mockResolvedValue({});
+
+      const result = await service.handleGoogleAuth(googleUser);
+      expect(result.accessToken).toBe('access-token');
+      expect(prismaMock.user.create).not.toHaveBeenCalled();
+      expect(prismaMock.user.update).not.toHaveBeenCalled();
+    });
+
+    it('links googleId to existing account with same email', async () => {
+      prismaMock.user.findUnique
+        .mockResolvedValueOnce(null) // googleId lookup → not found
+        .mockResolvedValueOnce(mockUser); // email lookup → found
+      prismaMock.user.update.mockResolvedValue(mockUser);
+      prismaMock.refreshToken.create.mockResolvedValue({});
+
+      const result = await service.handleGoogleAuth(googleUser);
+      expect(result.accessToken).toBe('access-token');
+      expect(prismaMock.user.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: mockUser.id },
+          data: expect.objectContaining({ googleId: googleUser.googleId }),
+        })
+      );
+    });
+
+    it('registers new user when no matching email or googleId', async () => {
+      prismaMock.user.findUnique
+        .mockResolvedValueOnce(null) // googleId lookup
+        .mockResolvedValueOnce(null); // email lookup
+      prismaMock.user.create.mockResolvedValue({ ...mockUser, email: googleUser.email });
+      prismaMock.refreshToken.create.mockResolvedValue({});
+
+      const result = await service.handleGoogleAuth(googleUser);
+      expect(result.accessToken).toBe('access-token');
+      expect(prismaMock.user.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ googleId: googleUser.googleId, isVerified: true }),
+        })
+      );
+    });
+
+    it('throws ForbiddenException when account is blocked', async () => {
+      prismaMock.user.findUnique.mockResolvedValueOnce({ ...mockUser, isActive: false });
+      await expect(service.handleGoogleAuth(googleUser)).rejects.toThrow(ForbiddenException);
+    });
+  });
 });
