@@ -19,7 +19,10 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: (origin, callback) => {
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void
+    ) => {
       // Allow same-origin / server-to-server requests (no Origin header)
       if (!origin) return callback(null, true);
       // Allow explicitly configured frontend URL + localhost
