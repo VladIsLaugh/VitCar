@@ -14,8 +14,23 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  const allowedOrigins = new Set(
+    [process.env.FRONTEND_URL, 'http://localhost:3000'].filter(Boolean)
+  );
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void
+    ) => {
+      // Allow same-origin / server-to-server requests (no Origin header)
+      if (!origin) return callback(null, true);
+      // Allow explicitly configured frontend URL + localhost
+      if (allowedOrigins.has(origin)) return callback(null, true);
+      // Allow all Vercel preview deployments (*.vercel.app)
+      if (origin.endsWith('.vercel.app')) return callback(null, true);
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
     credentials: true,
   });
 

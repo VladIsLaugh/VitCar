@@ -10,6 +10,7 @@ import { apiClient } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import type { AxiosError } from 'axios';
 
 const schema = z.object({ email: z.string().email() });
 type FormData = z.infer<typeof schema>;
@@ -21,12 +22,23 @@ export default function ForgotPasswordPage() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = async (data: FormData) => {
-    await apiClient.post('/auth/forgot-password', data).catch(() => null); // always 200
-    setSent(true);
+    try {
+      await apiClient.post('/auth/forgot-password', data);
+      setSent(true);
+    } catch (err) {
+      // API responded with any HTTP status → still show success (prevents email enumeration)
+      // API was unreachable (no response object) → show error
+      if ((err as AxiosError)?.response !== undefined) {
+        setSent(true);
+      } else {
+        setError('root', { message: t('errorGeneric') });
+      }
+    }
   };
 
   return (
@@ -50,6 +62,12 @@ export default function ForgotPasswordPage() {
               <Input id="email" type="email" autoComplete="email" {...register('email')} />
               {errors.email && <p className="text-xs text-destructive">{t('validationEmail')}</p>}
             </div>
+
+            {errors.root && (
+              <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                {errors.root.message}
+              </p>
+            )}
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? t('loading') : t('forgotPasswordButton')}
