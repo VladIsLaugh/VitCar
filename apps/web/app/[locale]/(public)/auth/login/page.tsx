@@ -65,7 +65,7 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
           <div className="space-y-1">
             <Label htmlFor="email">{t('email')}</Label>
-            <Input id="email" type="email" autoComplete="email" {...register('email')} />
+            <Input id="email" type="email" autoComplete="email" aria-invalid={!!errors.email} {...register('email')} />
             {errors.email && <p className="text-xs text-destructive">{t('validationEmail')}</p>}
           </div>
 
@@ -80,6 +80,7 @@ export default function LoginPage() {
               id="password"
               type="password"
               autoComplete="current-password"
+              aria-invalid={!!errors.password}
               {...register('password')}
             />
             {errors.password && (
