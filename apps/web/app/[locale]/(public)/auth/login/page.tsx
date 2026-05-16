@@ -62,7 +62,7 @@ export default function LoginPage() {
           <span className="h-px flex-1 bg-border" />
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
           <div className="space-y-1">
             <Label htmlFor="email">{t('email')}</Label>
             <Input id="email" type="email" autoComplete="email" aria-invalid={!!errors.email} {...register('email')} />
