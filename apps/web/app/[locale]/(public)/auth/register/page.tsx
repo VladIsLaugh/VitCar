@@ -63,6 +63,7 @@ export default function RegisterPage() {
               id="firstName"
               type="text"
               autoComplete="given-name"
+              aria-invalid={!!errors.firstName}
               {...register('firstName')}
             />
             {errors.firstName && (
@@ -72,7 +73,7 @@ export default function RegisterPage() {
 
           <div className="space-y-1">
             <Label htmlFor="email">{t('email')}</Label>
-            <Input id="email" type="email" autoComplete="email" {...register('email')} />
+            <Input id="email" type="email" autoComplete="email" aria-invalid={!!errors.email} {...register('email')} />
             {errors.email && <p className="text-xs text-destructive">{t('validationEmail')}</p>}
           </div>
 
@@ -82,6 +83,7 @@ export default function RegisterPage() {
               id="password"
               type="password"
               autoComplete="new-password"
+              aria-invalid={!!errors.password}
               {...register('password')}
             />
             {errors.password && (
