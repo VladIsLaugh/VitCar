@@ -1,0 +1,117 @@
+{
+  "Metadata": {
+    "title": "VitAuto — Import Cars from USA",
+    "description": "Full-cycle import of cars from US auctions Copart and IAAI to Ukraine"
+  },
+  "Home": {
+    "title": "VitAuto — Import Cars from USA"
+  },
+  "Calculator": {
+    "title": "Cost Calculator"
+  },
+  "Cars": {
+    "title": "Car Catalog"
+  },
+  "Auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First name",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "signInWithGoogle": "Sign in with Google",
+    "orContinueWith": "or continue with",
+    "callbackLoading": "Signing in with Google...",
+    "loginButton": "Sign in",
+    "registerButton": "Create account",
+    "forgotPasswordButton": "Send reset link",
+    "resetPasswordButton": "Save password",
+    "forgotPasswordLink": "Forgot password?",
+    "forgotPasswordTitle": "Reset password",
+    "forgotPasswordSuccess": "If that email exists, we've sent a reset link.",
+    "resetPasswordTitle": "New password",
+    "resetPasswordSuccess": "Password updated! Redirecting to sign in...",
+    "resetPasswordInvalidToken": "This link is invalid or has expired.",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "goToLogin": "Sign in",
+    "goToRegister": "Create account",
+    "loading": "Loading...",
+    "verifyEmailLoading": "Verifying your email...",
+    "verifyEmailSuccess": "Email verified! Redirecting to dashboard...",
+    "verifyEmailError": "This link is invalid or has expired.",
+    "validationEmail": "Invalid email format",
+    "validationRequired": "Required",
+    "validationPasswordMin": "At least 8 characters",
+    "validationPasswordMatch": "Passwords don't match",
+    "errorInvalidCredentials": "Invalid email or password",
+    "errorEmailNotVerified": "Email not verified. Please check your inbox.",
+    "errorEmailTaken": "This email is already registered",
+    "errorGeneric": "Something went wrong. Please try again."
+  },
+  "Nav": {
+    "howItWorks": "How it works",
+    "cases": "Cases",
+    "calculator": "Calculator",
+    "faq": "FAQ",
+    "contacts": "Contacts",
+    "signIn": "Sign In",
+    "calculate": "Calculate",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "Footer": {
+    "desc": "Digital full-cycle operator for car imports from US auctions. Transparent pricing, real timelines, turnkey cost.",
+    "product": "Product",
+    "company": "Company",
+    "contacts": "Contacts",
+    "calculator": "Calculator",
+    "howItWorks": "How it works",
+    "cases": "Cases",
+    "dashboard": "Personal Dashboard",
+    "tracker": "Order Tracker",
+    "about": "About us",
+    "team": "Team",
+    "partners": "Partners",
+    "careers": "Careers",
+    "agreement": "Service Agreement",
+    "cities": "Kyiv · Lviv · Odesa",
+    "copyright": "© 2026 VitAuto. All rights reserved.",
+    "companyId": "Company ID: [placeholder]",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "Common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "back": "Back",
+    "continue": "Continue",
+    "cars": "{count, plural, one {car} other {cars}}",
+    "days": "{count, plural, one {day} other {days}}",
+    "orders": "{count, plural, one {order} other {orders}}"
+  },
+  "Landing": {
+    "hero": {
+      "title": "Cars from the USA, turnkey — with the price to the cent before you bid.",
+      "subtitle": "Enter the parameters — see a breakdown of every stage.",
+      "ctaPrimary": "Get exact quote",
+      "ctaSecondary": "Browse ready cars"
+    }
+  },
+  "Dashboard": {
+    "Garage": {
+      "title": "My Garage"
+    },
+    "Saved": {
+      "title": "Saved"
+    },
+    "Finance": {
+      "title": "Finance"
+    }
+  }
+}

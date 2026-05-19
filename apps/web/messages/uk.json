@@ -1,0 +1,117 @@
+{
+  "Metadata": {
+    "title": "VitAuto — Імпорт авто з США",
+    "description": "Повний цикл імпорту автомобілів з американських аукціонів Copart та IAAI в Україну"
+  },
+  "Home": {
+    "title": "VitAuto — Імпорт авто з США"
+  },
+  "Calculator": {
+    "title": "Калькулятор вартості"
+  },
+  "Cars": {
+    "title": "Каталог автомобілів"
+  },
+  "Auth": {
+    "signIn": "Увійти",
+    "signUp": "Зареєструватись",
+    "email": "Email",
+    "password": "Пароль",
+    "firstName": "Ім'я",
+    "newPassword": "Новий пароль",
+    "confirmPassword": "Підтвердіть пароль",
+    "signInWithGoogle": "Увійти через Google",
+    "orContinueWith": "або продовжити через",
+    "callbackLoading": "Виконується вхід через Google...",
+    "loginButton": "Увійти",
+    "registerButton": "Зареєструватись",
+    "forgotPasswordButton": "Відправити посилання",
+    "resetPasswordButton": "Зберегти пароль",
+    "forgotPasswordLink": "Забули пароль?",
+    "forgotPasswordTitle": "Відновлення пароля",
+    "forgotPasswordSuccess": "Якщо цей email існує — ми вже надіслали посилання.",
+    "resetPasswordTitle": "Новий пароль",
+    "resetPasswordSuccess": "Пароль оновлено! Переходимо на вхід...",
+    "resetPasswordInvalidToken": "Посилання недійсне або прострочене.",
+    "noAccount": "Немає акаунту?",
+    "haveAccount": "Вже є акаунт?",
+    "goToLogin": "Увійти",
+    "goToRegister": "Зареєструватись",
+    "loading": "Завантаження...",
+    "verifyEmailLoading": "Перевіряємо email...",
+    "verifyEmailSuccess": "Email підтверджено! Переходимо у кабінет...",
+    "verifyEmailError": "Посилання недійсне або прострочене.",
+    "validationEmail": "Невірний формат email",
+    "validationRequired": "Обов'язкове поле",
+    "validationPasswordMin": "Мінімум 8 символів",
+    "validationPasswordMatch": "Паролі не збігаються",
+    "errorInvalidCredentials": "Невірний email або пароль",
+    "errorEmailNotVerified": "Email не підтверджено. Перевірте пошту.",
+    "errorEmailTaken": "Цей email вже зареєстрований",
+    "errorGeneric": "Сталася помилка. Спробуйте ще раз."
+  },
+  "Nav": {
+    "howItWorks": "Як це працює",
+    "cases": "Кейси",
+    "calculator": "Калькулятор",
+    "faq": "FAQ",
+    "contacts": "Контакти",
+    "signIn": "Увійти",
+    "calculate": "Розрахувати",
+    "openMenu": "Відкрити меню",
+    "closeMenu": "Закрити меню",
+    "language": "Мова",
+    "theme": "Тема"
+  },
+  "Footer": {
+    "desc": "Digital full-cycle оператор імпорту авто з аукціонів США. Прозорі цифри, реальні строки, ціна під ключ.",
+    "product": "Продукт",
+    "company": "Компанія",
+    "contacts": "Контакти",
+    "calculator": "Калькулятор",
+    "howItWorks": "Як це працює",
+    "cases": "Кейси",
+    "dashboard": "Особистий кабінет",
+    "tracker": "Order Tracker",
+    "about": "Про нас",
+    "team": "Команда",
+    "partners": "Партнери",
+    "careers": "Кар'єра",
+    "agreement": "Договір про послуги",
+    "cities": "Київ · Львів · Одеса",
+    "copyright": "© 2026 VitAuto. Усі права захищені.",
+    "companyId": "ID компанії: [placeholder]",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "Common": {
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "loading": "Завантаження...",
+    "error": "Сталася помилка",
+    "back": "Назад",
+    "continue": "Продовжити",
+    "cars": "{count, plural, one {авто} few {авто} many {авто} other {авто}}",
+    "days": "{count, plural, one {день} few {дні} many {днів} other {днів}}",
+    "orders": "{count, plural, one {замовлення} few {замовлення} many {замовлень} other {замовлень}}"
+  },
+  "Landing": {
+    "hero": {
+      "title": "Авто з США під ключ — з ціною до копійки ще до купівлі лота.",
+      "subtitle": "Введіть параметри — побачите розрахунок усіх етапів.",
+      "ctaPrimary": "Точний розрахунок",
+      "ctaSecondary": "Подивитись готові авто"
+    }
+  },
+  "Dashboard": {
+    "Garage": {
+      "title": "Мій гараж"
+    },
+    "Saved": {
+      "title": "Збережені"
+    },
+    "Finance": {
+      "title": "Фінанси"
+    }
+  }
+}

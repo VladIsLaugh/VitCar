@@ -1,0 +1,78 @@
+name: Deploy — Dev Preview
+
+on:
+  push:
+    branches:
+      - 'claude/*'
+
+concurrency:
+  group: deploy-dev-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-api:
+    name: Deploy API to Dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Dev
+        run: railway up --service=vitauto-api --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_DEV }}
+
+      - name: Post preview URLs to PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = context.ref.replace('refs/heads/', '');
+            const apiUrl = '${{ secrets.API_URL_DEV }}';
+            const sluggedBranch = branch.replace(/\//g, '-').toLowerCase();
+            const vercelUrl = `https://vitcar-git-${sluggedBranch}-vladvit19.vercel.app`;
+
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${branch}`,
+              state: 'open',
+            });
+
+            if (prs.data.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prs.data[0].number,
+                body: [
+                  '## Dev Preview Deployed',
+                  '',
+                  '| | URL |',
+                  '|---|---|',
+                  `| **Frontend** | ${vercelUrl} |`,
+                  `| **API Health** | ${apiUrl}/api/health |`,
+                ].join('\n'),
+              });
+            }
+
+  smoke-test:
+    name: Smoke Test Dev
+    needs: deploy-api
+    runs-on: ubuntu-latest
+    steps:
+      - name: Health check (with retries)
+        run: |
+          url="${{ secrets.API_URL_DEV }}/api/health"
+          for i in 1 2 3 4 5 6 7 8; do
+            echo "Attempt $i / 8 — $(date -u)"
+            response=$(curl -sf "$url" 2>/dev/null) && break
+            echo "Not ready yet, waiting 15s..."
+            sleep 15
+          done
+          echo "$response"
+          echo "$response" | grep '"status":"ok"'
+          echo "$response" | grep '"environment":"dev"'
