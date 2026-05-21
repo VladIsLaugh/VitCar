@@ -96,6 +96,60 @@
     "orders": "{count, plural, one {order} other {orders}}"
   },
   "Landing": {
+    "faq": {
+      "title": "Things we get asked most often.",
+      "subtitle": "Didn't find an answer? Message a manager — we'll respond within a few hours.",
+      "items": [
+        {
+          "question": "How long does it take to bring a car from the USA?",
+          "answer": "On average 60–80 days from the moment of purchase at auction: 30–45 days for sea shipping, 5–10 days for customs clearance, and 10–25 days for restoration. The exact timeline depends on the port of departure, chosen vessel, and scope of repairs."
+        },
+        {
+          "question": "What taxes and fees will I pay under Ukrainian law?",
+          "answer": "Customs duty (0% for EVs, 10% for all others), excise tax (calculated in EUR based on engine size and car age), and VAT at 20%. All amounts are calculated before the auction and shown in the full cost breakdown — no surprises."
+        },
+        {
+          "question": "Can I see the condition of the car before purchase at auction?",
+          "answer": "Yes. We provide the full Copart or IAAI lot page with all available photos, condition report, and VIN history. You approve the specific lot before we bid."
+        },
+        {
+          "question": "What happens if my car arrives with additional damage?",
+          "answer": "During ocean shipping, the car is insured. If damage occurs in transit, we handle the insurance claim on your behalf and coordinate repairs at our workshop — at no extra cost to you."
+        },
+        {
+          "question": "Can I return the car if something is wrong?",
+          "answer": "After purchase at auction, the car cannot be returned to the seller — this is standard for US auto auctions. That's exactly why we provide a full cost breakdown and photos before you approve any lot. If a defect is discovered during restoration that wasn't in the auction listing, we document it and discuss options with you transparently."
+        },
+        {
+          "question": "How are payments structured — by stage or all at once?",
+          "answer": "In stages: you pay the auction bid and fees first, then sea shipping, then customs duties, then restoration. Each payment is agreed and documented in advance — you never pay a lump sum upfront."
+        },
+        {
+          "question": "Can I fly to inspect the car before customs clearance?",
+          "answer": "Yes, you can visit our yard after the car arrives in Ukraine and before customs clearance. We'll arrange the inspection and walk you through the condition of the vehicle in person."
+        },
+        {
+          "question": "What guarantees do you provide?",
+          "answer": "We guarantee full transparency of all costs before purchase, photo and video documentation at every stage, and restoration work performed only with your written approval. We do not provide a manufacturer-style warranty on used auction vehicles — but we do stand behind the quality of our restoration work."
+        },
+        {
+          "question": "Is there a discount if I buy multiple cars?",
+          "answer": "Yes, we offer individual terms for clients ordering multiple vehicles. Contact a manager to discuss the details."
+        },
+        {
+          "question": "Can I track the car in real time?",
+          "answer": "Yes. After registration in your personal dashboard, you can track the current status of your order at any time — from auction purchase through delivery. Key updates are also sent via Telegram notifications."
+        },
+        {
+          "question": "What about repairs — do you handle restoration or do I need to arrange it separately?",
+          "answer": "We have our own restoration workshop. After arrival, our technicians assess the car and prepare a repair estimate. You review and approve the scope before any work begins. You can also decline restoration and take the car as-is after customs clearance."
+        },
+        {
+          "question": "Can I register it with Ukrainian plates, or does it need Polish plates?",
+          "answer": "Ukrainian plates. We handle full customs clearance in Ukraine — the car receives a Ukrainian customs declaration and can be registered with the traffic police (Service Centre of the Ministry of Internal Affairs) for standard Ukrainian number plates."
+        }
+      ]
+    },
     "cases": {
       "title": "Our First Real Case.",
       "photoPlaceholder": "Photo coming soon",
