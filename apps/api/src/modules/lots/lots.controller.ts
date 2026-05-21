@@ -1,6 +1,7 @@
 import { Controller, Get, Query, Inject } from '@nestjs/common';
 import { LotsService } from './lots.service';
-import type { AvgPriceQueryDto } from './dto/avg-price-query.dto';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS emitDecoratorMetadata requires runtime class for @Query() transform
+import { AvgPriceQueryDto } from './dto/avg-price-query.dto';
 import type { AvgPriceResponseDto } from '@vitauto/shared-types';
 
 @Controller('lots')
