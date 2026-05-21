@@ -1,6 +1,8 @@
 import HeroSection from '@/components/landing/HeroSection';
 import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import BenefitsSection from '@/components/landing/BenefitsSection';
+import CasesSection from '@/components/landing/CasesSection';
+import TestimonialsSection from '@/components/landing/TestimonialsSection';
 
 export default function HomePage() {
   return (
@@ -8,6 +10,8 @@ export default function HomePage() {
       <HeroSection />
       <HowItWorksSection />
       <BenefitsSection />
+      <CasesSection />
+      <TestimonialsSection />
     </main>
   );
 }
