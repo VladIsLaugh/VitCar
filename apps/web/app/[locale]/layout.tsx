@@ -7,6 +7,7 @@ import { ThemeProvider } from 'next-themes';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { AuthProvider } from '@/contexts/auth-context';
+import { QueryProvider } from '@/contexts/query-provider';
 import '../globals.css';
 
 const geist = Geist({
@@ -51,11 +52,13 @@ export default async function LocaleLayout({ children, params }: Props) {
           disableTransitionOnChange
         >
           <NextIntlClientProvider locale={locale} messages={messages}>
-            <AuthProvider>
-              <Header />
-              {children}
-              <Footer />
-            </AuthProvider>
+            <QueryProvider>
+              <AuthProvider>
+                <Header />
+                {children}
+                <Footer />
+              </AuthProvider>
+            </QueryProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

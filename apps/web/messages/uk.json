@@ -242,6 +242,24 @@
       "demoTrackerStep3": "На митниці",
       "demoTrackerStep4": "Доставлено клієнту",
       "miniCalculatorPlaceholder": "Міні-калькулятор — в наступній задачі"
+    },
+    "miniCalculator": {
+      "title": "Швидка оцінка",
+      "makeLabel": "Марка",
+      "modelLabel": "Модель",
+      "yearLabel": "Рік",
+      "conditionLabel": "Стан на аукціоні",
+      "avgPriceHint": "на основі даних Copart / IAAI",
+      "manualPriceLabel": "Введіть вашу ставку ($)",
+      "ctaButton": "Отримати точний розрахунок →",
+      "loadingError": "Не вдалося завантажити середню ціну — введіть вручну",
+      "fillAllFields": "Заповніть усі поля для оцінки",
+      "conditions": {
+        "runAndDrive": "На ходу",
+        "engineStart": "Мотор заводиться",
+        "stationary": "Не на ходу",
+        "enhancedVehicle": "Enhanced Vehicle"
+      }
     }
   },
   "Dashboard": {
