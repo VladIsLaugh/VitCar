@@ -96,6 +96,31 @@
     "orders": "{count, plural, one {order} other {orders}}"
   },
   "Landing": {
+    "cases": {
+      "title": "Our First Real Case.",
+      "photoPlaceholder": "Photo coming soon",
+      "item1Title": "Toyota Camry SE · 2021",
+      "item1Badge": "Run & Drive · Front damage · Copart NJ",
+      "item1SpecLabel1": "Auction price",
+      "item1SpecValue1": "$8,500",
+      "item1SpecLabel2": "Fees + shipping",
+      "item1SpecValue2": "$3,240",
+      "item1SpecLabel3": "Customs + service",
+      "item1SpecValue3": "$4,180",
+      "item1SpecLabel4": "Timeline",
+      "item1SpecValue4": "75 days",
+      "item1FinalPrice": "580,000 UAH",
+      "item1Quote": "I watched all repairs online. The car arrived better than expected.",
+      "item1ClientName": "Oleh",
+      "item1ClientCity": "Kyiv"
+    },
+    "testimonials": {
+      "title": "What clients say.",
+      "item1Name": "Oleh P.",
+      "item1City": "Kyiv",
+      "item1Initials": "OP",
+      "item1Text": "I was skeptical at first — importing a car from the USA seemed complicated and risky. But the team explained every step clearly, all costs were laid out before the auction, and I could watch the restoration process online. The car arrived on time and in better condition than I expected. I'll definitely recommend VitAuto to anyone considering this."
+    },
     "howItWorks": {
       "title": "How It Works",
       "step1Title": "Selection",
