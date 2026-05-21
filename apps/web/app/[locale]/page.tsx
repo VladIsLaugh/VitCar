@@ -4,6 +4,7 @@ import BenefitsSection from '@/components/landing/BenefitsSection';
 import CasesSection from '@/components/landing/CasesSection';
 import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import FaqSection from '@/components/landing/FaqSection';
+import CtaBandSection from '@/components/landing/CtaBandSection';
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
       <CasesSection />
       <TestimonialsSection />
       <FaqSection />
+      <CtaBandSection />
     </main>
   );
 }

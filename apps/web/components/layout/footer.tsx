@@ -45,20 +45,16 @@ export async function Footer() {
             <p className="text-sm leading-relaxed text-white/60 mb-5">{t('desc')}</p>
             <div className="flex gap-2.5">
               <a
-                href="https://t.me/vitauto_bot"
+                href="#"
                 className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-white/[.08] text-white/85 hover:bg-accent hover:text-white transition-colors"
                 aria-label="Telegram"
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 <TelegramIcon />
               </a>
               <a
-                href="https://instagram.com/vitauto"
+                href="#"
                 className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-white/[.08] text-white/85 hover:bg-accent hover:text-white transition-colors"
                 aria-label="Instagram"
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 <InstagramIcon />
               </a>
@@ -94,10 +90,7 @@ export async function Footer() {
             >
               {t('dashboard')}
             </Link>
-            <Link
-              href="/tracker"
-              className="text-sm text-white/[.78] hover:text-white transition-colors"
-            >
+            <Link href="#" className="text-sm text-white/[.78] hover:text-white transition-colors">
               {t('tracker')}
             </Link>
           </div>
@@ -107,34 +100,19 @@ export async function Footer() {
             <h4 className="text-[11px] uppercase tracking-[0.08em] text-white/45 font-mono font-medium mb-1.5">
               {t('company')}
             </h4>
-            <Link
-              href="/about"
-              className="text-sm text-white/[.78] hover:text-white transition-colors"
-            >
+            <Link href="#" className="text-sm text-white/[.78] hover:text-white transition-colors">
               {t('about')}
             </Link>
-            <Link
-              href="/team"
-              className="text-sm text-white/[.78] hover:text-white transition-colors"
-            >
+            <Link href="#" className="text-sm text-white/[.78] hover:text-white transition-colors">
               {t('team')}
             </Link>
-            <Link
-              href="/partners"
-              className="text-sm text-white/[.78] hover:text-white transition-colors"
-            >
+            <Link href="#" className="text-sm text-white/[.78] hover:text-white transition-colors">
               {t('partners')}
             </Link>
-            <Link
-              href="/careers"
-              className="text-sm text-white/[.78] hover:text-white transition-colors"
-            >
+            <Link href="#" className="text-sm text-white/[.78] hover:text-white transition-colors">
               {t('careers')}
             </Link>
-            <Link
-              href="/agreement"
-              className="text-sm text-white/[.78] hover:text-white transition-colors"
-            >
+            <Link href="#" className="text-sm text-white/[.78] hover:text-white transition-colors">
               {t('agreement')}
             </Link>
           </div>
@@ -144,13 +122,10 @@ export async function Footer() {
             <h4 className="text-[11px] uppercase tracking-[0.08em] text-white/45 font-mono font-medium mb-1.5">
               {t('contacts')}
             </h4>
-            <a
-              href="tel:+380670000000"
-              className="inline-flex items-center gap-1.5 text-sm text-white/[.78] hover:text-white transition-colors"
-            >
+            <span className="inline-flex items-center gap-1.5 text-sm text-white/[.78]">
               <Phone className="h-3.5 w-3.5 text-white/50" />
-              +380 67 000 0000
-            </a>
+              {t('phone')}
+            </span>
             <a
               href="mailto:hi@vitauto.ua"
               className="inline-flex items-center gap-1.5 text-sm text-white/[.78] hover:text-white transition-colors"
@@ -165,8 +140,6 @@ export async function Footer() {
             <a
               href="https://t.me/vitauto_bot"
               className="inline-flex items-center gap-1.5 text-sm text-[#10B981] hover:text-[#34D399] transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
             >
               <TelegramIcon />
               @vitauto_bot
@@ -178,17 +151,16 @@ export async function Footer() {
       {/* ── Bottom bar ────────────────────────────────── */}
       <div className="border-t border-white/[.08]">
         <div className="max-w-[1200px] mx-auto px-6 py-[18px] flex flex-wrap items-center justify-between gap-3 text-xs text-white/45 font-mono tracking-[0.02em]">
-          <span>{t('copyright')}</span>
-          <span className="opacity-80">{t('companyId')}</span>
           <span>
-            <Link
-              href="/privacy"
-              className="text-white/60 hover:text-white transition-colors mx-0.5"
-            >
+            © {new Date().getFullYear()} VitAuto. {t('allRightsReserved')}
+          </span>
+          <span className="opacity-80">{t('legal')}</span>
+          <span>
+            <Link href="#" className="text-white/60 hover:text-white transition-colors mx-0.5">
               {t('privacy')}
             </Link>
             {' · '}
-            <Link href="/terms" className="text-white/60 hover:text-white transition-colors mx-0.5">
+            <Link href="#" className="text-white/60 hover:text-white transition-colors mx-0.5">
               {t('terms')}
             </Link>
           </span>
