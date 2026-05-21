@@ -96,6 +96,42 @@
     "orders": "{count, plural, one {order} other {orders}}"
   },
   "Landing": {
+    "howItWorks": {
+      "title": "How It Works",
+      "step1Title": "Selection",
+      "step1Duration": "1–7 days",
+      "step1Desc": "We analyze Copart and IAAI lots based on your budget, requirements, and condition preferences — and present options for your approval.",
+      "step2Title": "Purchase",
+      "step2Duration": "1 day",
+      "step2Desc": "We bid on your behalf and purchase the lot. You receive full auction documents and payment confirmation.",
+      "step3Title": "Shipping",
+      "step3Duration": "30–45 days",
+      "step3Desc": "The car is loaded at a US port and shipped by container vessel to Odesa, Ukraine.",
+      "step4Title": "Customs Clearance",
+      "step4Duration": "5–10 days",
+      "step4Desc": "We handle all customs paperwork — duties, excise, and VAT — and provide a full itemised cost breakdown.",
+      "step5Title": "Restoration",
+      "step5Duration": "10–25 days",
+      "step5Desc": "Repair and detailing at our own workshop. You approve the work scope and cost before anything begins.",
+      "step6Title": "Handover",
+      "step6Duration": "1 day",
+      "step6Desc": "The car is delivered with all documents, Ukrainian registration, and plates — ready to drive."
+    },
+    "benefits": {
+      "title": "Why VitAuto",
+      "item1Title": "No Hidden Fees",
+      "item1Desc": "All costs are calculated before the auction. The price you see is the price you pay — no surprises.",
+      "item2Title": "Photo at Every Stage",
+      "item2Desc": "From auction lot photos to restoration progress — everything is visible in your personal dashboard.",
+      "item3Title": "Data, Not Promises",
+      "item3Desc": "Exchange rates and duty calculations are updated daily at the NBU exchange rate.",
+      "item4Title": "Personal Manager",
+      "item4Desc": "A dedicated manager guides you through every step and answers your questions at any stage.",
+      "item5Title": "Own Restoration Shop",
+      "item5Desc": "Quality controlled in-house — no third-party workshops, no hidden markups on repairs.",
+      "item6Title": "Delivery Across Ukraine",
+      "item6Desc": "We deliver to Kyiv, Lviv, Odesa, and other cities — straight to your door."
+    },
     "hero": {
       "badge": "● EXACT DATA · COPART · IAAI",
       "heading": "Car from the USA, turnkey — with a price <accent>to the penny</accent> before buying the lot.",
