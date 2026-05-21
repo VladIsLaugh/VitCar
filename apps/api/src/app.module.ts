@@ -7,6 +7,7 @@ import { HealthModule } from './modules/health/health.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { CalculatorModule } from './modules/calculator/calculator.module';
+import { LotsModule } from './modules/lots/lots.module';
 import { DebugModule } from './modules/debug/debug.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import configuration from './config/configuration';
@@ -24,6 +25,7 @@ import configuration from './config/configuration';
     AuthModule,
     UsersModule,
     CalculatorModule,
+    LotsModule,
     DebugModule,
   ],
   providers: [
