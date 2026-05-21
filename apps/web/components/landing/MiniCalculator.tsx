@@ -43,7 +43,7 @@ export default function MiniCalculator() {
       api.get<AvgPriceResponseDto>(
         `/lots/avg-price?make=${encodeURIComponent(make)}&model=${encodeURIComponent(model)}&year=${year}`
       ),
-    enabled: !!(make && model && year),
+    enabled: allFilled,
     staleTime: 1000 * 60 * 60,
   });
 
