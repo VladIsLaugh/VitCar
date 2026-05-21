@@ -97,10 +97,22 @@
   },
   "Landing": {
     "hero": {
-      "title": "Авто з США під ключ — з ціною до копійки ще до купівлі лота.",
-      "subtitle": "Введіть параметри — побачите розрахунок усіх етапів.",
-      "ctaPrimary": "Точний розрахунок",
-      "ctaSecondary": "Подивитись готові авто"
+      "badge": "● ТОЧНІ ДАНІ · COPART · IAAI",
+      "heading": "Авто з США під ключ — з ціною <accent>до копійки</accent> ще до купівлі лота.",
+      "subtitle": "Жодних прихованих платежів — прозорий розрахунок кожного етапу.",
+      "ctaPrimary": "Точний розрахунок →",
+      "ctaSecondary": "Переглянути готові авто ↗",
+      "statsCarsLabel": "Автомобілів доставлено",
+      "statsAvgDaysLabel": "Серед. термін доставки (дні)",
+      "statsClientsLabel": "Задоволених клієнтів",
+      "demoTrackerLabel": "ПРИКЛАД ТРЕКЕРА ЗАМОВЛЕНЬ",
+      "demoTrackerCar": "Toyota Camry 2021",
+      "demoTrackerLot": "Лот #US-2024-1847",
+      "demoTrackerStep1": "Придбано на аукціоні",
+      "demoTrackerStep2": "Відправлено з порту",
+      "demoTrackerStep3": "На митниці",
+      "demoTrackerStep4": "Доставлено клієнту",
+      "miniCalculatorPlaceholder": "Міні-калькулятор — в наступній задачі"
     }
   },
   "Dashboard": {

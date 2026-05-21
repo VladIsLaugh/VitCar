@@ -97,10 +97,22 @@
   },
   "Landing": {
     "hero": {
-      "title": "Cars from the USA, turnkey — with the price to the cent before you bid.",
-      "subtitle": "Enter the parameters — see a breakdown of every stage.",
-      "ctaPrimary": "Get exact quote",
-      "ctaSecondary": "Browse ready cars"
+      "badge": "● EXACT DATA · COPART · IAAI",
+      "heading": "Car from the USA, turnkey — with a price <accent>to the penny</accent> before buying the lot.",
+      "subtitle": "No hidden fees — transparent breakdown of every stage.",
+      "ctaPrimary": "Exact Calculation →",
+      "ctaSecondary": "View Available Cars ↗",
+      "statsCarsLabel": "Cars delivered",
+      "statsAvgDaysLabel": "Avg. delivery days",
+      "statsClientsLabel": "Satisfied clients",
+      "demoTrackerLabel": "EXAMPLE ORDER TRACKER",
+      "demoTrackerCar": "Toyota Camry 2021",
+      "demoTrackerLot": "Lot #US-2024-1847",
+      "demoTrackerStep1": "Purchased at auction",
+      "demoTrackerStep2": "Shipped from port",
+      "demoTrackerStep3": "In customs",
+      "demoTrackerStep4": "Delivered to client",
+      "miniCalculatorPlaceholder": "Mini Calculator — coming in next story"
     }
   },
   "Dashboard": {
