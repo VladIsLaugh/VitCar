@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './theme-toggle';
 import { LanguageSwitcher } from './language-switcher';
@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 
 export function HeaderClient() {
   const t = useTranslations('Nav');
+  const locale = useLocale();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -23,11 +24,11 @@ export function HeaderClient() {
   }, []);
 
   const translatedItems = [
-    { href: '/#how', id: 'how', label: t('howItWorks') },
-    { href: '/#cases', id: 'cases', label: t('cases') },
+    { href: `/${locale}#how-it-works`, id: 'how', label: t('howItWorks') },
+    { href: `/${locale}#cases`, id: 'cases', label: t('cases') },
     { href: '/calculator', id: 'calculator', label: t('calculator') },
-    { href: '/#faq', id: 'faq', label: t('faq') },
-    { href: '/#contacts', id: 'contacts', label: t('contacts') },
+    { href: `/${locale}#faq`, id: 'faq', label: t('faq') },
+    { href: `/${locale}#contacts`, id: 'contacts', label: t('contacts') },
   ];
 
   return (
