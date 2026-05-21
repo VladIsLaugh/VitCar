@@ -242,6 +242,24 @@
       "demoTrackerStep3": "In customs",
       "demoTrackerStep4": "Delivered to client",
       "miniCalculatorPlaceholder": "Mini Calculator — coming in next story"
+    },
+    "miniCalculator": {
+      "title": "Quick Estimate",
+      "makeLabel": "Make",
+      "modelLabel": "Model",
+      "yearLabel": "Year",
+      "conditionLabel": "Auction condition",
+      "avgPriceHint": "based on Copart / IAAI data",
+      "manualPriceLabel": "Enter your bid estimate ($)",
+      "ctaButton": "Get precise calculation →",
+      "loadingError": "Couldn't load average price — enter manually",
+      "fillAllFields": "Fill all fields to see an estimate",
+      "conditions": {
+        "runAndDrive": "Run & Drive",
+        "engineStart": "Engine Start",
+        "stationary": "Stationary",
+        "enhancedVehicle": "Enhanced Vehicle"
+      }
     }
   },
   "Dashboard": {
