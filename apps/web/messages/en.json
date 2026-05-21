@@ -82,7 +82,10 @@
     "copyright": "© 2026 VitAuto. All rights reserved.",
     "companyId": "Company ID: [placeholder]",
     "privacy": "Privacy",
-    "terms": "Terms"
+    "terms": "Terms",
+    "allRightsReserved": "All rights reserved.",
+    "legal": "EDRPOU: [TBD] · MFA LICENCE: [TBD]",
+    "phone": "[Phone TBD]"
   },
   "Common": {
     "save": "Save",
@@ -96,6 +99,16 @@
     "orders": "{count, plural, one {order} other {orders}}"
   },
   "Landing": {
+    "ctaBand": {
+      "badge": "● READY TO CALCULATE?",
+      "title": "Enter parameters — and in 30 seconds you'll see the turnkey price.",
+      "subtitle": "No registration, no obligations. The calculator shows all payments — auction, shipping, customs, our service — to the dollar.",
+      "makeModelLabel": "Make & Model",
+      "makeModelPlaceholder": "Toyota Camry",
+      "lotPriceLabel": "Budget / Lot price",
+      "lotPricePlaceholder": "8500",
+      "submitButton": "Calculate Cost →"
+    },
     "faq": {
       "title": "Things we get asked most often.",
       "subtitle": "Didn't find an answer? Message a manager — we'll respond within a few hours.",

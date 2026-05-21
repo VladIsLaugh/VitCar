@@ -82,7 +82,10 @@
     "copyright": "© 2026 VitAuto. Усі права захищені.",
     "companyId": "ID компанії: [placeholder]",
     "privacy": "Privacy",
-    "terms": "Terms"
+    "terms": "Terms",
+    "allRightsReserved": "Усі права захищені.",
+    "legal": "ЄДРПОУ: [TBD] · ЛІЦЕНЗІЯ МЗС: [TBD]",
+    "phone": "[Телефон TBD]"
   },
   "Common": {
     "save": "Зберегти",
@@ -96,6 +99,16 @@
     "orders": "{count, plural, one {замовлення} few {замовлення} many {замовлень} other {замовлень}}"
   },
   "Landing": {
+    "ctaBand": {
+      "badge": "● ГОТОВІ РОЗРАХУВАТИ?",
+      "title": "Введіть параметри — і за 30 секунд побачите ціну під ключ.",
+      "subtitle": "Без реєстрації, без зобов'язань. Калькулятор показує всі платежі — аукціон, доставка, митниця, наш сервіс — до долара.",
+      "makeModelLabel": "Марка та модель",
+      "makeModelPlaceholder": "Toyota Camry",
+      "lotPriceLabel": "Бюджет / Ціна лота",
+      "lotPricePlaceholder": "8500",
+      "submitButton": "Розрахувати вартість →"
+    },
     "faq": {
       "title": "Найчастіші запитання.",
       "subtitle": "Не знайшли відповідь? Напишіть менеджеру — відповімо протягом кількох годин.",
