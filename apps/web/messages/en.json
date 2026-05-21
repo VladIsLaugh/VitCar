@@ -99,6 +99,7 @@
     "orders": "{count, plural, one {order} other {orders}}"
   },
   "Landing": {
+    "stickyCtaButton": "Calculate →",
     "ctaBand": {
       "badge": "● READY TO CALCULATE?",
       "title": "Enter parameters — and in 30 seconds you'll see the turnkey price.",
