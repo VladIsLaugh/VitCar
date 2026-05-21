@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import type { AvgPriceResponseDto } from '@vitauto/shared-types';
 
 interface StubEntry {
@@ -18,10 +18,6 @@ export class LotsService {
   ];
 
   async getAvgPrice(make: string, model: string, year: number): Promise<AvgPriceResponseDto> {
-    if (!make || !model) {
-      throw new BadRequestException('make and model are required');
-    }
-
     const match = this.STUB_DATA.find(
       (d) => d.make === make.toLowerCase() && d.model === model.toLowerCase() && d.year === year
     );

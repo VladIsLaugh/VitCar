@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { BadRequestException } from '@nestjs/common';
 import { LotsService } from './lots.service';
 
 describe('LotsService', () => {
@@ -37,14 +36,6 @@ describe('LotsService', () => {
     it('returns null for known make/model with wrong year', async () => {
       const result = await service.getAvgPrice('Toyota', 'Camry', 2019);
       expect(result).toEqual({ avgPrice: null, sampleSize: 0, currency: 'USD' });
-    });
-
-    it('throws BadRequestException when make is empty', async () => {
-      await expect(service.getAvgPrice('', 'Camry', 2021)).rejects.toThrow(BadRequestException);
-    });
-
-    it('throws BadRequestException when model is empty', async () => {
-      await expect(service.getAvgPrice('Toyota', '', 2021)).rejects.toThrow(BadRequestException);
     });
   });
 });
