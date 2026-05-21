@@ -84,8 +84,8 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "allRightsReserved": "Усі права захищені.",
-    "legal": "ЄДРПОУ: [TBD] · ЛІЦЕНЗІЯ МЗС: [TBD]",
-    "phone": "[Телефон TBD]"
+    "legal": "",
+    "phone": ""
   },
   "Common": {
     "save": "Зберегти",
@@ -242,6 +242,10 @@
       "demoTrackerStep3": "На митниці",
       "demoTrackerStep4": "Доставлено клієнту",
       "miniCalculatorPlaceholder": "Міні-калькулятор — в наступній задачі"
+    },
+    "meta": {
+      "title": "VitAuto — Авто з аукціонів США під ключ | Прозора ціна до копійки",
+      "description": "Повний цикл імпорту авто з аукціонів Copart та IAAI в Україну. Прозорий розрахунок усіх витрат до копійки до купівлі лота. Жодних прихованих платежів."
     },
     "miniCalculator": {
       "title": "Швидка оцінка",
