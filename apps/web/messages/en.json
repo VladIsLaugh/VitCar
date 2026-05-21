@@ -84,8 +84,8 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "allRightsReserved": "All rights reserved.",
-    "legal": "EDRPOU: [TBD] · MFA LICENCE: [TBD]",
-    "phone": "[Phone TBD]"
+    "legal": "",
+    "phone": ""
   },
   "Common": {
     "save": "Save",
@@ -242,6 +242,10 @@
       "demoTrackerStep3": "In customs",
       "demoTrackerStep4": "Delivered to client",
       "miniCalculatorPlaceholder": "Mini Calculator — coming in next story"
+    },
+    "meta": {
+      "title": "VitAuto — Cars from US Auctions, Turnkey | Transparent Price to the Penny",
+      "description": "Full-cycle import of cars from Copart and IAAI auctions to Ukraine. Transparent breakdown of all costs to the penny before buying the lot. No hidden fees."
     },
     "miniCalculator": {
       "title": "Quick Estimate",

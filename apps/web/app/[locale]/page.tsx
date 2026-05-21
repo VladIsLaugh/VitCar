@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import HeroSection from '@/components/landing/HeroSection';
 import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import BenefitsSection from '@/components/landing/BenefitsSection';
@@ -14,19 +15,15 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const isUk = locale === 'uk';
+  const t = await getTranslations({ locale, namespace: 'Landing.meta' });
 
   return {
-    title: isUk
-      ? 'VitAuto — Авто з аукціонів США під ключ | Прозора ціна до копійки'
-      : 'VitAuto — Cars from US Auctions, Turnkey | Transparent Price to the Penny',
-    description: isUk
-      ? 'Повний цикл імпорту авто з аукціонів Copart та IAAI. Прозорий розрахунок усіх витрат до копійки до покупки лота.'
-      : 'Full-cycle import of cars from Copart and IAAI auctions. Transparent breakdown of all costs to the penny before buying the lot.',
+    title: t('title'),
+    description: t('description'),
     openGraph: {
       images: ['/og-landing.jpg'],
       type: 'website',
-      locale: isUk ? 'uk_UA' : 'en_US',
+      locale: locale === 'uk' ? 'uk_UA' : 'en_US',
     },
     twitter: { card: 'summary_large_image' },
   };

@@ -122,10 +122,12 @@ export async function Footer() {
             <h4 className="text-[11px] uppercase tracking-[0.08em] text-white/45 font-mono font-medium mb-1.5">
               {t('contacts')}
             </h4>
-            <span className="inline-flex items-center gap-1.5 text-sm text-white/[.78]">
-              <Phone className="h-3.5 w-3.5 text-white/50" />
-              {t('phone')}
-            </span>
+            {t('phone') && (
+              <span className="inline-flex items-center gap-1.5 text-sm text-white/[.78]">
+                <Phone className="h-3.5 w-3.5 text-white/50" />
+                {t('phone')}
+              </span>
+            )}
             <a
               href="mailto:hi@vitauto.ua"
               className="inline-flex items-center gap-1.5 text-sm text-white/[.78] hover:text-white transition-colors"
@@ -154,7 +156,7 @@ export async function Footer() {
           <span>
             © {new Date().getFullYear()} VitAuto. {t('allRightsReserved')}
           </span>
-          <span className="opacity-80">{t('legal')}</span>
+          {t('legal') && <span className="opacity-80">{t('legal')}</span>}
           <span>
             <Link href="#" className="text-white/60 hover:text-white transition-colors mx-0.5">
               {t('privacy')}
