@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import type { PrismaService } from '../prisma/prisma.service';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import (emitDecoratorMetadata)
+import { PrismaService } from '../prisma/prisma.service';
 
 @Controller('health')
 export class HealthController {
