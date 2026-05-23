@@ -1,5 +1,29 @@
 import type { UsPort } from './enums';
 
+export interface CalculationBreakdown {
+  lotPrice: number;
+  auctionBuyerFee: number;
+  auctionProxyFee: number;
+  auctionFixedFees: number;
+  totalAuctionFees: number;
+  seaShipping: number;
+  ukraineDelivery: number;
+  customsDuty: number;
+  customsExcise: number;
+  customsVat: number;
+  totalCustoms: number;
+  pensionFund: number;
+  registration: number;
+  totalCost: number;
+}
+
+export interface ExchangeRates {
+  usdUah: number;
+  eurUah: number;
+  eurUsd: number;
+  updatedAt: string;
+}
+
 export type FeeRow = {
   min: number;
   max: number;

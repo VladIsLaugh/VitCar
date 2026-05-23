@@ -1,17 +1,6 @@
 import { IsEnum, IsInt, IsNumber, IsOptional, IsPositive, Max, Min } from 'class-validator';
-import { AuctionCondition, AuctionSource, CarSize, FuelType, UsPort } from './enums';
-
-export interface CalculationInputs {
-  lotPrice: number;
-  auctionSource: AuctionSource;
-  auctionCondition: AuctionCondition;
-  usPort: UsPort;
-  carSize: CarSize;
-  fuelType: FuelType;
-  year: number;
-  engineVolume: number;
-  batteryCapacity?: number;
-}
+import { AuctionCondition, AuctionSource, FuelType } from '@vitauto/shared-types';
+import type { CarSize, UsPort, CalculationInputs } from '@vitauto/shared-types';
 
 export class CalculationInputsDto implements CalculationInputs {
   @IsNumber()
@@ -24,10 +13,10 @@ export class CalculationInputsDto implements CalculationInputs {
   @IsEnum(AuctionCondition)
   auctionCondition!: AuctionCondition;
 
-  @IsEnum(UsPort)
+  @IsEnum(['CHI', 'HOU', 'LA', 'MIA', 'NY', 'SAV', 'SEATTLE'])
   usPort!: UsPort;
 
-  @IsEnum(CarSize)
+  @IsEnum(['small', 'big'])
   carSize!: CarSize;
 
   @IsEnum(FuelType)

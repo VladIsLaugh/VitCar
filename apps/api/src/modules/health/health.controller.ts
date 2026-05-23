@@ -1,7 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import (emitDecoratorMetadata)
+import { PrismaService } from '../prisma/prisma.service';
 
 @Controller('health')
 export class HealthController {
+  constructor(private readonly prisma: PrismaService) {}
+
   @Get()
   check() {
     return {
@@ -13,11 +17,12 @@ export class HealthController {
   }
 
   @Get('db')
-  checkDb() {
+  async checkDb() {
+    await this.prisma.$queryRaw`SELECT 1`;
     return {
       status: 'ok',
       timestamp: new Date().toISOString(),
-      database: 'pending — Prisma not yet configured',
+      database: 'connected',
     };
   }
 }
