@@ -13,11 +13,16 @@ import {
 import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
-import type { RegisterDto } from './dto/register.dto';
-import type { LoginDto } from './dto/login.dto';
-import type { VerifyEmailDto } from './dto/verify-email.dto';
-import type { ForgotPasswordDto } from './dto/forgot-password.dto';
-import type { ResetPasswordDto } from './dto/reset-password.dto';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS emitDecoratorMetadata needs value imports for @Body() validation
+import { RegisterDto } from './dto/register.dto';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS emitDecoratorMetadata needs value imports for @Body() validation
+import { LoginDto } from './dto/login.dto';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS emitDecoratorMetadata needs value imports for @Body() validation
+import { VerifyEmailDto } from './dto/verify-email.dto';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS emitDecoratorMetadata needs value imports for @Body() validation
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS emitDecoratorMetadata needs value imports for @Body() validation
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';

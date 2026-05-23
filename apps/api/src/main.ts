@@ -29,7 +29,7 @@ async function bootstrap() {
       if (allowedOrigins.has(origin)) return callback(null, true);
       // Allow all Vercel preview deployments (*.vercel.app)
       if (origin.endsWith('.vercel.app')) return callback(null, true);
-      callback(new Error(`CORS: origin ${origin} not allowed`));
+      callback(null, false);
     },
     credentials: true,
   });

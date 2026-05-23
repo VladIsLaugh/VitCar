@@ -13,6 +13,25 @@ enum Role {
   ADMIN
 }
 
+enum AuctionCondition {
+  RUN_AND_DRIVE
+  ENGINE_START
+  STATIONARY
+  ENHANCED_VEHICLE
+}
+
+enum FuelType {
+  PETROL
+  DIESEL
+  HYBRID
+  ELECTRIC
+}
+
+enum AuctionSource {
+  COPART
+  IAAI
+}
+
 model User {
   id                  String    @id @default(uuid())
   email               String    @unique
@@ -34,6 +53,7 @@ model User {
   refreshTokens           RefreshToken[]
   emailVerificationTokens EmailVerificationToken[]
   passwordResetTokens     PasswordResetToken[]
+  calculations            Calculation[]
 }
 
 model RefreshToken {
@@ -75,4 +95,29 @@ model PasswordResetToken {
 
   @@index([userId])
   @@index([token])
+}
+
+model Calculation {
+  id               String    @id @default(cuid())
+  userId           String?
+  user             User?     @relation(fields: [userId], references: [id])
+  shareToken       String    @unique @default(cuid())
+  inputParams      Json
+  result           Json
+  settingsSnapshot Json
+  createdAt        DateTime  @default(now())
+  expiresAt        DateTime?
+}
+
+model CalculationSettings {
+  id            String    @id @default(cuid())
+  category      String
+  key           String
+  data          Json
+  effectiveFrom DateTime  @default(now())
+  effectiveTo   DateTime?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+
+  @@unique([category, key, effectiveFrom])
 }

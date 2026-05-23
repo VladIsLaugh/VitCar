@@ -42,3 +42,6 @@ coverage
 # Prisma
 *.db
 *.db-journal
+
+# Node.js compile cache
+node-compile-cache/
