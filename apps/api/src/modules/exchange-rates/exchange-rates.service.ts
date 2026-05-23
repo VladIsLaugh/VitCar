@@ -1,6 +1,7 @@
 import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import type { ExchangeRates } from '@vitauto/shared-types';
-import type { RedisService } from '../redis/redis.service';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import
+import { RedisService } from '../redis/redis.service';
 
 const REDIS_KEY = 'exchange:rates';
 const NBU_URL = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json';

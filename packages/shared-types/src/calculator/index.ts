@@ -19,7 +19,7 @@ export enum AuctionSource {
 
 export type CarSize = 'small' | 'big';
 
-export type UsPort = 'CHI' | 'HOU' | 'LA' | 'MIA' | 'NY' | 'SAV' | 'SEATLE';
+export type UsPort = 'CHI' | 'HOU' | 'LA' | 'MIA' | 'NY' | 'SAV' | 'SEATTLE';
 
 export interface CalculationInputs {
   lotPrice: number;

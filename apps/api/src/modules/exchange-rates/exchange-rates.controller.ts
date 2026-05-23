@@ -1,5 +1,6 @@
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
-import type { ExchangeRatesService } from './exchange-rates.service';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import
+import { ExchangeRatesService } from './exchange-rates.service';
 
 @Controller('exchange-rates')
 export class ExchangeRatesController {

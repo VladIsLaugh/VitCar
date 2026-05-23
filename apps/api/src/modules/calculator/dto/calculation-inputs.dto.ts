@@ -13,7 +13,7 @@ export class CalculationInputsDto implements CalculationInputs {
   @IsEnum(AuctionCondition)
   auctionCondition!: AuctionCondition;
 
-  @IsEnum(['CHI', 'HOU', 'LA', 'MIA', 'NY', 'SAV', 'SEATLE'])
+  @IsEnum(['CHI', 'HOU', 'LA', 'MIA', 'NY', 'SAV', 'SEATTLE'])
   usPort!: UsPort;
 
   @IsEnum(['small', 'big'])

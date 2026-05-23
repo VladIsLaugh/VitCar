@@ -76,7 +76,7 @@ const SETTINGS: SettingsSnapshot = {
       MIA: { small: 775, big: 1000 },
       NY: { small: 775, big: 1000 },
       SAV: { small: 750, big: 966 },
-      SEATLE: { small: 1900, big: 2300 },
+      SEATTLE: { small: 1900, big: 2300 },
     },
   },
   UKRAINE_DELIVERY: {
