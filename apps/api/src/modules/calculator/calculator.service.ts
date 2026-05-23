@@ -71,6 +71,33 @@ export class CalculatorService {
     return this.stripHiddenFields(row);
   }
 
+  async findCalculationForPdf(
+    id: string,
+    requestingUserId: string | null
+  ): Promise<{
+    id: string;
+    inputParams: CalculationInputs;
+    result: CalculationBreakdown;
+    createdAt: Date;
+  }> {
+    const row = await this.prisma.calculation.findUnique({ where: { id } });
+
+    if (!row || (row.expiresAt && row.expiresAt < new Date())) {
+      throw new NotFoundException('Calculation not found');
+    }
+
+    if (row.userId && row.userId !== requestingUserId) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    return {
+      id: row.id,
+      inputParams: row.inputParams as unknown as CalculationInputs,
+      result: row.result as unknown as CalculationBreakdown,
+      createdAt: row.createdAt,
+    };
+  }
+
   async findByShareToken(token: string): Promise<object> {
     const row = await this.prisma.calculation.findUnique({ where: { shareToken: token } });
 
