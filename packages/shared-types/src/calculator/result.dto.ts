@@ -103,11 +103,7 @@ export interface CalculationResultDto {
   totalUSD: number;
   totalUAH: number;
   totalEUR: number;
-  rates: {
-    usdUah: number;
-    eurUsd: number;
-    ratesDate: string;
-  };
+  rates: ExchangeRates;
   customsValue: number;
   carAge: number;
 }

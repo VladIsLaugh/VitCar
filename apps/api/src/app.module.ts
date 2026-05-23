@@ -10,6 +10,7 @@ import { UsersModule } from './modules/users/users.module';
 import { CalculatorModule } from './modules/calculator/calculator.module';
 import { LotsModule } from './modules/lots/lots.module';
 import { DebugModule } from './modules/debug/debug.module';
+import { VehiclesModule } from './modules/vehicles/vehicles.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { RedisModule } from './modules/redis/redis.module';
 import configuration from './config/configuration';
@@ -31,6 +32,7 @@ import configuration from './config/configuration';
     CalculatorModule,
     LotsModule,
     DebugModule,
+    VehiclesModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

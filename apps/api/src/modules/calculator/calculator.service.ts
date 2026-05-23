@@ -1,10 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  Logger,
-  NotFoundException,
-  ServiceUnavailableException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import type { CalculationBreakdown, CalculationInputs, ExchangeRates } from '@vitauto/shared-types';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import
@@ -106,10 +100,8 @@ export class CalculatorService {
     return snapshot as unknown as SettingsSnapshot;
   }
 
-  private async getRates(): Promise<ExchangeRates> {
-    const rates = await this.exchangeRates.getRates();
-    if (!rates) throw new ServiceUnavailableException('Exchange rates temporarily unavailable');
-    return rates;
+  private getRates(): Promise<ExchangeRates> {
+    return this.exchangeRates.getRates();
   }
 
   private stripHiddenFields(row: object): object {
