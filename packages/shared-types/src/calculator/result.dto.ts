@@ -19,9 +19,8 @@ export interface CalculationBreakdown {
 
 export interface ExchangeRates {
   usdUah: number;
-  eurUah: number;
   eurUsd: number;
-  updatedAt: string;
+  ratesDate: string;
 }
 
 export type FeeRow = {

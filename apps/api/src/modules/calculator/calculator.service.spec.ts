@@ -119,9 +119,8 @@ const SETTINGS: SettingsSnapshot = {
 
 const RATES: ExchangeRates = {
   usdUah: 41.5,
-  eurUah: 44.82,
   eurUsd: 1.08,
-  updatedAt: '2026-01-01T00:00:00Z',
+  ratesDate: '2026-01-01',
 };
 
 describe('CalculationEngineService', () => {

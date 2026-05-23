@@ -107,7 +107,7 @@ export class CalculatorService {
   }
 
   private async getRates(): Promise<ExchangeRates> {
-    const rates = await this.exchangeRates.getCurrent();
+    const rates = await this.exchangeRates.getRates();
     if (!rates) throw new ServiceUnavailableException('Exchange rates temporarily unavailable');
     return rates;
   }
