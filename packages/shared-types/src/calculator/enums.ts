@@ -1,20 +1,20 @@
 export enum FuelType {
-  PETROL = 'petrol',
-  DIESEL = 'diesel',
-  ELECTRIC = 'electric',
-  HYBRID = 'hybrid',
+  PETROL = 'PETROL',
+  DIESEL = 'DIESEL',
+  ELECTRIC = 'ELECTRIC',
+  HYBRID = 'HYBRID',
 }
 
 export enum AuctionCondition {
-  RUN_AND_DRIVE = 'run_and_drive',
-  ENGINE_START = 'engine_start',
-  STATIONARY = 'stationary',
-  ENHANCED_VEHICLE = 'enhanced_vehicle',
+  RUN_AND_DRIVE = 'RUN_AND_DRIVE',
+  ENGINE_START = 'ENGINE_START',
+  STATIONARY = 'STATIONARY',
+  ENHANCED_VEHICLE = 'ENHANCED_VEHICLE',
 }
 
 export enum AuctionSource {
-  COPART = 'copart',
-  IAAI = 'iaai',
+  COPART = 'COPART',
+  IAAI = 'IAAI',
 }
 
 export enum CarSize {
@@ -23,9 +23,11 @@ export enum CarSize {
 }
 
 export enum UsPort {
-  BALTIMORE = 'baltimore',
-  BRUNSWICK = 'brunswick',
-  HOUSTON = 'houston',
-  LOS_ANGELES = 'los_angeles',
-  NEW_JERSEY = 'new_jersey',
+  CHI = 'CHI',
+  HOU = 'HOU',
+  LA = 'LA',
+  MIA = 'MIA',
+  NY = 'NY',
+  SAV = 'SAV',
+  SEATTLE = 'SEATTLE',
 }

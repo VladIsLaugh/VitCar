@@ -1,58 +1,37 @@
-import { IsEnum, IsInt, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
-import { AuctionCondition, AuctionSource, CarSize, FuelType } from './enums';
+import { IsEnum, IsInt, IsNumber, IsOptional, IsPositive, Max, Min } from 'class-validator';
+import { AuctionCondition, AuctionSource, CarSize, FuelType, UsPort } from './enums';
 
 export class CalculationInputsDto {
-  @IsString()
-  make!: string;
-
-  @IsString()
-  model!: string;
-
-  @IsInt()
-  @Min(2000)
-  @Max(2030)
-  year!: number;
-
-  @IsEnum(FuelType)
-  fuelType!: FuelType;
-
-  @IsEnum(AuctionCondition)
-  condition!: AuctionCondition;
+  @IsNumber()
+  @IsPositive()
+  lotPrice!: number;
 
   @IsEnum(AuctionSource)
   auctionSource!: AuctionSource;
 
-  @IsString()
-  usaState!: string;
+  @IsEnum(AuctionCondition)
+  auctionCondition!: AuctionCondition;
+
+  @IsEnum(UsPort)
+  usPort!: UsPort;
 
   @IsEnum(CarSize)
   carSize!: CarSize;
 
-  @IsNumber()
-  @Min(0)
-  lotPrice!: number;
+  @IsEnum(FuelType)
+  fuelType!: FuelType;
 
-  @IsNumber()
-  @Min(0)
-  @IsOptional()
-  engineVolumeL?: number;
+  @IsInt()
+  @Min(1900)
+  @Max(new Date().getFullYear() + 1)
+  year!: number;
 
-  @IsNumber()
+  @IsInt()
   @Min(0)
-  @IsOptional()
-  batteryKwh?: number;
+  engineVolume!: number;
 
+  @IsOptional()
   @IsNumber()
-  @Min(0)
-  @IsOptional()
-  mileage?: number;
-
-  @IsString()
-  @IsOptional()
-  vin?: string;
-
-  @IsNumber()
-  @Min(0)
-  @IsOptional()
-  repairPrice?: number;
+  @IsPositive()
+  batteryCapacity?: number;
 }

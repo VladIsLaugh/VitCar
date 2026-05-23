@@ -8,16 +8,26 @@ export type FeeRow = {
 };
 
 export interface CopartFixedFees {
-  gateFee: number;
-  titleFee: number;
+  internetBidFee: number;
+  gatePass: number;
+  latePayment: number;
   environmentalFee: number;
 }
 
 export interface IaaiFixedFees {
-  documentationFee: number;
+  processingFee: number;
+  destinationFee: number;
+  gatePass: number;
+  environmentalFee: number;
 }
 
-export type UkraineDelivery = Record<string, { C: number; M?: number }>;
+export interface UkraineDelivery {
+  expeditor: number;
+  deliveryToUA: number;
+  terminalFees: number;
+  brokerFee: number;
+  deliveryToSTO: number;
+}
 
 export interface Registration {
   certification: number;
@@ -25,11 +35,9 @@ export interface Registration {
 }
 
 export interface PensionFundThresholds {
-  tier1MaxUah: number;
-  tier2MaxUah: number;
-  rate1: number;
-  rate2: number;
-  rate3: number;
+  low: { maxUAH: number; rate: number };
+  mid: { maxUAH: number; rate: number };
+  high: { rate: number };
 }
 
 export interface CompanyFee {

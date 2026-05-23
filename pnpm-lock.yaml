@@ -321,14 +321,16 @@ importers:
         version: 4.1.6(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/ui@4.1.6)(vite@8.0.12(@types/node@22.19.17)(jiti@2.6.1)(terser@5.46.2)(yaml@2.8.4))
 
   packages/shared-types:
-    dependencies:
+    devDependencies:
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
       class-validator:
         specifier: ^0.14.1
         version: 0.14.4
-    devDependencies:
+      reflect-metadata:
+        specifier: ^0.2.0
+        version: 0.2.2
       typescript:
         specifier: ^5.8.3
         version: 5.9.3
