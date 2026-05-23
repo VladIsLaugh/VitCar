@@ -334,6 +334,15 @@ importers:
 
   packages/shared-types:
     devDependencies:
+      class-transformer:
+        specifier: ^0.5.1
+        version: 0.5.1
+      class-validator:
+        specifier: ^0.14.1
+        version: 0.14.4
+      reflect-metadata:
+        specifier: ^0.2.0
+        version: 0.2.2
       typescript:
         specifier: ^5.8.3
         version: 5.9.3

@@ -1,5 +1,5 @@
 import { CalculationEngineService } from './calculation-engine.service';
-import { AuctionCondition, AuctionSource, FuelType } from '@vitauto/shared-types';
+import { AuctionCondition, AuctionSource, CarSize, FuelType, UsPort } from '@vitauto/shared-types';
 import type { CalculationInputs, ExchangeRates } from '@vitauto/shared-types';
 import type { SettingsSnapshot } from './calculation-engine.service';
 
@@ -140,8 +140,8 @@ describe('CalculationEngineService', () => {
       lotPrice: 8500,
       auctionSource: AuctionSource.COPART,
       auctionCondition: AuctionCondition.RUN_AND_DRIVE,
-      usPort: 'NY',
-      carSize: 'small',
+      usPort: UsPort.NY,
+      carSize: CarSize.SMALL,
       fuelType: FuelType.PETROL,
       year: 2021,
       engineVolume: 2500,
@@ -204,8 +204,8 @@ describe('CalculationEngineService', () => {
       lotPrice: 30000,
       auctionSource: AuctionSource.COPART,
       auctionCondition: AuctionCondition.RUN_AND_DRIVE,
-      usPort: 'NY',
-      carSize: 'small',
+      usPort: UsPort.NY,
+      carSize: CarSize.SMALL,
       fuelType: FuelType.ELECTRIC,
       year: 2023,
       engineVolume: 0,
@@ -233,8 +233,8 @@ describe('CalculationEngineService', () => {
       lotPrice: 15000,
       auctionSource: AuctionSource.COPART,
       auctionCondition: AuctionCondition.RUN_AND_DRIVE,
-      usPort: 'HOU',
-      carSize: 'small',
+      usPort: UsPort.HOU,
+      carSize: CarSize.SMALL,
       fuelType: FuelType.HYBRID,
       year: 2020,
       engineVolume: 2500,
@@ -252,8 +252,8 @@ describe('CalculationEngineService', () => {
         lotPrice: 60000,
         auctionSource: AuctionSource.COPART,
         auctionCondition: AuctionCondition.RUN_AND_DRIVE,
-        usPort: 'LA',
-        carSize: 'big',
+        usPort: UsPort.LA,
+        carSize: CarSize.BIG,
         fuelType: FuelType.PETROL,
         year: 2022,
         engineVolume: 3000,

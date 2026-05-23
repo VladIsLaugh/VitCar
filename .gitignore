@@ -8,6 +8,7 @@ dist
 out
 build
 *.tsbuildinfo
+node-compile-cache
 
 # Turborepo
 .turbo
