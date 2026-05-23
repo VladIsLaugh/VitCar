@@ -16,6 +16,10 @@
     "dev": "tsc --watch",
     "clean": "rm -rf dist"
   },
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1"
+  },
   "devDependencies": {
     "typescript": "^5.8.3"
   }
