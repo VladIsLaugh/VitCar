@@ -11,6 +11,10 @@ import {
   COMPANY_FEE,
   REGISTRATION,
   PENSION_FUND_THRESHOLDS,
+  PETROL_EXCISE,
+  DIESEL_EXCISE,
+  EV_EXCISE_RATE,
+  HYBRID_EXCISE,
 } from './seed-data/calculator.constants';
 
 const prisma = new PrismaClient();
@@ -30,6 +34,10 @@ async function seedCalculatorSettings() {
     { category: 'COMPANY_FEE', key: 'COMPANY_FEE', data: COMPANY_FEE },
     { category: 'REGISTRATION', key: 'REGISTRATION', data: REGISTRATION },
     { category: 'CUSTOMS', key: 'PENSION_FUND_THRESHOLDS', data: PENSION_FUND_THRESHOLDS },
+    { category: 'CUSTOMS', key: 'PETROL_EXCISE', data: PETROL_EXCISE },
+    { category: 'CUSTOMS', key: 'DIESEL_EXCISE', data: DIESEL_EXCISE },
+    { category: 'CUSTOMS', key: 'EV_EXCISE_RATE', data: EV_EXCISE_RATE },
+    { category: 'CUSTOMS', key: 'HYBRID_EXCISE', data: HYBRID_EXCISE },
   ];
 
   for (const setting of settings) {

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './common/guards/roles.guard';
@@ -10,6 +11,7 @@ import { CalculatorModule } from './modules/calculator/calculator.module';
 import { LotsModule } from './modules/lots/lots.module';
 import { DebugModule } from './modules/debug/debug.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
+import { RedisModule } from './modules/redis/redis.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -19,8 +21,10 @@ import configuration from './config/configuration';
       envFilePath: '.env',
       load: [configuration],
     }),
+    ScheduleModule.forRoot(),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 10 }]),
     PrismaModule,
+    RedisModule,
     HealthModule,
     AuthModule,
     UsersModule,

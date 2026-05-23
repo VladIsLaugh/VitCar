@@ -128,7 +128,7 @@ export const SEA_LOGISTIC = {
   MIA: { small: 775, big: 1000 },
   NY: { small: 775, big: 1000 },
   SAV: { small: 750, big: 966 },
-  SEATLE: { small: 1900, big: 2300 },
+  SEATTLE: { small: 1900, big: 2300 },
 };
 
 export const UKRAINE_DELIVERY = {
@@ -154,3 +154,29 @@ export const PENSION_FUND_THRESHOLDS = {
   mid: { maxUAH: 965120, rate: 0.04 },
   high: { rate: 0.05 },
 };
+
+// ratePerL: EUR per litre of displacement per year of car age
+// maxCC: upper bound of tier in cc; null = no upper bound
+export const PETROL_EXCISE = {
+  tiers: [
+    { maxCC: 1000, ratePerL: 50 },
+    { maxCC: 1500, ratePerL: 75 },
+    { maxCC: 2000, ratePerL: 100 },
+    { maxCC: 3000, ratePerL: 150 },
+    { maxCC: null, ratePerL: 200 },
+  ],
+};
+
+export const DIESEL_EXCISE = {
+  tiers: [
+    { maxCC: 1500, ratePerL: 75 },
+    { maxCC: 2500, ratePerL: 150 },
+    { maxCC: null, ratePerL: 200 },
+  ],
+};
+
+// EV: 1 EUR per kWh of battery capacity (flat, no age multiplier per UA 2026 law)
+export const EV_EXCISE_RATE = { eurPerKwh: 1 };
+
+// Hybrid: fixed EUR amount per vehicle (no engine/age factor)
+export const HYBRID_EXCISE = { eurFixed: 100 };
