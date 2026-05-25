@@ -15,14 +15,13 @@ import type { AuctionCondition, CarSize, FuelType } from '@vitauto/shared-types'
 export default function CalculatorClient() {
   const t = useTranslations('Calculator');
   const searchParams = useSearchParams();
-  const { setInputs, setStep, calculate, reset } = useCalculatorStore();
+  const { setInputs, setStep, calculate } = useCalculatorStore();
   const [pendingDraft, setPendingDraft] = useState<ReturnType<typeof loadDraft>>(null);
 
   useCalculatorDraftSync();
 
   useEffect(() => {
     useCalculatorStore.getState().fetchRates();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -47,7 +46,9 @@ export default function CalculatorClient() {
     if (Object.keys(preFill).length > 0) {
       setInputs(preFill);
       if (preFill.lotPrice) {
-        calculate().then(() => { setStep(2); });
+        calculate().then(() => {
+          setStep(2);
+        });
       }
       return;
     }
@@ -57,7 +58,6 @@ export default function CalculatorClient() {
     if (draft) {
       setPendingDraft(draft);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRestoreDraft = () => {
