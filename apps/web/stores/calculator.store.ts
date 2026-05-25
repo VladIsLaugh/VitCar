@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { apiClient } from '@/lib/api-client';
-import type { CalculationInputs, CalculationBreakdown, ExchangeRates } from '@vitauto/shared-types';
+import type { CalculationInputs, CalculationResultDto, ExchangeRates } from '@vitauto/shared-types';
 import axios from 'axios';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
@@ -21,7 +21,7 @@ export type CalculatorFormInputs = Partial<CalculationInputs> & {
 interface CalculatorStore {
   step: 1 | 2 | 3;
   inputs: CalculatorFormInputs;
-  result: CalculationBreakdown | null;
+  result: CalculationResultDto | null;
   rates: ExchangeRates | null;
   currency: CalculatorCurrency;
   savedId: string | null;
@@ -84,7 +84,7 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
 
     set({ isCalculating: true, error: null });
     try {
-      const { data } = await apiClient.post<CalculationBreakdown>(
+      const { data } = await apiClient.post<CalculationResultDto>(
         '/calculations/calculate',
         apiInputs,
       );
@@ -100,11 +100,13 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
 
   save: async () => {
     const { inputs, result } = get();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { make, model, bodyType, vin, mileage, mileageUnit, ...apiInputs } = inputs;
     set({ isSaving: true });
     try {
       const { data } = await apiClient.post<{ id: string; shareToken: string }>(
         '/calculations/save',
-        { inputParams: inputs, result },
+        { inputParams: apiInputs, result },
       );
       set({ savedId: data.id, shareToken: data.shareToken, isSaving: false });
       return data;

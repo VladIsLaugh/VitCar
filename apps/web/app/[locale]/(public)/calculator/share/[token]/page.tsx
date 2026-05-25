@@ -1,13 +1,14 @@
 import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import type { CalculationBreakdown } from '@vitauto/shared-types';
+import type { CalculationResultDto } from '@vitauto/shared-types';
 import { notFound } from 'next/navigation';
+import ShareResultPanel from './ShareResultPanel';
 
 type Props = {
   params: Promise<{ locale: string; token: string }>;
 };
 
-async function fetchSharedCalculation(token: string): Promise<CalculationBreakdown | null> {
+async function fetchSharedCalculation(token: string): Promise<CalculationResultDto | null> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
   try {
     const res = await fetch(`${apiUrl}/calculations/share/${token}`, {
@@ -43,10 +44,7 @@ export default async function SharedCalculatorPage({ params }: Props) {
       </h1>
       <p className="mb-8 text-sm text-muted-foreground">{t('shareReadOnly')}</p>
 
-      {/* Result breakdown rendered in CAR-58 */}
-      <div className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border">
-        <p className="text-sm text-muted-foreground">{t('step3Placeholder')}</p>
-      </div>
+      <ShareResultPanel result={data} />
     </main>
   );
 }
