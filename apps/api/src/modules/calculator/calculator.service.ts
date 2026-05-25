@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, Logger, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import type { CalculationBreakdown, CalculationInputs, ExchangeRates } from '@vitauto/shared-types';
+import type { CalculationBreakdown, CalculationInputs, CalculationResultDto, ExchangeRates } from '@vitauto/shared-types';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import
 import { PrismaService } from '../prisma/prisma.service';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import
@@ -29,9 +29,62 @@ export class CalculatorService {
     private readonly engine: CalculationEngineService
   ) {}
 
-  async calculate(inputs: CalculationInputs): Promise<CalculationBreakdown> {
+  async calculate(inputs: CalculationInputs): Promise<CalculationResultDto> {
     const [settings, rates] = await Promise.all([this.getActiveSettings(), this.getRates()]);
-    return this.engine.calculate(inputs, settings, rates);
+    const bd = this.engine.calculate(inputs, settings, rates);
+    return this.toResultDto(bd, inputs, settings, rates);
+  }
+
+  private toResultDto(
+    bd: CalculationBreakdown,
+    inputs: CalculationInputs,
+    settings: SettingsSnapshot,
+    rates: ExchangeRates
+  ): CalculationResultDto {
+    const ud = settings.UKRAINE_DELIVERY.UKRAINE_DELIVERY;
+    const reg = settings.REGISTRATION.REGISTRATION;
+    const currentYear = new Date().getFullYear();
+    const carAge = Math.max(currentYear - inputs.year, 1);
+
+    return {
+      firstPayment: {
+        lotPrice: bd.lotPrice,
+        auctionFees: {
+          buyerFee: bd.auctionBuyerFee,
+          proxyFee: bd.auctionProxyFee,
+          fixedFees: bd.auctionFixedFees,
+          total: bd.totalAuctionFees,
+        },
+        landDelivery: 0,
+        seaShipping: bd.seaShipping,
+        bankFee: 0,
+        total: bd.lotPrice + bd.totalAuctionFees + bd.seaShipping,
+      },
+      secondPayment: {
+        expeditor: ud.expeditor,
+        deliveryToUA: ud.deliveryToUA,
+        terminalFees: ud.terminalFees,
+        brokerFee: ud.brokerFee,
+        deliveryToSTO: ud.deliveryToSTO,
+        customsDuty: bd.customsDuty,
+        excise: bd.customsExcise,
+        vat: bd.customsVat,
+        total: bd.ukraineDelivery + bd.totalCustoms,
+      },
+      thirdPayment: {
+        repairPrice: 0,
+        certification: reg.certification,
+        pensionFund: bd.pensionFund,
+        mreo: reg.mreo,
+        total: bd.registration + bd.pensionFund,
+      },
+      totalUSD: bd.totalCost,
+      totalUAH: Math.round(bd.totalCost * rates.usdUah),
+      totalEUR: Math.round(bd.totalCost / rates.eurUsd),
+      rates,
+      customsValue: bd.lotPrice + 1500,
+      carAge,
+    };
   }
 
   async save(
