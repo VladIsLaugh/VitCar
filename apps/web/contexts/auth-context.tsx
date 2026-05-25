@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setApiToken(token);
     setAccessToken(token);
     setUser(userData);
+    window.dispatchEvent(new CustomEvent('vitauto:login'));
   }, []);
 
   const logout = useCallback(async () => {

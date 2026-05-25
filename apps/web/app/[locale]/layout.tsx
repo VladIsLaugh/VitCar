@@ -9,6 +9,7 @@ import { Footer } from '@/components/layout/footer';
 import { AuthProvider } from '@/contexts/auth-context';
 import { QueryProvider } from '@/contexts/query-provider';
 import { Toaster } from '@/components/ui/sonner';
+import DraftMigrationListener from '@/components/auth/DraftMigrationListener';
 import '../globals.css';
 
 const geist = Geist({
@@ -55,6 +56,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <NextIntlClientProvider locale={locale} messages={messages}>
             <QueryProvider>
               <AuthProvider>
+                <DraftMigrationListener />
                 <Header />
                 {children}
                 <Footer />
