@@ -111,12 +111,13 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    if (!user.isVerified) {
-      throw new ForbiddenException({
-        message: 'Email not verified',
-        action: 'resend_verification',
-      });
-    }
+    // TODO: re-enable once Resend domain vitauto.ua is verified and email delivery confirmed
+    // if (!user.isVerified) {
+    //   throw new ForbiddenException({
+    //     message: 'Email not verified',
+    //     action: 'resend_verification',
+    //   });
+    // }
 
     if (!user.isActive) {
       throw new ForbiddenException({

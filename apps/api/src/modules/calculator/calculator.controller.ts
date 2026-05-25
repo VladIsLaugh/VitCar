@@ -2,13 +2,17 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   HttpCode,
   HttpStatus,
   NotFoundException,
   Param,
   Post,
+  Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { Throttle } from '@nestjs/throttler';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import
@@ -17,12 +21,17 @@ import { CalculatorService } from './calculator.service';
 import { CalculationInputsDto } from './dto/calculation-inputs.dto';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS emitDecoratorMetadata needs value imports for @Body() validation
 import { SaveCalculationDto } from './dto/save-calculation.dto';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import
+import { PdfService } from './pdf/pdf.service';
 
 import { OptionalAuthGuard } from './guards/optional-auth.guard';
 
 @Controller('calculations')
 export class CalculationsController {
-  constructor(private readonly calculatorService: CalculatorService) {}
+  constructor(
+    private readonly calculatorService: CalculatorService,
+    private readonly pdfService: PdfService
+  ) {}
 
   @Post('calculate')
   @HttpCode(HttpStatus.OK)
@@ -41,6 +50,22 @@ export class CalculationsController {
   @Get('share/:token')
   findByShareToken(@Param('token') token: string) {
     return this.calculatorService.findByShareToken(token);
+  }
+
+  @Get(':id/pdf')
+  @UseGuards(OptionalAuthGuard)
+  @Header('Content-Type', 'application/pdf')
+  async downloadPdf(
+    @Param('id') id: string,
+    @Query('lang') lang: 'uk' | 'en' = 'uk',
+    @Res() res: Response,
+    @CurrentUser() user: AuthUser | undefined
+  ) {
+    const effectiveLang: 'uk' | 'en' = lang === 'en' ? 'en' : 'uk';
+    const buf = await this.pdfService.generate(id, effectiveLang, user?.userId ?? null);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="vitauto-calculation-${id}.pdf"`);
+    res.send(buf);
   }
 
   @Get(':id')
