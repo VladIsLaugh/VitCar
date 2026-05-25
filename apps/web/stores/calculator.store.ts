@@ -3,12 +3,19 @@ import { apiClient } from '@/lib/api-client';
 import type { CalculationInputs, CalculationResultDto, ExchangeRates } from '@vitauto/shared-types';
 import axios from 'axios';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
+
 export type CalculatorCurrency = 'UAH' | 'USD' | 'EUR';
 
-// Extends CalculationInputs with display-only fields not sent to the API
+// Extends CalculationInputs with display/form-only fields not sent to the API
 export type CalculatorFormInputs = Partial<CalculationInputs> & {
   make?: string;
   model?: string;
+  bodyType?: string;
+  vin?: string;
+  mileage?: number;
+  mileageUnit?: 'miles' | 'km';
+  // engineVolume in store is cc (API format); form shows liters
 };
 
 interface CalculatorStore {
@@ -57,8 +64,12 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
   setCurrency: (currency) => set({ currency }),
 
   fetchRates: async () => {
+    // Use plain fetch (not apiClient) to avoid triggering the 401→refresh interceptor
+    // on a public endpoint — exchange rates require no auth.
     try {
-      const { data } = await apiClient.get<ExchangeRates>('/exchange-rates/current');
+      const res = await fetch(`${API_BASE}/exchange-rates/current`);
+      if (!res.ok) return;
+      const data: ExchangeRates = await res.json();
       set({ rates: data });
     } catch {
       // Rates unavailable — convertAmount will fallback to USD
