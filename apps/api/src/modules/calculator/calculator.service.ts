@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import type { CalculationBreakdown, CalculationInputs, ExchangeRates } from '@vitauto/shared-types';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import
@@ -110,9 +110,16 @@ export class CalculatorService {
 
   async getActiveSettings(): Promise<SettingsSnapshot> {
     const cached = await this.redis.get(SETTINGS_CACHE_KEY).catch(() => null);
-    if (cached) return JSON.parse(cached) as SettingsSnapshot;
+    if (cached) {
+      const parsed = JSON.parse(cached) as Record<string, unknown>;
+      if (Object.keys(parsed).length > 0) return parsed as unknown as SettingsSnapshot;
+    }
 
     const rows = await this.prisma.calculationSettings.findMany({ where: { isActive: true } });
+
+    if (rows.length === 0) {
+      throw new ServiceUnavailableException('Calculation settings not configured');
+    }
 
     const snapshot = rows.reduce<Record<string, Record<string, unknown>>>((acc, row) => {
       if (!acc[row.category]) acc[row.category] = {};

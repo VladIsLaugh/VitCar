@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { apiClient } from '@/lib/api-client';
-import type { CalculationInputs, CalculationResultDto, ExchangeRates } from '@vitauto/shared-types';
+import type { CalculationInputs, CalculationBreakdown, ExchangeRates } from '@vitauto/shared-types';
 import axios from 'axios';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
@@ -21,7 +21,7 @@ export type CalculatorFormInputs = Partial<CalculationInputs> & {
 interface CalculatorStore {
   step: 1 | 2 | 3;
   inputs: CalculatorFormInputs;
-  result: CalculationResultDto | null;
+  result: CalculationBreakdown | null;
   rates: ExchangeRates | null;
   currency: CalculatorCurrency;
   savedId: string | null;
@@ -84,7 +84,7 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
 
     set({ isCalculating: true, error: null });
     try {
-      const { data } = await apiClient.post<CalculationResultDto>(
+      const { data } = await apiClient.post<CalculationBreakdown>(
         '/calculations/calculate',
         apiInputs,
       );

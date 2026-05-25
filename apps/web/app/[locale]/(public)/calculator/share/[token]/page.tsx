@@ -1,13 +1,13 @@
 import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import type { CalculationResultDto } from '@vitauto/shared-types';
+import type { CalculationBreakdown } from '@vitauto/shared-types';
 import { notFound } from 'next/navigation';
 
 type Props = {
   params: Promise<{ locale: string; token: string }>;
 };
 
-async function fetchSharedCalculation(token: string): Promise<CalculationResultDto | null> {
+async function fetchSharedCalculation(token: string): Promise<CalculationBreakdown | null> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
   try {
     const res = await fetch(`${apiUrl}/calculations/share/${token}`, {
