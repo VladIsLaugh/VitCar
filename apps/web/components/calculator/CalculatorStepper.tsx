@@ -1,11 +1,12 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { useCalculatorStore } from '@/stores/calculator.store';
 import type { CalculatorFormInputs } from '@/stores/calculator.store';
-import Step1VehicleInfo from './Step1VehicleInfo';
-import Step2AuctionInfo from './Step2AuctionInfo';
+import Step1VehicleInfo from './steps/Step1VehicleInfo';
+import Step2AuctionInfo from './steps/Step2AuctionInfo';
 import Step3Result from './Step3Result';
 
 function canAdvanceFromStep1(inputs: CalculatorFormInputs): boolean {
@@ -25,7 +26,21 @@ const STEP_NAMES = ['step1Name', 'step2Name', 'step3Name'] as const;
 
 export default function CalculatorStepper() {
   const t = useTranslations('Calculator');
-  const { step, inputs, isCalculating, setStep, calculate } = useCalculatorStore();
+  const { step, inputs, isCalculating, error, setStep, calculate } = useCalculatorStore();
+  const debounceRef = useRef<{ timer: ReturnType<typeof setTimeout> | null }>({ timer: null });
+
+  // Debounced real-time preview on Step 2 field changes
+  useEffect(() => {
+    if (step !== 2 || !canAdvanceFromStep2(inputs)) return;
+    if (debounceRef.current.timer) clearTimeout(debounceRef.current.timer);
+    debounceRef.current.timer = setTimeout(() => {
+      calculate();
+    }, 600);
+    return () => {
+      if (debounceRef.current.timer) clearTimeout(debounceRef.current.timer);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputs.auctionSource, inputs.usPort, inputs.auctionCondition, inputs.lotPrice, step]);
 
   const handleBack = () => {
     if (step > 1) setStep((step - 1) as 1 | 2 | 3);
@@ -56,7 +71,6 @@ export default function CalculatorStepper() {
           {([1, 2, 3] as const).map((n) => (
             <div key={n} className="flex flex-1 flex-col items-center gap-1">
               <div className="flex w-full items-center">
-                {/* Connector line before */}
                 {n > 1 && (
                   <div
                     className={`h-0.5 flex-1 transition-colors ${
@@ -64,7 +78,6 @@ export default function CalculatorStepper() {
                     }`}
                   />
                 )}
-                {/* Step circle */}
                 <div
                   className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
                     step > n
@@ -76,7 +89,6 @@ export default function CalculatorStepper() {
                 >
                   {step > n ? '✓' : n}
                 </div>
-                {/* Connector line after */}
                 {n < 3 && (
                   <div
                     className={`h-0.5 flex-1 transition-colors ${
@@ -97,6 +109,13 @@ export default function CalculatorStepper() {
         </div>
       </div>
 
+      {/* Error banner */}
+      {error && (
+        <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {t(error as Parameters<typeof t>[0])}
+        </div>
+      )}
+
       {/* Step content */}
       <div>
         {step === 1 && <Step1VehicleInfo />}
@@ -115,7 +134,10 @@ export default function CalculatorStepper() {
         )}
 
         {step < 3 && (
-          <Button onClick={handleNext} disabled={isCalculating}>
+          <Button
+            onClick={handleNext}
+            disabled={isCalculating || (step === 1 && !canAdvanceFromStep1(inputs)) || (step === 2 && !canAdvanceFromStep2(inputs))}
+          >
             {step === 2 ? (
               isCalculating ? t('calculating') : t('calculate')
             ) : (

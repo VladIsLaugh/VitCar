@@ -9,11 +9,14 @@ import type { AuctionCondition, CarSize, FuelType } from '@vitauto/shared-types'
 
 export default function CalculatorClient() {
   const searchParams = useSearchParams();
-  const { setInputs, setStep, calculate, fetchRates } = useCalculatorStore();
+  const { setInputs, setStep, calculate } = useCalculatorStore();
 
+  // Run once on mount — useCalculatorStore.getState() avoids subscription churn,
+  // and the plain-fetch implementation in the store skips the auth interceptor.
   useEffect(() => {
-    fetchRates();
-  }, [fetchRates]);
+    useCalculatorStore.getState().fetchRates();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const preFill: CalculatorFormInputs = {};

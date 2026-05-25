@@ -1,20 +1,27 @@
 import { create } from 'zustand';
 import { apiClient } from '@/lib/api-client';
-import type { CalculationInputs, CalculationResultDto, ExchangeRates } from '@vitauto/shared-types';
+import type { CalculationInputs, CalculationBreakdown, ExchangeRates } from '@vitauto/shared-types';
 import axios from 'axios';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
 
 export type CalculatorCurrency = 'UAH' | 'USD' | 'EUR';
 
-// Extends CalculationInputs with display-only fields not sent to the API
+// Extends CalculationInputs with display/form-only fields not sent to the API
 export type CalculatorFormInputs = Partial<CalculationInputs> & {
   make?: string;
   model?: string;
+  bodyType?: string;
+  vin?: string;
+  mileage?: number;
+  mileageUnit?: 'miles' | 'km';
+  // engineVolume in store is cc (API format); form shows liters
 };
 
 interface CalculatorStore {
   step: 1 | 2 | 3;
   inputs: CalculatorFormInputs;
-  result: CalculationResultDto | null;
+  result: CalculationBreakdown | null;
   rates: ExchangeRates | null;
   currency: CalculatorCurrency;
   savedId: string | null;
@@ -57,8 +64,12 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
   setCurrency: (currency) => set({ currency }),
 
   fetchRates: async () => {
+    // Use plain fetch (not apiClient) to avoid triggering the 401→refresh interceptor
+    // on a public endpoint — exchange rates require no auth.
     try {
-      const { data } = await apiClient.get<ExchangeRates>('/exchange-rates/current');
+      const res = await fetch(`${API_BASE}/exchange-rates/current`);
+      if (!res.ok) return;
+      const data: ExchangeRates = await res.json();
       set({ rates: data });
     } catch {
       // Rates unavailable — convertAmount will fallback to USD
@@ -69,11 +80,11 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
     const { inputs } = get();
     // Strip display-only fields before sending to API
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { make, model, ...apiInputs } = inputs;
+    const { make, model, bodyType, vin, mileage, mileageUnit, ...apiInputs } = inputs;
 
     set({ isCalculating: true, error: null });
     try {
-      const { data } = await apiClient.post<CalculationResultDto>(
+      const { data } = await apiClient.post<CalculationBreakdown>(
         '/calculations/calculate',
         apiInputs,
       );
