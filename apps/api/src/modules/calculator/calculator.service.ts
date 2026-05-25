@@ -1,6 +1,18 @@
-import { ForbiddenException, Injectable, Logger, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
+import type { OnApplicationBootstrap } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  Logger,
+  NotFoundException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import type { CalculationBreakdown, CalculationInputs, CalculationResultDto, ExchangeRates } from '@vitauto/shared-types';
+import type {
+  CalculationBreakdown,
+  CalculationInputs,
+  CalculationResultDto,
+  ExchangeRates,
+} from '@vitauto/shared-types';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import
 import { PrismaService } from '../prisma/prisma.service';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports -- NestJS DI requires value import
@@ -19,7 +31,7 @@ function omitCompanyFee<T extends Record<string, unknown>>(obj: T): Omit<T, 'COM
 }
 
 @Injectable()
-export class CalculatorService {
+export class CalculatorService implements OnApplicationBootstrap {
   private readonly logger = new Logger(CalculatorService.name);
 
   constructor(
@@ -28,6 +40,17 @@ export class CalculatorService {
     private readonly exchangeRates: ExchangeRatesService,
     private readonly engine: CalculationEngineService
   ) {}
+
+  async onApplicationBootstrap(): Promise<void> {
+    const count = await this.prisma.calculationSettings.count().catch(() => 0);
+    if (count === 0) {
+      this.logger.warn(
+        'CalculatorSettings table is empty — run: pnpm --filter=@vitauto/api db:seed'
+      );
+    } else {
+      this.logger.log(`CalculatorSettings loaded: ${count} rows`);
+    }
+  }
 
   async calculate(inputs: CalculationInputs): Promise<CalculationResultDto> {
     const [settings, rates] = await Promise.all([this.getActiveSettings(), this.getRates()]);
