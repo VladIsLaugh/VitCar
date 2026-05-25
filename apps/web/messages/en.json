@@ -7,7 +7,29 @@
     "title": "VitAuto — Import Cars from USA"
   },
   "Calculator": {
-    "title": "Cost Calculator"
+    "title": "Cost Calculator",
+    "metaTitle": "Car Import Cost Calculator from USA — VitAuto",
+    "metaDescription": "Calculate the exact cost to import a car from Copart and IAAI auctions: auction fees, shipping, customs, registration.",
+    "step1Name": "Vehicle",
+    "step2Name": "Auction",
+    "step3Name": "Result",
+    "step1Placeholder": "Form fields — coming in next story",
+    "step2Placeholder": "Form fields — coming in next story",
+    "step3Placeholder": "Cost breakdown — coming in CAR-58",
+    "stepOf": "Step {current} of {total}",
+    "back": "Back",
+    "next": "Next",
+    "calculate": "Calculate",
+    "calculating": "Calculating...",
+    "shareTitle": "Car Import Cost Estimate",
+    "shareReadOnly": "This is a shared calculation — read only.",
+    "shareMetaTitle": "Car Import Cost Estimate — VitAuto",
+    "shareMetaDescription": "View a car import cost calculation from USA.",
+    "errors": {
+      "ratesUnavailable": "Exchange rates are temporarily unavailable. Please try again later.",
+      "calculationFailed": "Calculation failed. Please check your inputs and try again.",
+      "saveFailed": "Failed to save calculation. Please try again."
+    }
   },
   "Cars": {
     "title": "Car Catalog"

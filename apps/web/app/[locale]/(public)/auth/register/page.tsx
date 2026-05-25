@@ -56,7 +56,7 @@ export default function RegisterPage() {
           <span className="h-px flex-1 bg-border" />
         </div>
 
-        <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
           <div className="space-y-1">
             <Label htmlFor="firstName">{t('firstName')}</Label>
             <Input

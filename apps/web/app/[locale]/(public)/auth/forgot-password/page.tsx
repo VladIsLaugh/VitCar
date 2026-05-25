@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
             </Link>
           </div>
         ) : (
-          <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
             <div className="space-y-1">
               <Label htmlFor="email">{t('email')}</Label>
               <Input id="email" type="email" autoComplete="email" aria-invalid={!!errors.email} {...register('email')} />
