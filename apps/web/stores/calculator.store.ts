@@ -80,7 +80,7 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
     const { inputs } = get();
     // Strip display-only fields before sending to API
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { make, model, ...apiInputs } = inputs;
+    const { make, model, bodyType, vin, mileage, mileageUnit, ...apiInputs } = inputs;
 
     set({ isCalculating: true, error: null });
     try {
