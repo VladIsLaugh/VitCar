@@ -1,0 +1,120 @@
+import { create } from 'zustand';
+import { apiClient } from '@/lib/api-client';
+import type { CalculationInputs, CalculationResultDto, ExchangeRates } from '@vitauto/shared-types';
+import axios from 'axios';
+
+export type CalculatorCurrency = 'UAH' | 'USD' | 'EUR';
+
+// Extends CalculationInputs with display-only fields not sent to the API
+export type CalculatorFormInputs = Partial<CalculationInputs> & {
+  make?: string;
+  model?: string;
+};
+
+interface CalculatorStore {
+  step: 1 | 2 | 3;
+  inputs: CalculatorFormInputs;
+  result: CalculationResultDto | null;
+  rates: ExchangeRates | null;
+  currency: CalculatorCurrency;
+  savedId: string | null;
+  shareToken: string | null;
+  isCalculating: boolean;
+  isSaving: boolean;
+  error: string | null;
+
+  setStep: (step: 1 | 2 | 3) => void;
+  setInputs: (inputs: CalculatorFormInputs) => void;
+  setCurrency: (currency: CalculatorCurrency) => void;
+  calculate: () => Promise<void>;
+  save: () => Promise<{ id: string; shareToken: string }>;
+  reset: () => void;
+  convertAmount: (usd: number) => number;
+  fetchRates: () => Promise<void>;
+}
+
+const initialState = {
+  step: 1 as const,
+  inputs: {} as CalculatorFormInputs,
+  result: null,
+  rates: null,
+  currency: 'UAH' as CalculatorCurrency,
+  savedId: null,
+  shareToken: null,
+  isCalculating: false,
+  isSaving: false,
+  error: null,
+};
+
+export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
+  ...initialState,
+
+  setStep: (step) => set({ step }),
+
+  setInputs: (inputs) =>
+    set((state) => ({ inputs: { ...state.inputs, ...inputs } })),
+
+  setCurrency: (currency) => set({ currency }),
+
+  fetchRates: async () => {
+    try {
+      const { data } = await apiClient.get<ExchangeRates>('/exchange-rates/current');
+      set({ rates: data });
+    } catch {
+      // Rates unavailable — convertAmount will fallback to USD
+    }
+  },
+
+  calculate: async () => {
+    const { inputs } = get();
+    // Strip display-only fields before sending to API
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { make, model, ...apiInputs } = inputs;
+
+    set({ isCalculating: true, error: null });
+    try {
+      const { data } = await apiClient.post<CalculationResultDto>(
+        '/calculations/calculate',
+        apiInputs,
+      );
+      set({ result: data, isCalculating: false });
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 503) {
+        set({ error: 'calculator.errors.ratesUnavailable', isCalculating: false });
+      } else {
+        set({ error: 'calculator.errors.calculationFailed', isCalculating: false });
+      }
+    }
+  },
+
+  save: async () => {
+    const { inputs, result } = get();
+    set({ isSaving: true });
+    try {
+      const { data } = await apiClient.post<{ id: string; shareToken: string }>(
+        '/calculations/save',
+        { inputParams: inputs, result },
+      );
+      set({ savedId: data.id, shareToken: data.shareToken, isSaving: false });
+      return data;
+    } catch {
+      set({ isSaving: false });
+      throw new Error('calculator.errors.saveFailed');
+    }
+  },
+
+  reset: () => set(initialState),
+
+  convertAmount: (usd) => {
+    const { currency, rates } = get();
+    if (!rates) return usd;
+    switch (currency) {
+      case 'USD':
+        return usd;
+      case 'UAH':
+        return usd * rates.usdUah;
+      case 'EUR':
+        return usd / rates.eurUsd;
+    }
+  },
+}));
