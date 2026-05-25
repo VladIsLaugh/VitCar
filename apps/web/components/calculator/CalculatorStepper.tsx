@@ -27,17 +27,17 @@ const STEP_NAMES = ['step1Name', 'step2Name', 'step3Name'] as const;
 export default function CalculatorStepper() {
   const t = useTranslations('Calculator');
   const { step, inputs, isCalculating, error, setStep, calculate } = useCalculatorStore();
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debounceRef = useRef<{ timer: ReturnType<typeof setTimeout> | null }>({ timer: null });
 
   // Debounced real-time preview on Step 2 field changes
   useEffect(() => {
     if (step !== 2 || !canAdvanceFromStep2(inputs)) return;
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
+    if (debounceRef.current.timer) clearTimeout(debounceRef.current.timer);
+    debounceRef.current.timer = setTimeout(() => {
       calculate();
     }, 600);
     return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
+      if (debounceRef.current.timer) clearTimeout(debounceRef.current.timer);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputs.auctionSource, inputs.usPort, inputs.auctionCondition, inputs.lotPrice, step]);

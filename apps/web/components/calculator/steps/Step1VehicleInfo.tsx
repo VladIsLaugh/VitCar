@@ -64,6 +64,16 @@ const MAKE_MODELS: Record<string, string[]> = {
 };
 
 const BODY_TYPES = ['Sedan', 'SUV', 'Pickup', 'Hatchback', 'Coupe', 'Minivan', 'Wagon'] as const;
+
+const BODY_TYPE_I18N_KEYS = {
+  Sedan: 'form.bodyTypes.sedan',
+  SUV: 'form.bodyTypes.suv',
+  Pickup: 'form.bodyTypes.pickup',
+  Hatchback: 'form.bodyTypes.hatchback',
+  Coupe: 'form.bodyTypes.coupe',
+  Minivan: 'form.bodyTypes.minivan',
+  Wagon: 'form.bodyTypes.wagon',
+} as const satisfies Record<typeof BODY_TYPES[number], string>;
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: CURRENT_YEAR - 1999 }, (_, i) => CURRENT_YEAR - i);
 
@@ -381,7 +391,7 @@ export default function Step1VehicleInfo() {
             <SelectContent>
               {BODY_TYPES.map((b) => (
                 <SelectItem key={b} value={b}>
-                  {t(`form.bodyTypes.${b.toLowerCase().replace('-', '')}`)}
+                  {t(BODY_TYPE_I18N_KEYS[b])}
                 </SelectItem>
               ))}
             </SelectContent>
