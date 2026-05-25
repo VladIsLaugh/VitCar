@@ -5,14 +5,13 @@ import { useSearchParams } from 'next/navigation';
 import { useCalculatorStore } from '@/stores/calculator.store';
 import type { CalculatorFormInputs } from '@/stores/calculator.store';
 import CalculatorStepper from '@/components/calculator/CalculatorStepper';
+import Step3Result from '@/components/calculator/Step3Result';
 import type { AuctionCondition, CarSize, FuelType } from '@vitauto/shared-types';
 
 export default function CalculatorClient() {
   const searchParams = useSearchParams();
   const { setInputs, setStep, calculate } = useCalculatorStore();
 
-  // Run once on mount — useCalculatorStore.getState() avoids subscription churn,
-  // and the plain-fetch implementation in the store skips the auth interceptor.
   useEffect(() => {
     useCalculatorStore.getState().fetchRates();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -20,7 +19,6 @@ export default function CalculatorClient() {
 
   useEffect(() => {
     const preFill: CalculatorFormInputs = {};
-
     const make = searchParams.get('make');
     const model = searchParams.get('model');
     const year = searchParams.get('year');
@@ -38,17 +36,21 @@ export default function CalculatorClient() {
     if (fuelType) preFill.fuelType = fuelType as FuelType;
 
     if (Object.keys(preFill).length === 0) return;
-
     setInputs(preFill);
-
     if (preFill.lotPrice) {
-      calculate().then(() => {
-        setStep(2);
-      });
+      calculate().then(() => { setStep(2); });
     }
-  // searchParams reference is stable — only run on mount
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <CalculatorStepper />;
+  return (
+    <div className="grid gap-8 lg:grid-cols-[1fr_360px] lg:items-start">
+      <CalculatorStepper />
+      <div className="hidden lg:block">
+        <div className="sticky top-6">
+          <Step3Result />
+        </div>
+      </div>
+    </div>
+  );
 }
