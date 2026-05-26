@@ -6,14 +6,25 @@ import { Resend } from 'resend';
 export class EmailService {
   private readonly resend: Resend;
   private readonly logger = new Logger(EmailService.name);
+  private readonly disabled: boolean;
 
   constructor(@Inject(ConfigService) private readonly config: ConfigService) {
     this.resend = new Resend(this.config.get<string>('RESEND_API_KEY') ?? 'not-configured');
+    // Set EMAIL_DISABLED=true in dev/stage when Resend domain is not yet verified
+    this.disabled = this.config.get<string>('EMAIL_DISABLED') === 'true';
+    if (this.disabled) {
+      this.logger.warn('EMAIL_DISABLED=true — emails will be logged to console instead of sent');
+    }
   }
 
   async sendVerificationEmail(email: string, token: string): Promise<void> {
     const frontendUrl = this.config.get<string>('FRONTEND_URL', 'https://vit-car.vercel.app');
     const url = `${frontendUrl}/auth/verify-email?token=${token}`;
+
+    if (this.disabled) {
+      this.logger.log(`[EMAIL_DISABLED] Verification email for ${email} → ${url}`);
+      return;
+    }
 
     const { error } = await this.resend.emails.send({
       from: 'VitAuto <noreply@vitauto.ua>',
@@ -35,6 +46,11 @@ export class EmailService {
   async sendPasswordResetEmail(email: string, token: string): Promise<void> {
     const frontendUrl = this.config.get<string>('FRONTEND_URL', 'https://vit-car.vercel.app');
     const url = `${frontendUrl}/auth/reset-password?token=${token}`;
+
+    if (this.disabled) {
+      this.logger.log(`[EMAIL_DISABLED] Password reset email for ${email} → ${url}`);
+      return;
+    }
 
     const { error } = await this.resend.emails.send({
       from: 'VitAuto <noreply@vitauto.ua>',
