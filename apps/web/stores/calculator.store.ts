@@ -58,8 +58,7 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
 
   setStep: (step) => set({ step }),
 
-  setInputs: (inputs) =>
-    set((state) => ({ inputs: { ...state.inputs, ...inputs } })),
+  setInputs: (inputs) => set((state) => ({ inputs: { ...state.inputs, ...inputs } })),
 
   setCurrency: (currency) => set({ currency }),
 
@@ -86,14 +85,14 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
     try {
       const { data } = await apiClient.post<CalculationResultDto>(
         '/calculations/calculate',
-        apiInputs,
+        apiInputs
       );
       set({ result: data, isCalculating: false });
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 503) {
-        set({ error: 'calculator.errors.ratesUnavailable', isCalculating: false });
+        set({ error: 'errors.ratesUnavailable', isCalculating: false });
       } else {
-        set({ error: 'calculator.errors.calculationFailed', isCalculating: false });
+        set({ error: 'errors.calculationFailed', isCalculating: false });
       }
     }
   },
@@ -106,7 +105,7 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
     try {
       const { data } = await apiClient.post<{ id: string; shareToken: string }>(
         '/calculations/save',
-        { inputParams: apiInputs, result },
+        { inputParams: apiInputs, result }
       );
       set({ savedId: data.id, shareToken: data.shareToken, isSaving: false });
       return data;
