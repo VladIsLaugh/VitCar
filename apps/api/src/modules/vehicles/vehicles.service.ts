@@ -9,10 +9,15 @@ interface NhtsaResult {
   Value: string | null;
 }
 
+// NHTSA uses different strings across model years; pre-1996 vehicles often return
+// non-standard variants. Map all known variants to our FuelType enum.
 const FUEL_TYPE_MAP: Record<string, FuelType> = {
   Gasoline: FuelType.PETROL,
+  Gas: FuelType.PETROL,
+  'Flex Fuel Vehicle (FFV)': FuelType.PETROL,
   Diesel: FuelType.DIESEL,
   Electric: FuelType.ELECTRIC,
+  'Plug-in Hybrid/Electric Vehicle (PHEV)': FuelType.HYBRID,
   Hybrid: FuelType.HYBRID,
 };
 
@@ -39,8 +44,14 @@ export class VehiclesService {
     const yearRaw = get('Model Year');
     const year = yearRaw ? parseInt(yearRaw, 10) || null : null;
 
+    if (!model)
+      this.logger.warn(`NHTSA returned empty model for VIN ${vin} — likely pre-1996 vehicle`);
+
     const nhtsaFuel = get('Fuel Type - Primary');
+    if (!nhtsaFuel) this.logger.warn(`NHTSA returned empty fuel type for VIN ${vin}`);
     const fuelType = nhtsaFuel ? (FUEL_TYPE_MAP[nhtsaFuel] ?? null) : null;
+    if (nhtsaFuel && !fuelType)
+      this.logger.warn(`Unknown NHTSA fuel type "${nhtsaFuel}" for VIN ${vin}`);
 
     const batteryTo = get('Battery Energy (kWh) To');
     const batteryFrom = get('Battery Energy (kWh) From');
