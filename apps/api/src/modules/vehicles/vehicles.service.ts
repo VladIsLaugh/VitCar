@@ -10,11 +10,15 @@ interface NhtsaResult {
 }
 
 // NHTSA uses different strings across model years; pre-1996 vehicles often return
-// non-standard variants. Map all known variants to our FuelType enum.
+// non-standard variants, and some manufacturers (e.g. BMW) populate Series instead
+// of Model. Map all known variants to our FuelType enum.
 const FUEL_TYPE_MAP: Record<string, FuelType> = {
   Gasoline: FuelType.PETROL,
   Gas: FuelType.PETROL,
   'Flex Fuel Vehicle (FFV)': FuelType.PETROL,
+  'Natural Gas': FuelType.PETROL,
+  'Compressed Natural Gas (CNG)': FuelType.PETROL,
+  'Liquefied Petroleum Gas (LPG)': FuelType.PETROL,
   Diesel: FuelType.DIESEL,
   Electric: FuelType.ELECTRIC,
   'Plug-in Hybrid/Electric Vehicle (PHEV)': FuelType.HYBRID,
@@ -40,12 +44,12 @@ export class VehiclesService {
     const get = (variable: string) => results.find((r) => r.Variable === variable)?.Value ?? null;
 
     const make = get('Make') || null;
-    const model = get('Model') || null;
+    // NHTSA sometimes populates Series instead of Model (common for BMW, some European makes)
+    const model = get('Model') || get('Series') || null;
     const yearRaw = get('Model Year');
     const year = yearRaw ? parseInt(yearRaw, 10) || null : null;
 
-    if (!model)
-      this.logger.warn(`NHTSA returned empty model for VIN ${vin} — likely pre-1996 vehicle`);
+    if (!model) this.logger.warn(`NHTSA returned empty model for VIN ${vin}`);
 
     const nhtsaFuel = get('Fuel Type - Primary');
     if (!nhtsaFuel) this.logger.warn(`NHTSA returned empty fuel type for VIN ${vin}`);
