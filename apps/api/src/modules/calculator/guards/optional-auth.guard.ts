@@ -1,16 +1,18 @@
 import type { ExecutionContext } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import type { Observable } from 'rxjs';
 
 @Injectable()
 export class OptionalAuthGuard extends AuthGuard('jwt') {
-  override canActivate(ctx: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-    return super.canActivate(ctx);
-  }
-
-  // Never throw — just set req.user = undefined for unauthenticated requests
-  override handleRequest<TUser>(_err: unknown, user: TUser): TUser {
-    return user;
+  // Try to authenticate; if no token or invalid token, allow through with req.user = undefined.
+  // Using try-catch instead of handleRequest override because super.canActivate() can throw
+  // synchronously for malformed tokens before handleRequest is ever called.
+  override async canActivate(ctx: ExecutionContext): Promise<boolean> {
+    try {
+      await (super.canActivate(ctx) as Promise<boolean>);
+    } catch {
+      // unauthenticated — req.user stays undefined
+    }
+    return true;
   }
 }
