@@ -6,6 +6,7 @@ import { ExchangeRatesService } from './exchange-rates.service';
 export class ExchangeRatesController {
   constructor(private readonly exchangeRates: ExchangeRatesService) {}
 
+  @Get()
   @Get('current')
   async getCurrent() {
     const rates = await this.exchangeRates.getFromCacheOnly();

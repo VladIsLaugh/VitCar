@@ -7,12 +7,12 @@ const DRAFT_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 export interface CalculatorDraft {
   inputs: CalculatorFormInputs;
   result: CalculationResultDto;
-  savedAt: number;
+  savedAt: string;
 }
 
 export function saveDraft(inputs: CalculatorFormInputs, result: CalculationResultDto): void {
   try {
-    const draft: CalculatorDraft = { inputs, result, savedAt: Date.now() };
+    const draft: CalculatorDraft = { inputs, result, savedAt: new Date().toISOString() };
     localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
   } catch {
     // localStorage unavailable (private mode, quota exceeded)
@@ -24,7 +24,7 @@ export function loadDraft(): CalculatorDraft | null {
     const raw = localStorage.getItem(DRAFT_KEY);
     if (!raw) return null;
     const draft = JSON.parse(raw) as CalculatorDraft;
-    if (Date.now() - draft.savedAt > DRAFT_TTL_MS) {
+    if (Date.now() - new Date(draft.savedAt).getTime() > DRAFT_TTL_MS) {
       localStorage.removeItem(DRAFT_KEY);
       return null;
     }

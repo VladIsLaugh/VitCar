@@ -28,7 +28,12 @@ apiClient.interceptors.response.use(
   (res) => res,
   async (error) => {
     const original = error.config as typeof error.config & { _retry?: boolean };
-    if (error.response?.status === 401 && !original._retry && _onRefresh) {
+    if (
+      error.response?.status === 401 &&
+      !original._retry &&
+      _onRefresh &&
+      !error.config?.url?.includes('/auth/refresh')
+    ) {
       original._retry = true;
       if (!_pendingRefresh) {
         _pendingRefresh = _onRefresh().finally(() => {

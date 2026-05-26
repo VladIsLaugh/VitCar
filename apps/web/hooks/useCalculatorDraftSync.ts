@@ -14,5 +14,5 @@ export function useCalculatorDraftSync(): void {
       saveDraft(inputs, result);
     }
     prevResultRef.current = result;
-  }, [result, inputs]);
+  }, [result]); // inputs captured via closure; only result change should trigger a save
 }
