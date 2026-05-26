@@ -54,8 +54,15 @@ export class CalculatorService implements OnApplicationBootstrap {
 
   async calculate(inputs: CalculationInputs): Promise<CalculationResultDto> {
     const [settings, rates] = await Promise.all([this.getActiveSettings(), this.getRates()]);
-    const bd = this.engine.calculate(inputs, settings, rates);
-    return this.toResultDto(bd, inputs, settings, rates);
+    try {
+      const bd = this.engine.calculate(inputs, settings, rates);
+      return this.toResultDto(bd, inputs, settings, rates);
+    } catch (err) {
+      this.logger.error('Calculation engine threw unexpected error', err);
+      throw new ServiceUnavailableException(
+        'Calculation engine error — check settings configuration'
+      );
+    }
   }
 
   private toResultDto(
@@ -187,8 +194,12 @@ export class CalculatorService implements OnApplicationBootstrap {
   async getActiveSettings(): Promise<SettingsSnapshot> {
     const cached = await this.redis.get(SETTINGS_CACHE_KEY).catch(() => null);
     if (cached) {
-      const parsed = JSON.parse(cached) as Record<string, unknown>;
-      if (Object.keys(parsed).length > 0) return parsed as unknown as SettingsSnapshot;
+      try {
+        const parsed = JSON.parse(cached) as Record<string, unknown>;
+        if (Object.keys(parsed).length > 0) return parsed as unknown as SettingsSnapshot;
+      } catch {
+        this.logger.warn('Cached calculator settings are malformed — reloading from DB');
+      }
     }
 
     const rows = await this.prisma.calculationSettings.findMany({ where: { isActive: true } });
