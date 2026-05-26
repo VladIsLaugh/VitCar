@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { useCalculatorStore } from '@/stores/calculator.store';
 import type { CalculatorFormInputs } from '@/stores/calculator.store';
+import { clearDraft } from '@/lib/calculator-draft';
 import Step1VehicleInfo from './steps/Step1VehicleInfo';
 import Step2AuctionInfo from './steps/Step2AuctionInfo';
 import Step3Result from './Step3Result';
@@ -26,7 +27,7 @@ const STEP_NAMES = ['step1Name', 'step2Name', 'step3Name'] as const;
 
 export default function CalculatorStepper() {
   const t = useTranslations('Calculator');
-  const { step, inputs, isCalculating, error, setStep, calculate } = useCalculatorStore();
+  const { step, inputs, isCalculating, error, setStep, calculate, reset } = useCalculatorStore();
   const debounceRef = useRef<{ timer: ReturnType<typeof setTimeout> | null }>({ timer: null });
 
   // Debounced real-time preview on Step 2 field changes
@@ -125,7 +126,7 @@ export default function CalculatorStepper() {
 
       {/* Navigation */}
       <div className="flex items-center justify-between">
-        {step > 1 ? (
+        {step > 1 && step < 3 ? (
           <Button variant="outline" onClick={handleBack} disabled={isCalculating}>
             {t('back')}
           </Button>
@@ -143,6 +144,15 @@ export default function CalculatorStepper() {
             ) : (
               t('next')
             )}
+          </Button>
+        )}
+
+        {step === 3 && (
+          <Button
+            variant="outline"
+            onClick={() => { clearDraft(); reset(); }}
+          >
+            {t('newCalculation')}
           </Button>
         )}
       </div>
