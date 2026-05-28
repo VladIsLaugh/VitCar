@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { MakeDto, ModelDto } from '@vitauto/shared-types';
-import type { PrismaService } from '../prisma/prisma.service';
-import type { RedisService } from '../redis/redis.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class MakesService {
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly redis: RedisService
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(RedisService) private readonly redis: RedisService
   ) {}
 
   async getMakes(): Promise<MakeDto[]> {
