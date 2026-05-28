@@ -473,5 +473,11 @@
     "breadcrumbHome": "Home",
     "breadcrumbCatalog": "Catalog",
     "lotNotFound": "Lot not found"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "Sorry, this page doesn't exist or has been moved.",
+    "backHome": "Back to home",
+    "browseCars": "Browse catalog"
   }
 }

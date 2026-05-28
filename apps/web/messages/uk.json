@@ -473,5 +473,11 @@
     "breadcrumbHome": "Головна",
     "breadcrumbCatalog": "Каталог",
     "lotNotFound": "Лот не знайдено"
+  },
+  "NotFound": {
+    "title": "Сторінку не знайдено",
+    "description": "Вибачте, такої сторінки не існує або вона була переміщена.",
+    "backHome": "На головну",
+    "browseCars": "Переглянути каталог"
   }
 }

@@ -72,7 +72,7 @@ export default async function LotDetailPage({ params }: Props) {
 
   if (!lot) notFound();
 
-  const jsonLd = {
+  const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
@@ -84,9 +84,42 @@ export default async function LotDetailPage({ params }: Props) {
     ],
   };
 
+  const vehicleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Vehicle',
+    name: `${lot.year} ${lot.make.name} ${lot.model.name}`,
+    modelDate: String(lot.year),
+    brand: { '@type': 'Brand', name: lot.make.name },
+    model: lot.model.name,
+    ...(lot.vin ? { vehicleIdentificationNumber: lot.vin } : {}),
+    ...(lot.fuelType ? { fuelType: lot.fuelType } : {}),
+    ...(lot.mileage != null
+      ? {
+          mileageFromOdometer: {
+            '@type': 'QuantitativeValue',
+            value: lot.mileage,
+            unitCode: lot.mileageUnit === 'KM' ? 'KMT' : 'SMI',
+          },
+        }
+      : {}),
+    ...(lot.finalBid != null
+      ? {
+          offers: {
+            '@type': 'Offer',
+            priceCurrency: lot.currency ?? 'USD',
+            price: lot.finalBid,
+            availability: 'https://schema.org/SoldOut',
+          },
+        }
+      : {}),
+    image: lot.photoUrls[0] ?? undefined,
+    url: `https://vitauto.ua/${locale}/cars/${id}`,
+  };
+
   return (
     <main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(vehicleJsonLd) }} />
       <DemoDataBanner />
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground">
