@@ -1,31 +1,234 @@
-import { Injectable } from '@nestjs/common';
-import type { AvgPriceResponseDto } from '@vitauto/shared-types';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, SaleStatus } from '@prisma/client';
+import * as crypto from 'crypto';
+import type {
+  AvgPriceResponseDto,
+  LotCardDto,
+  LotDetailDto,
+  LotFacets,
+  LotListResponseDto,
+  LotLookupNotFoundDto,
+  LotLookupResponseDto,
+} from '@vitauto/shared-types';
+import { PrismaService } from '../prisma/prisma.service';
+import { RedisService } from '../redis/redis.service';
+import type { LotQueryDto } from './dto/lot-query.dto';
+import { LotSortBy } from './dto/lot-query.dto';
 
-interface StubEntry {
-  make: string;
-  model: string;
-  year: number;
-  avgPrice: number;
-  sampleSize: number;
+const LOT_CARD_INCLUDE = {
+  make: { select: { id: true, name: true, slug: true } },
+  model: { select: { id: true, name: true, slug: true } },
+} as const;
+
+type LotWithRefs = Prisma.LotGetPayload<{ include: typeof LOT_CARD_INCLUDE }>;
+
+function toLotCard(lot: LotWithRefs): LotCardDto {
+  return {
+    id: lot.id,
+    source: lot.source,
+    lotNumber: lot.lotNumber,
+    vin: lot.vin,
+    make: lot.make,
+    model: lot.model,
+    year: lot.year,
+    bodyType: lot.bodyType,
+    fuelType: lot.fuelType,
+    mileage: lot.mileage,
+    mileageUnit: lot.mileageUnit,
+    damageType: lot.damageType,
+    titleStatus: lot.titleStatus,
+    saleStatus: lot.saleStatus,
+    finalBid: lot.finalBid,
+    currency: lot.currency,
+    saleDate: lot.saleDate?.toISOString() ?? null,
+    state: lot.state,
+    photoUrls: lot.photoUrls,
+    externalUrl: lot.externalUrl,
+  };
+}
+
+function buildOrderBy(sortBy: LotSortBy): Prisma.LotOrderByWithRelationInput {
+  const map: Record<LotSortBy, Prisma.LotOrderByWithRelationInput> = {
+    [LotSortBy.SALE_DATE_DESC]: { saleDate: 'desc' },
+    [LotSortBy.SALE_DATE_ASC]: { saleDate: 'asc' },
+    [LotSortBy.PRICE_ASC]: { finalBid: 'asc' },
+    [LotSortBy.PRICE_DESC]: { finalBid: 'desc' },
+    [LotSortBy.MILEAGE_ASC]: { mileage: 'asc' },
+  };
+  return map[sortBy] ?? { saleDate: 'desc' };
 }
 
 @Injectable()
 export class LotsService {
-  private readonly STUB_DATA: StubEntry[] = [
-    { make: 'toyota', model: 'camry', year: 2021, avgPrice: 8500, sampleSize: 30 },
-    { make: 'toyota', model: 'rav4', year: 2020, avgPrice: 11200, sampleSize: 18 },
-    { make: 'honda', model: 'accord', year: 2019, avgPrice: 7800, sampleSize: 22 },
-  ];
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly redis: RedisService,
+  ) {}
 
-  async getAvgPrice(make: string, model: string, year: number): Promise<AvgPriceResponseDto> {
-    const match = this.STUB_DATA.find(
-      (d) => d.make === make.toLowerCase() && d.model === model.toLowerCase() && d.year === year
-    );
+  async getLots(query: LotQueryDto): Promise<LotListResponseDto> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 24;
+    const sortBy = query.sortBy ?? LotSortBy.SALE_DATE_DESC;
+
+    const cacheKey = `lots:${crypto.createHash('md5').update(JSON.stringify({ ...query, page, limit })).digest('hex')}`;
+    const cached = await this.redis.get(cacheKey).catch(() => null);
+    if (cached) return JSON.parse(cached) as LotListResponseDto;
+
+    const where: Prisma.LotWhereInput = {
+      ...(query.makeId && { makeId: query.makeId }),
+      ...(query.modelId && { modelId: query.modelId }),
+      ...((query.yearFrom ?? query.yearTo) && {
+        year: { gte: query.yearFrom, lte: query.yearTo },
+      }),
+      ...((query.priceFrom ?? query.priceTo) && {
+        finalBid: { gte: query.priceFrom, lte: query.priceTo },
+      }),
+      ...(query.source && { source: query.source }),
+      ...(query.damageType?.length && { damageType: { in: query.damageType } }),
+      ...(query.fuelType && { fuelType: query.fuelType }),
+      ...(query.mileageMax && { mileage: { lte: query.mileageMax } }),
+      ...(query.state && { state: query.state }),
+      saleStatus: SaleStatus.SOLD,
+    };
+
+    const [items, total, damageTypeCounts, sourceCounts, fuelTypeCounts] = await Promise.all([
+      this.prisma.lot.findMany({
+        where,
+        include: LOT_CARD_INCLUDE,
+        orderBy: buildOrderBy(sortBy),
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.lot.count({ where }),
+      this.prisma.lot.groupBy({
+        by: ['damageType'],
+        where: { ...where, damageType: undefined },
+        _count: { _all: true },
+        orderBy: { _count: { damageType: 'desc' } },
+      }),
+      this.prisma.lot.groupBy({
+        by: ['source'],
+        where: { ...where, source: undefined },
+        _count: { _all: true },
+      }),
+      this.prisma.lot.groupBy({
+        by: ['fuelType'],
+        where: { ...where, fuelType: undefined },
+        _count: { _all: true },
+      }),
+    ]);
+
+    const facets: LotFacets = {
+      damageType: damageTypeCounts
+        .filter((r) => r.damageType !== null)
+        .map((r) => ({ value: r.damageType!, count: r._count._all })),
+      source: sourceCounts.map((r) => ({ value: r.source, count: r._count._all })),
+      fuelType: fuelTypeCounts
+        .filter((r) => r.fuelType !== null)
+        .map((r) => ({ value: r.fuelType!, count: r._count._all })),
+    };
+
+    const result: LotListResponseDto = {
+      items: items.map(toLotCard),
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      facets,
+    };
+
+    await this.redis.setex(cacheKey, 600, JSON.stringify(result)).catch(() => null);
+    return result;
+  }
+
+  async getLotById(id: string): Promise<LotDetailDto> {
+    const lot = await this.prisma.lot.findUnique({
+      where: { id },
+      include: LOT_CARD_INCLUDE,
+    });
+
+    if (!lot) throw new NotFoundException(`Lot ${id} not found`);
+
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    const [avgResult, relatedLots] = await Promise.all([
+      this.prisma.lot.aggregate({
+        where: {
+          makeId: lot.makeId,
+          modelId: lot.modelId,
+          year: { gte: lot.year - 2, lte: lot.year + 2 },
+          saleStatus: SaleStatus.SOLD,
+          saleDate: { gte: sixMonthsAgo },
+          id: { not: lot.id },
+        },
+        _avg: { finalBid: true },
+        _count: { _all: true },
+      }),
+      this.prisma.lot.findMany({
+        where: {
+          makeId: lot.makeId,
+          modelId: lot.modelId,
+          id: { not: lot.id },
+          saleStatus: SaleStatus.SOLD,
+        },
+        include: LOT_CARD_INCLUDE,
+        orderBy: { saleDate: 'desc' },
+        take: 4,
+      }),
+    ]);
 
     return {
-      avgPrice: match?.avgPrice ?? null,
-      sampleSize: match?.sampleSize ?? 0,
+      ...toLotCard(lot),
+      engineCC: lot.engineCC,
+      location: lot.location,
+      scrapedAt: lot.scrapedAt.toISOString(),
+      avgPrice: avgResult._avg.finalBid ?? null,
+      avgPriceSampleSize: avgResult._count._all,
+      relatedLots: relatedLots.map(toLotCard),
+    };
+  }
+
+  async getAvgPrice(make: string, model: string, year: number): Promise<AvgPriceResponseDto> {
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    const result = await this.prisma.lot.aggregate({
+      where: {
+        make: { name: { equals: make, mode: 'insensitive' } },
+        model: { name: { equals: model, mode: 'insensitive' } },
+        year,
+        saleStatus: SaleStatus.SOLD,
+        saleDate: { gte: sixMonthsAgo },
+      },
+      _avg: { finalBid: true },
+      _count: { _all: true },
+    });
+
+    return {
+      avgPrice: result._avg.finalBid ?? null,
+      sampleSize: result._count._all,
       currency: 'USD',
     };
+  }
+
+  async lookupLot(
+    vin?: string,
+    lotNumber?: string,
+  ): Promise<LotLookupResponseDto | LotLookupNotFoundDto> {
+    const lot = await this.prisma.lot.findFirst({
+      where: {
+        OR: [
+          ...(vin ? [{ vin }] : []),
+          ...(lotNumber ? [{ lotNumber }] : []),
+        ],
+      },
+      include: LOT_CARD_INCLUDE,
+    });
+
+    if (lot) return { found: true, lot: toLotCard(lot) };
+
+    const query = vin ?? lotNumber ?? '';
+    return { found: false, bidfaxUrl: `https://bidfax.info/search/?q=${encodeURIComponent(query)}` };
   }
 }
