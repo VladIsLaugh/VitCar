@@ -146,7 +146,9 @@
     }
   },
   "Cars": {
-    "title": "Каталог автомобілів"
+    "title": "Каталог автомобілів",
+    "metaTitle": "Каталог авто з США — VitAuto",
+    "metaDescription": "Перегляньте тисячі проданих лотів з аукціонів Copart та IAAI. Реальні ціни, фільтри за маркою, моделлю, роком, типом пошкодження."
   },
   "Auth": {
     "signIn": "Увійти",
@@ -412,5 +414,64 @@
     "Finance": {
       "title": "Фінанси"
     }
+  },
+  "catalog": {
+    "demoDataBanner": "ДЕМО-ДАНІ — Каталог показує зразкові лоти для демонстрації. Реальні дані аукціонів будуть доступні після інтеграції.",
+    "showing": "Показано {shown} з {total} результатів",
+    "sortBy": "Сортувати",
+    "sortNewest": "Новіші",
+    "sortCheapest": "Дешевші",
+    "sortExpensive": "Дорожчі",
+    "listView": "Список",
+    "gridView": "Сітка",
+    "comingSoon": "Незабаром",
+    "emptyTitle": "Нічого не знайдено за вашими фільтрами",
+    "emptyHint": "Спробуйте розширити пошук або скинути фільтри",
+    "resetFilters": "Скинути фільтри",
+    "errorTitle": "Не вдалося завантажити лоти",
+    "retry": "Спробувати знову",
+    "details": "Деталі",
+    "calculate": "Розрахувати →",
+    "sold": "Продано:",
+    "filtersMake": "Марка",
+    "filtersModel": "Модель",
+    "filtersYear": "Рік",
+    "filtersSource": "Аукціон",
+    "filtersDamage": "Тип пошкодження",
+    "filtersPrice": "Ціна ($)",
+    "filtersMileage": "Пробіг (миль)",
+    "filtersState": "Штат",
+    "filtersAll": "Всі",
+    "applyFilters": "Застосувати",
+    "clearFilters": "Очистити",
+    "spec": {
+      "make": "Марка",
+      "model": "Модель",
+      "year": "Рік",
+      "bodyType": "Тип кузова",
+      "fuelType": "Тип палива",
+      "engineCC": "Об'єм двигуна (cc)",
+      "mileage": "Пробіг",
+      "damageType": "Тип пошкодження",
+      "titleStatus": "Статус документів",
+      "source": "Аукціон",
+      "lotNumber": "Номер лоту",
+      "vin": "VIN",
+      "saleDate": "Дата продажу",
+      "state": "Штат",
+      "salePrice": "Ціна продажу",
+      "copyVin": "Скопіювати VIN",
+      "vinCopied": "VIN скопійовано!"
+    },
+    "avgPrice": "Середня ціна схожих лотів",
+    "avgPriceBased": "на основі {count} продажів",
+    "calculateCta": "Розрахувати вартість під ключ →",
+    "vinInfo": "Інформація за VIN",
+    "relatedLots": "Схожі автомобілі",
+    "share": "Поділитись",
+    "linkCopied": "Посилання скопійовано!",
+    "breadcrumbHome": "Головна",
+    "breadcrumbCatalog": "Каталог",
+    "lotNotFound": "Лот не знайдено"
   }
 }
