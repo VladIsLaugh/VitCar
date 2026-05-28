@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
 import { SaleStatus } from '@prisma/client';
 import * as crypto from 'crypto';
@@ -11,8 +11,8 @@ import type {
   LotLookupNotFoundDto,
   LotLookupResponseDto,
 } from '@vitauto/shared-types';
-import type { PrismaService } from '../prisma/prisma.service';
-import type { RedisService } from '../redis/redis.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { RedisService } from '../redis/redis.service';
 import type { LotQueryDto } from './dto/lot-query.dto';
 import { LotSortBy } from './dto/lot-query.dto';
 
@@ -88,8 +88,8 @@ function getSaleDateGte(range: string): Date | undefined {
 @Injectable()
 export class LotsService {
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly redis: RedisService
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(RedisService) private readonly redis: RedisService
   ) {}
 
   async getLots(query: LotQueryDto): Promise<LotListResponseDto> {
