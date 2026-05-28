@@ -444,6 +444,75 @@
     "filtersAll": "Всі",
     "applyFilters": "Застосувати",
     "clearFilters": "Очистити",
+    "filters": {
+      "makeLabel": "Марка",
+      "modelLabel": "Модель",
+      "yearLabel": "Рік",
+      "sourceLabel": "Аукціон",
+      "damageTypeLabel": "Тип пошкодження",
+      "fuelTypeLabel": "Тип палива",
+      "priceLabel": "Ціна ($)",
+      "mileageLabel": "Пробіг (миль)",
+      "stateLabel": "Штат",
+      "saleDateLabel": "Дата продажу",
+      "resetAll": "Скинути фільтри",
+      "showResults": "Показати {count} результатів",
+      "activeCount": "{count} активних",
+      "saleDateOptions": {
+        "any": "Будь-який",
+        "week": "Минулий тиждень",
+        "month": "Минулий місяць",
+        "threeMonths": "3 місяці",
+        "year": "Минулий рік"
+      },
+      "allMakes": "Всі марки",
+      "allModels": "Всі моделі",
+      "allStates": "Всі штати",
+      "drawerTitle": "Фільтри",
+      "triggerLabel": "Фільтри ({count})"
+    },
+    "card": {
+      "soldLabel": "Продано:",
+      "detailsButton": "Деталі",
+      "calculateButton": "Розрахувати →",
+      "miles": "миль",
+      "km": "км",
+      "noPhoto": "Фото відсутнє"
+    },
+    "grid": {
+      "showingResults": "{shown} з {total} результатів",
+      "sortNewest": "Найновіші",
+      "sortCheapest": "Найдешевші",
+      "sortMostExpensive": "Найдорожчі",
+      "sortMileageAsc": "Мінімальний пробіг",
+      "emptyState": "Нічого не знайдено. Спробуйте змінити фільтри.",
+      "errorState": "Помилка завантаження. Спробуйте ще раз.",
+      "retryButton": "Повторити",
+      "gridView": "Сітка",
+      "listView": "Список",
+      "comingSoon": "Незабаром"
+    },
+    "pagination": {
+      "previous": "Назад",
+      "next": "Далі",
+      "pageAriaLabel": "Сторінка {page}"
+    },
+    "lookup": {
+      "modalTitle": "Пошук по VIN або номеру лоту",
+      "inputPlaceholder": "Введіть VIN (17 символів) або номер лоту...",
+      "searchingByVin": "Пошук по VIN",
+      "searchingByLot": "Пошук по номеру лоту",
+      "notFound": "Цей лот відсутній у нашій базі даних.",
+      "bidfaxLink": "Переглянути на bidfax.info ↗",
+      "errorMessage": "Пошук недоступний. Спробуйте ще раз.",
+      "retryButton": "Повторити",
+      "triggerTooltip": "Знайти по VIN або номеру лоту",
+      "keyboardHint": "⌘K"
+    },
+    "meta": {
+      "title": "Каталог авто зі США — VitAuto",
+      "description": "Перегляньте лоти з аукціонів Copart та IAAI. Фільтри по марці, моделі, ціні та пробігу."
+    },
     "spec": {
       "make": "Марка",
       "model": "Модель",

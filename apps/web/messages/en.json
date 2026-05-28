@@ -444,6 +444,75 @@
     "filtersAll": "All",
     "applyFilters": "Apply",
     "clearFilters": "Clear",
+    "filters": {
+      "makeLabel": "Make",
+      "modelLabel": "Model",
+      "yearLabel": "Year",
+      "sourceLabel": "Auction",
+      "damageTypeLabel": "Damage type",
+      "fuelTypeLabel": "Fuel type",
+      "priceLabel": "Price ($)",
+      "mileageLabel": "Mileage (miles)",
+      "stateLabel": "State",
+      "saleDateLabel": "Sale date",
+      "resetAll": "Reset filters",
+      "showResults": "Show {count} results",
+      "activeCount": "{count} active",
+      "saleDateOptions": {
+        "any": "Any",
+        "week": "Last week",
+        "month": "Last month",
+        "threeMonths": "3 months",
+        "year": "Last year"
+      },
+      "allMakes": "All makes",
+      "allModels": "All models",
+      "allStates": "All states",
+      "drawerTitle": "Filters",
+      "triggerLabel": "Filters ({count})"
+    },
+    "card": {
+      "soldLabel": "Sold:",
+      "detailsButton": "Details",
+      "calculateButton": "Calculate →",
+      "miles": "mi",
+      "km": "km",
+      "noPhoto": "No photo"
+    },
+    "grid": {
+      "showingResults": "{shown} of {total} results",
+      "sortNewest": "Newest",
+      "sortCheapest": "Cheapest",
+      "sortMostExpensive": "Most expensive",
+      "sortMileageAsc": "Lowest mileage",
+      "emptyState": "Nothing found. Try changing your filters.",
+      "errorState": "Failed to load. Please try again.",
+      "retryButton": "Retry",
+      "gridView": "Grid",
+      "listView": "List",
+      "comingSoon": "Coming soon"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "pageAriaLabel": "Page {page}"
+    },
+    "lookup": {
+      "modalTitle": "Search by VIN or Lot number",
+      "inputPlaceholder": "Enter VIN (17 chars) or lot number...",
+      "searchingByVin": "Searching by VIN",
+      "searchingByLot": "Searching by Lot #",
+      "notFound": "This lot isn't in our database yet.",
+      "bidfaxLink": "View on bidfax.info ↗",
+      "errorMessage": "Search unavailable. Please try again.",
+      "retryButton": "Retry",
+      "triggerTooltip": "Find by VIN or Lot #",
+      "keyboardHint": "⌘K"
+    },
+    "meta": {
+      "title": "US Car Catalog — VitAuto",
+      "description": "Browse lots from Copart and IAAI auctions. Filter by make, model, price, and mileage."
+    },
     "spec": {
       "make": "Make",
       "model": "Model",
