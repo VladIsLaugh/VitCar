@@ -18,14 +18,10 @@ const API_URL =
   process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
 
 async function getLot(id: string): Promise<LotDetailDto | null> {
-  try {
-    const res = await fetch(`${API_URL}/lots/${id}`, { next: { revalidate } });
-    if (res.status === 404) return null;
-    if (!res.ok) return null;
-    return (await res.json()) as LotDetailDto;
-  } catch {
-    return null;
-  }
+  const res = await fetch(`${API_URL}/lots/${id}`, { next: { revalidate } });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Failed to fetch lot: ${res.status}`);
+  return (await res.json()) as LotDetailDto;
 }
 
 export async function generateStaticParams() {
@@ -41,7 +37,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, id } = await params;
-  const lot = await getLot(id);
+  const lot = await getLot(id).catch(() => null);
   const t = await getTranslations({ locale, namespace: 'catalog' });
 
   if (!lot) {

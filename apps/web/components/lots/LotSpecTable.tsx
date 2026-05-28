@@ -44,8 +44,8 @@ export function LotSpecTable({ lot }: LotSpecTableProps) {
     { label: t('engineCC'), value: lot.engineCC ? `${lot.engineCC} cc` : '—' },
     {
       label: t('mileage'),
-      value: lot.mileage
-        ? `${lot.mileage.toLocaleString('en-US')} ${lot.mileageUnit.toLowerCase()}`
+      value: lot.mileage != null
+        ? `${lot.mileage.toLocaleString('en-US')} ${(lot.mileageUnit ?? 'MILES').toLowerCase()}`
         : '—',
     },
     { label: t('damageType'), value: lot.damageType ?? '—' },
