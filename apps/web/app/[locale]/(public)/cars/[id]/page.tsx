@@ -26,7 +26,7 @@ async function getLot(id: string): Promise<LotDetailDto | null> {
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${API_URL}/lots?limit=1000&sortBy=saleDate_desc`);
+    const res = await fetch(`${API_URL}/lots?limit=48&sortBy=saleDate_desc`);
     if (!res.ok) return [];
     const data = (await res.json()) as { items: Array<{ id: string }> };
     return data.items.map((lot) => ({ id: lot.id }));

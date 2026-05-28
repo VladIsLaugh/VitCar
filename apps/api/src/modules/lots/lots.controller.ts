@@ -1,4 +1,5 @@
 import { BadRequestException, Controller, Get, Param, Query } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import type {
   AvgPriceResponseDto,
   LotDetailDto,
@@ -14,6 +15,7 @@ import { LotQueryDto } from './dto/lot-query.dto';
 import { LotLookupDto } from './dto/lot-lookup.dto';
 import { LotsService } from './lots.service';
 
+@SkipThrottle()
 @Controller('lots')
 export class LotsController {
   constructor(private readonly lotsService: LotsService) {}
