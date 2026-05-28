@@ -26,9 +26,9 @@ const makeLotCardHtml = (
   const {
     lotNumber = '12345678',
     vin = '1HGBH41JXMN109186',
-    year = '2022',
+    year = '2024',
     bid = '$8,500',
-    date = 'May 14, 2024',
+    date = 'Jan 15, 2026', // within last 12 months (today = May 28, 2026)
     state = 'FL',
   } = overrides;
 
@@ -101,7 +101,7 @@ describe('BidfaxScraperService – field extraction', () => {
     expect(createCall.vin).toBe('1HGBH41JXMN109186');
     expect(createCall.finalBid).toBe(8500);
     expect(createCall.saleDate).toBeInstanceOf(Date);
-    expect(createCall.saleDate.getFullYear()).toBe(2024);
+    expect(createCall.saleDate.getFullYear()).toBe(2026);
     expect(createCall.state).toBe('FL');
     expect(createCall.photoUrls).toContain('https://img.bidfax.info/photo1.jpg');
     expect(createCall.saleStatus).toBe('SOLD');
@@ -110,7 +110,7 @@ describe('BidfaxScraperService – field extraction', () => {
   it('parses short date format MM/DD/YYYY correctly', async () => {
     axiosGetMock
       .mockResolvedValueOnce({ data: '' }) // robots.txt
-      .mockResolvedValueOnce({ data: makeLotCardHtml({ date: '03/25/2024' }) })
+      .mockResolvedValueOnce({ data: makeLotCardHtml({ date: '03/25/2026' }) })
       .mockResolvedValueOnce({ data: makeEmptyPageHtml() });
 
     await service.scrapeMakeModel('toyota', 'camry', 5);
@@ -119,7 +119,7 @@ describe('BidfaxScraperService – field extraction', () => {
     expect(createCall.saleDate).toBeInstanceOf(Date);
     expect(createCall.saleDate.getMonth()).toBe(2); // March = index 2
     expect(createCall.saleDate.getDate()).toBe(25);
-    expect(createCall.saleDate.getFullYear()).toBe(2024);
+    expect(createCall.saleDate.getFullYear()).toBe(2026);
   });
 });
 
@@ -236,16 +236,16 @@ describe('BidfaxScraperService – deduplication', () => {
       <html><body>
         <div data-lot="11111111" class="lot-item">
           <span class="vin">1HGBH41JXMN109186</span>
-          <span class="year">2022</span>
+          <span class="year">2024</span>
           <span class="price">$8,500</span>
-          <span class="date">May 14, 2024</span>
+          <span class="date">Jan 14, 2026</span>
           <span class="state">FL</span>
         </div>
         <div data-lot="22222222" class="lot-item">
           <span class="vin">2T1BURHE0JC036403</span>
-          <span class="year">2022</span>
+          <span class="year">2024</span>
           <span class="price">$9,000</span>
-          <span class="date">May 15, 2024</span>
+          <span class="date">Jan 15, 2026</span>
           <span class="state">CA</span>
         </div>
       </body></html>
