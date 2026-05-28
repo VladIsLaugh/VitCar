@@ -8,12 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useCalculatorStore } from '@/stores/calculator.store';
 import { formatAmount, type Currency } from '@/lib/formatters';
 import type { CalculationResultDto } from '@vitauto/shared-types';
@@ -54,7 +49,7 @@ function LineItem({
           </TooltipProvider>
         )}
       </span>
-      <span>{value === 0 ? '$0' : fmt(value)}</span>
+      <span>{fmt(value)}</span>
     </div>
   );
 }
@@ -64,8 +59,7 @@ export default function ResultBreakdown({ result }: Props) {
   const locale = useLocale();
   const { currency, convertAmount } = useCalculatorStore();
 
-  const fmt = (usd: number) =>
-    formatAmount(convertAmount(usd), currency as Currency, locale);
+  const fmt = (usd: number) => formatAmount(convertAmount(usd), currency as Currency, locale);
 
   return (
     <div>
@@ -76,11 +70,7 @@ export default function ResultBreakdown({ result }: Props) {
             {t('result.firstPayment')}
           </AccordionTrigger>
           <AccordionContent>
-            <LineItem
-              label={t('result.lotPrice')}
-              value={result.firstPayment.lotPrice}
-              fmt={fmt}
-            />
+            <LineItem label={t('result.lotPrice')} value={result.firstPayment.lotPrice} fmt={fmt} />
 
             {/* Nested auction fees accordion */}
             <Accordion type="single" collapsible>
@@ -130,11 +120,7 @@ export default function ResultBreakdown({ result }: Props) {
               fmt={fmt}
             />
             {result.firstPayment.bankFee > 0 && (
-              <LineItem
-                label={t('result.bankFee')}
-                value={result.firstPayment.bankFee}
-                fmt={fmt}
-              />
+              <LineItem label={t('result.bankFee')} value={result.firstPayment.bankFee} fmt={fmt} />
             )}
 
             <div className="mt-2 flex items-center justify-between border-t pt-2 text-sm font-semibold">
@@ -180,16 +166,8 @@ export default function ResultBreakdown({ result }: Props) {
               value={result.secondPayment.customsDuty}
               fmt={fmt}
             />
-            <LineItem
-              label={t('result.excise')}
-              value={result.secondPayment.excise}
-              fmt={fmt}
-            />
-            <LineItem
-              label={t('result.vat')}
-              value={result.secondPayment.vat}
-              fmt={fmt}
-            />
+            <LineItem label={t('result.excise')} value={result.secondPayment.excise} fmt={fmt} />
+            <LineItem label={t('result.vat')} value={result.secondPayment.vat} fmt={fmt} />
 
             <div className="mt-2 flex items-center justify-between border-t pt-2 text-sm font-semibold">
               <span>{t('result.blockTotal')}</span>
@@ -220,11 +198,7 @@ export default function ResultBreakdown({ result }: Props) {
               value={result.thirdPayment.pensionFund}
               fmt={fmt}
             />
-            <LineItem
-              label={t('result.mreo')}
-              value={result.thirdPayment.mreo}
-              fmt={fmt}
-            />
+            <LineItem label={t('result.mreo')} value={result.thirdPayment.mreo} fmt={fmt} />
 
             <div className="mt-2 flex items-center justify-between border-t pt-2 text-sm font-semibold">
               <span>{t('result.blockTotal')}</span>

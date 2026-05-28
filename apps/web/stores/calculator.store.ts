@@ -76,6 +76,7 @@ export const useCalculatorStore = create<CalculatorStore>((set, get) => ({
   },
 
   calculate: async () => {
+    if (get().isCalculating) return;
     const { inputs } = get();
     // Strip display-only fields before sending to API
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

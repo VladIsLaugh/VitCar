@@ -2,10 +2,12 @@ import type { OnApplicationBootstrap } from '@nestjs/common';
 import {
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { Cron } from '@nestjs/schedule';
 import type {
   CalculationBreakdown,
@@ -126,16 +128,27 @@ export class CalculatorService implements OnApplicationBootstrap {
 
     const clientSnapshot = omitCompanyFee(settings as unknown as Record<string, unknown>);
 
-    const row = await this.prisma.calculation.create({
-      data: {
-        userId,
-        inputParams: inputParams as object,
-        result: result as object,
-        settingsSnapshot: clientSnapshot as object,
-        expiresAt: userId ? null : this.engine.guestExpiresAt(),
-      },
-      select: { id: true, shareToken: true },
-    });
+    let row: { id: string; shareToken: string };
+    try {
+      row = await this.prisma.calculation.create({
+        data: {
+          userId,
+          inputParams: inputParams as object,
+          result: result as object,
+          settingsSnapshot: clientSnapshot as object,
+          expiresAt: userId ? null : this.engine.guestExpiresAt(),
+        },
+        select: { id: true, shareToken: true },
+      });
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2003') {
+        // FK violation — userId from JWT points to a user not in this DB
+        this.logger.error(`Save failed: userId ${userId} not found in DB`, err);
+        throw new InternalServerErrorException('Failed to save calculation — please try again');
+      }
+      this.logger.error('Unexpected error saving calculation', err);
+      throw new InternalServerErrorException('Failed to save calculation');
+    }
 
     return row;
   }
