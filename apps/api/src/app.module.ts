@@ -9,6 +9,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { CalculatorModule } from './modules/calculator/calculator.module';
 import { LotsModule } from './modules/lots/lots.module';
+import { MakesModule } from './modules/makes/makes.module';
+import { ScraperModule } from './modules/scraper/scraper.module';
 import { DebugModule } from './modules/debug/debug.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
@@ -31,6 +33,8 @@ import configuration from './config/configuration';
     UsersModule,
     CalculatorModule,
     LotsModule,
+    MakesModule,
+    ScraperModule,
     DebugModule,
     VehiclesModule,
   ],
