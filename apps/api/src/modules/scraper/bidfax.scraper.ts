@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import type { PrismaService } from '@/prisma/prisma.service';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { PrismaService } from '@/prisma/prisma.service';
 import * as Sentry from '@sentry/node';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
@@ -38,7 +38,7 @@ export class BidfaxScraperService {
   private readonly logger = new Logger(BidfaxScraperService.name);
   private robotsChecked = false;
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   private sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
