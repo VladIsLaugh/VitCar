@@ -3,10 +3,16 @@
 import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
-import type { LotCardDto, LotListResponseDto } from '@vitauto/shared-types';
+import type { LotListResponseDto } from '@vitauto/shared-types';
 import { LotCard } from './LotCard';
 import { LotCardSkeleton } from './LotCardSkeleton';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { LayoutGrid, List } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -33,14 +39,15 @@ export function LotsGrid({ data, isLoading, isError, onRetry }: LotsGridProps) {
     router.replace(`${pathname}?${params.toString()}`);
   };
 
-  const skeletons: LotCardDto[] = [];
   const skeletonCount = 24;
 
   if (isError) {
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
         <p className="text-muted-foreground">{t('errorTitle')}</p>
-        <Button variant="outline" onClick={onRetry}>{t('retry')}</Button>
+        <Button variant="outline" onClick={onRetry}>
+          {t('retry')}
+        </Button>
       </div>
     );
   }
@@ -73,7 +80,12 @@ export function LotsGrid({ data, isLoading, isError, onRetry }: LotsGridProps) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 opacity-40 cursor-not-allowed" disabled>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 opacity-40 cursor-not-allowed"
+                  disabled
+                >
                   <List className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
