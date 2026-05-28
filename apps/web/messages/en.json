@@ -146,7 +146,9 @@
     }
   },
   "Cars": {
-    "title": "Car Catalog"
+    "title": "Car Catalog",
+    "metaTitle": "US Car Catalog — VitAuto",
+    "metaDescription": "Browse thousands of sold Copart and IAAI auction lots. Real prices, filter by make, model, year, damage type."
   },
   "Auth": {
     "signIn": "Sign In",
@@ -412,5 +414,139 @@
     "Finance": {
       "title": "Finance"
     }
+  },
+  "catalog": {
+    "demoDataBanner": "DEMO DATA — This catalog shows sample lots for demonstration purposes. Real auction data will be available after integration is complete.",
+    "showing": "Showing {shown} of {total} results",
+    "sortBy": "Sort by",
+    "sortNewest": "Newest",
+    "sortCheapest": "Cheapest",
+    "sortExpensive": "Most Expensive",
+    "listView": "List",
+    "gridView": "Grid",
+    "comingSoon": "Coming soon",
+    "emptyTitle": "Nothing found for your filters",
+    "emptyHint": "Try broadening your search or reset the filters",
+    "resetFilters": "Reset filters",
+    "errorTitle": "Failed to load lots",
+    "retry": "Try again",
+    "details": "Details",
+    "calculate": "Calculate →",
+    "sold": "Sold:",
+    "filtersMake": "Make",
+    "filtersModel": "Model",
+    "filtersYear": "Year",
+    "filtersSource": "Auction",
+    "filtersDamage": "Damage type",
+    "filtersPrice": "Price ($)",
+    "filtersMileage": "Mileage (miles)",
+    "filtersState": "State",
+    "filtersAll": "All",
+    "applyFilters": "Apply",
+    "clearFilters": "Clear",
+    "filters": {
+      "makeLabel": "Make",
+      "modelLabel": "Model",
+      "yearLabel": "Year",
+      "sourceLabel": "Auction",
+      "damageTypeLabel": "Damage type",
+      "fuelTypeLabel": "Fuel type",
+      "priceLabel": "Price ($)",
+      "mileageLabel": "Mileage (miles)",
+      "stateLabel": "State",
+      "saleDateLabel": "Sale date",
+      "resetAll": "Reset filters",
+      "showResults": "Show {count} results",
+      "activeCount": "{count} active",
+      "saleDateOptions": {
+        "any": "Any",
+        "week": "Last week",
+        "month": "Last month",
+        "threeMonths": "3 months",
+        "year": "Last year"
+      },
+      "allMakes": "All makes",
+      "allModels": "All models",
+      "allStates": "All states",
+      "drawerTitle": "Filters",
+      "triggerLabel": "Filters ({count})"
+    },
+    "card": {
+      "soldLabel": "Sold:",
+      "detailsButton": "Details",
+      "calculateButton": "Calculate →",
+      "miles": "mi",
+      "km": "km",
+      "noPhoto": "No photo"
+    },
+    "grid": {
+      "showingResults": "{shown} of {total} results",
+      "sortNewest": "Newest",
+      "sortCheapest": "Cheapest",
+      "sortMostExpensive": "Most expensive",
+      "sortMileageAsc": "Lowest mileage",
+      "emptyState": "Nothing found. Try changing your filters.",
+      "errorState": "Failed to load. Please try again.",
+      "retryButton": "Retry",
+      "gridView": "Grid",
+      "listView": "List",
+      "comingSoon": "Coming soon"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "pageAriaLabel": "Page {page}"
+    },
+    "lookup": {
+      "modalTitle": "Search by VIN or Lot number",
+      "inputPlaceholder": "Enter VIN (17 chars) or lot number...",
+      "searchingByVin": "Searching by VIN",
+      "searchingByLot": "Searching by Lot #",
+      "notFound": "This lot isn't in our database yet.",
+      "bidfaxLink": "View on bidfax.info ↗",
+      "errorMessage": "Search unavailable. Please try again.",
+      "retryButton": "Retry",
+      "triggerTooltip": "Find by VIN or Lot #",
+      "keyboardHint": "⌘K"
+    },
+    "meta": {
+      "title": "US Car Catalog — VitAuto",
+      "description": "Browse lots from Copart and IAAI auctions. Filter by make, model, price, and mileage."
+    },
+    "spec": {
+      "make": "Make",
+      "model": "Model",
+      "year": "Year",
+      "bodyType": "Body type",
+      "fuelType": "Fuel type",
+      "engineCC": "Engine (cc)",
+      "mileage": "Mileage",
+      "damageType": "Damage type",
+      "titleStatus": "Title status",
+      "source": "Auction",
+      "lotNumber": "Lot number",
+      "vin": "VIN",
+      "saleDate": "Sale date",
+      "state": "State",
+      "salePrice": "Sale price",
+      "copyVin": "Copy VIN",
+      "vinCopied": "VIN copied!"
+    },
+    "avgPrice": "Avg sold price for similar lots",
+    "avgPriceBased": "based on {count} sales",
+    "calculateCta": "Calculate Turnkey Cost →",
+    "vinInfo": "VIN Information",
+    "relatedLots": "Similar vehicles",
+    "share": "Share",
+    "linkCopied": "Link copied!",
+    "breadcrumbHome": "Home",
+    "breadcrumbCatalog": "Catalog",
+    "lotNotFound": "Lot not found"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "Sorry, this page doesn't exist or has been moved.",
+    "backHome": "Back to home",
+    "browseCars": "Browse catalog"
   }
 }

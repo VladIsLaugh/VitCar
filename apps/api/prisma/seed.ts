@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { AuctionSource, MileageUnit, Prisma, PrismaClient, SaleStatus } from '@prisma/client';
 import {
   COPART_BUYER_FEES,
   COPART_PROXY_FEES,
@@ -20,6 +20,46 @@ import {
 const prisma = new PrismaClient();
 
 const EFFECTIVE_FROM = new Date('2026-01-01');
+
+const MAKES_SEED = [
+  { name: 'Toyota', slug: 'toyota', models: ['Camry', 'RAV4', 'Highlander', 'Corolla', 'Tacoma', 'Prius', 'Sienna'] },
+  { name: 'Honda', slug: 'honda', models: ['Accord', 'CR-V', 'Civic', 'Pilot', 'Odyssey', 'Passport'] },
+  { name: 'Ford', slug: 'ford', models: ['F-150', 'Explorer', 'Escape', 'Mustang', 'Edge', 'Expedition'] },
+  { name: 'Chevrolet', slug: 'chevrolet', models: ['Malibu', 'Equinox', 'Tahoe', 'Silverado', 'Traverse', 'Suburban'] },
+  { name: 'BMW', slug: 'bmw', models: ['3 Series', '5 Series', 'X3', 'X5', 'X7', '7 Series'] },
+  { name: 'Mercedes-Benz', slug: 'mercedes-benz', models: ['C-Class', 'E-Class', 'GLE', 'GLC', 'S-Class', 'GLS'] },
+  { name: 'Lexus', slug: 'lexus', models: ['RX', 'ES', 'IS', 'GX', 'NX', 'LX'] },
+  { name: 'Tesla', slug: 'tesla', models: ['Model 3', 'Model Y', 'Model S', 'Model X'] },
+  { name: 'Kia', slug: 'kia', models: ['Sorento', 'Sportage', 'Telluride', 'Optima', 'Stinger'] },
+  { name: 'Hyundai', slug: 'hyundai', models: ['Sonata', 'Tucson', 'Santa Fe', 'Elantra', 'Palisade'] },
+  { name: 'Jeep', slug: 'jeep', models: ['Grand Cherokee', 'Wrangler', 'Cherokee', 'Compass'] },
+  { name: 'Dodge', slug: 'dodge', models: ['Charger', 'Challenger', 'Durango', 'Ram 1500'] },
+  { name: 'Subaru', slug: 'subaru', models: ['Outback', 'Forester', 'Impreza', 'Legacy', 'Crosstrek'] },
+  { name: 'Audi', slug: 'audi', models: ['A4', 'A6', 'Q5', 'Q7', 'Q8'] },
+  { name: 'Volkswagen', slug: 'volkswagen', models: ['Jetta', 'Passat', 'Tiguan', 'Atlas', 'Golf'] },
+  { name: 'Mazda', slug: 'mazda', models: ['CX-5', 'CX-9', 'Mazda3', 'Mazda6', 'CX-30'] },
+  { name: 'Nissan', slug: 'nissan', models: ['Altima', 'Rogue', 'Murano', 'Pathfinder', 'Frontier'] },
+  { name: 'Mitsubishi', slug: 'mitsubishi', models: ['Outlander', 'Eclipse Cross', 'Galant'] },
+  { name: 'Volvo', slug: 'volvo', models: ['XC90', 'XC60', 'S90', 'V90'] },
+  { name: 'Ram', slug: 'ram', models: ['1500', '2500', '3500'] },
+];
+
+const DAMAGE_TYPES = ['Front', 'Rear', 'Side', 'Hail', 'Flood', 'Fire'];
+const STATES = ['NJ', 'TX', 'FL', 'CA', 'IL', 'GA', 'NY', 'PA', 'OH', 'MI'];
+const BODY_TYPES = ['Sedan', 'SUV', 'Truck', 'Coupe', 'Hatchback', 'Minivan', 'Wagon'];
+const TITLE_STATUSES = ['Salvage', 'Clean', 'Rebuilt', 'Parts Only'];
+
+function slugify(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+}
+
+function randomItem<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomInt(min: number, max: number): number {
+  return min + Math.floor(Math.random() * (max - min + 1));
+}
 
 async function seedCalculatorSettings() {
   const settings = [
@@ -63,9 +103,87 @@ async function seedCalculatorSettings() {
   console.log(`Seeded ${settings.length} CalculationSettings rows`);
 }
 
+async function seedMakesAndModels() {
+  let makesCount = 0;
+  let modelsCount = 0;
+
+  for (const makeData of MAKES_SEED) {
+    const make = await prisma.make.upsert({
+      where: { slug: makeData.slug },
+      update: {},
+      create: { name: makeData.name, slug: makeData.slug },
+    });
+    makesCount++;
+
+    for (const modelName of makeData.models) {
+      const modelSlug = slugify(modelName);
+      await prisma.model.upsert({
+        where: { makeId_slug: { makeId: make.id, slug: modelSlug } },
+        update: {},
+        create: { makeId: make.id, name: modelName, slug: modelSlug },
+      });
+      modelsCount++;
+    }
+  }
+
+  console.log(`Seeded ${makesCount} makes and ${modelsCount} models`);
+}
+
+async function seedTestLots() {
+  const TOP5_SLUGS = ['toyota', 'honda', 'ford', 'bmw', 'tesla'];
+
+  const makes = await prisma.make.findMany({
+    where: { slug: { in: TOP5_SLUGS } },
+    include: { models: true },
+  });
+
+  if (makes.length === 0) {
+    console.log('No makes found for test lots — skipping');
+    return;
+  }
+
+  const lotsToCreate: Prisma.LotCreateManyInput[] = [];
+
+  for (let i = 0; i < 100; i++) {
+    const make = randomItem(makes);
+    const model = randomItem(make.models);
+    const source: AuctionSource = Math.random() > 0.5 ? AuctionSource.COPART : AuctionSource.IAAI;
+    const lotNumber = `TEST-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+
+    lotsToCreate.push({
+      source,
+      lotNumber,
+      makeId: make.id,
+      modelId: model.id,
+      year: randomInt(2018, 2024),
+      finalBid: randomInt(2000, 22000),
+      saleStatus: SaleStatus.SOLD,
+      saleDate: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000),
+      state: randomItem(STATES),
+      damageType: randomItem(DAMAGE_TYPES),
+      bodyType: randomItem(BODY_TYPES),
+      titleStatus: randomItem(TITLE_STATUSES),
+      mileage: randomInt(5000, 150000),
+      mileageUnit: MileageUnit.MILES,
+      currency: 'USD',
+      photoUrls: [],
+    });
+  }
+
+  // Use skipDuplicates for idempotency (lotNumber+source must be unique)
+  const result = await prisma.lot.createMany({
+    data: lotsToCreate,
+    skipDuplicates: true,
+  });
+
+  console.log(`Seeded ${result.count} test lots`);
+}
+
 async function main() {
   console.log('Seeding database...');
   await seedCalculatorSettings();
+  await seedMakesAndModels();
+  await seedTestLots();
   console.log('Seeding complete.');
 }
 

@@ -32,6 +32,70 @@ enum AuctionSource {
   IAAI
 }
 
+enum SaleStatus {
+  SOLD
+  UNSOLD
+}
+
+enum MileageUnit {
+  MILES
+  KM
+}
+
+model Make {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  slug   String  @unique
+  models Model[]
+  lots   Lot[]
+}
+
+model Model {
+  id     String @id @default(cuid())
+  makeId String
+  make   Make   @relation(fields: [makeId], references: [id])
+  name   String
+  slug   String
+  lots   Lot[]
+
+  @@unique([makeId, slug])
+}
+
+model Lot {
+  id          String        @id @default(cuid())
+  source      AuctionSource
+  lotNumber   String
+  vin         String?
+  makeId      String
+  make        Make          @relation(fields: [makeId], references: [id])
+  modelId     String
+  model       Model         @relation(fields: [modelId], references: [id])
+  year        Int
+  bodyType    String?
+  fuelType    FuelType?
+  engineCC    Int?
+  mileage     Int?
+  mileageUnit MileageUnit   @default(MILES)
+  damageType  String?
+  titleStatus String?
+  saleStatus  SaleStatus    @default(SOLD)
+  finalBid    Float?
+  currency    String        @default("USD")
+  saleDate    DateTime?
+  location    String?
+  state       String?
+  photoUrls   String[]
+  externalUrl String?
+  scrapedAt   DateTime      @default(now())
+
+  @@unique([lotNumber, source])
+  @@index([makeId, modelId, year])
+  @@index([saleDate])
+  @@index([finalBid])
+  @@index([state])
+  @@index([saleStatus])
+}
+
 model User {
   id                  String    @id @default(uuid())
   email               String    @unique

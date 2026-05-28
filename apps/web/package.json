@@ -38,6 +38,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@sentry/nextjs": "^8.0.0",
     "@tanstack/react-query": "^5.100.11",
+    "@vercel/speed-insights": "^1.1.0",
     "@vitauto/shared-types": "workspace:*",
     "axios": "^1.16.0",
     "class-variance-authority": "^0.7.1",

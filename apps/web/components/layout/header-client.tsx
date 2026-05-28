@@ -2,25 +2,40 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ThemeToggle } from './theme-toggle';
 import { LanguageSwitcher } from './language-switcher';
 import { MobileNav } from './mobile-nav';
 import { VitAutoLogo } from './logo';
+import { VinLotLookupModal } from '@/components/lots/VinLotLookupModal';
 import { cn } from '@/lib/utils';
 
 export function HeaderClient() {
   const t = useTranslations('Nav');
+  const tLookup = useTranslations('catalog');
   const locale = useLocale();
   const [scrolled, setScrolled] = useState(false);
+  const [lookupOpen, setLookupOpen] = useState(false);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handler, { passive: true });
     handler();
     return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setLookupOpen(true);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const translatedItems = [
@@ -65,6 +80,26 @@ export function HeaderClient() {
           </nav>
 
           <div className="flex items-center gap-2.5">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setLookupOpen(true)}
+                    aria-label={tLookup('lookup.triggerTooltip')}
+                  >
+                    <Search className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <span>{tLookup('lookup.triggerTooltip')}</span>
+                  <span className="ml-2 text-muted-foreground text-xs">
+                    {tLookup('lookup.keyboardHint')}
+                  </span>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <LanguageSwitcher />
             <ThemeToggle />
             <Button variant="outline" size="sm" asChild>
@@ -83,12 +118,22 @@ export function HeaderClient() {
         <div className="flex md:hidden h-14 items-center justify-between">
           <VitAutoLogo />
           <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setLookupOpen(true)}
+              aria-label={tLookup('lookup.triggerTooltip')}
+            >
+              <Search className="h-4 w-4" />
+            </Button>
             <LanguageSwitcher />
             <ThemeToggle />
             <MobileNav items={translatedItems} />
           </div>
         </div>
       </div>
+
+      <VinLotLookupModal open={lookupOpen} onClose={() => setLookupOpen(false)} />
     </header>
   );
 }

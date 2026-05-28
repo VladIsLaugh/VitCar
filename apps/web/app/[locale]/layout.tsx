@@ -4,6 +4,9 @@ import { Geist } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { ThemeProvider } from 'next-themes';
+import { cookies } from 'next/headers';
+import Script from 'next/script';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { AuthProvider } from '@/contexts/auth-context';
@@ -28,8 +31,12 @@ export async function generateMetadata({ params }: Pick<Props, 'params'>): Promi
   const t = await getTranslations({ locale, namespace: 'Metadata' });
 
   return {
+    metadataBase: new URL('https://vitauto.ua'),
     title: t('title'),
     description: t('description'),
+    robots: { index: true, follow: true },
+    openGraph: { siteName: 'VitAuto' },
+    twitter: { card: 'summary_large_image' },
     alternates: {
       languages: {
         uk: 'https://vitauto.ua/uk',
@@ -43,6 +50,8 @@ export async function generateMetadata({ params }: Pick<Props, 'params'>): Promi
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
   const messages = await getMessages();
+  const cookieStore = await cookies();
+  const hasConsent = cookieStore.get('cookieConsent')?.value === 'accepted';
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -65,6 +74,14 @@ export default async function LocaleLayout({ children, params }: Props) {
           </NextIntlClientProvider>
         </ThemeProvider>
         <Toaster />
+        {hasConsent && process.env.NEXT_PUBLIC_CLARITY_ID && (
+          <Script
+            id="clarity"
+            strategy="afterInteractive"
+            src={`https://www.clarity.ms/tag/${process.env.NEXT_PUBLIC_CLARITY_ID}`}
+          />
+        )}
+        <SpeedInsights />
       </body>
     </html>
   );
