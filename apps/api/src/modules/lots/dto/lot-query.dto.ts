@@ -37,7 +37,7 @@ export class LotQueryDto {
 
   @IsOptional()
   @Transform(({ value }: { value: unknown }) =>
-    Array.isArray(value) ? value : typeof value === 'string' ? [value] : undefined,
+    Array.isArray(value) ? value : typeof value === 'string' ? [value] : undefined
   )
   damageType?: string[];
 
@@ -67,6 +67,10 @@ export class LotQueryDto {
   @IsOptional()
   @IsEnum(LotSortBy)
   sortBy?: LotSortBy = LotSortBy.SALE_DATE_DESC;
+
+  @IsOptional()
+  @IsString()
+  saleDateRange?: string;
 
   @IsOptional()
   @Type(() => Number)

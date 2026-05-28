@@ -14,14 +14,15 @@ interface Props {
   params: Promise<{ locale: string; id: string }>;
 }
 
-const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
+const API_URL =
+  process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
 
 async function getLot(id: string): Promise<LotDetailDto | null> {
   try {
     const res = await fetch(`${API_URL}/lots/${id}`, { next: { revalidate } });
     if (res.status === 404) return null;
     if (!res.ok) return null;
-    return res.json() as Promise<LotDetailDto>;
+    return (await res.json()) as LotDetailDto;
   } catch {
     return null;
   }
@@ -76,11 +77,36 @@ export default async function LotDetailPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: t('breadcrumbHome'), item: `https://vitauto.ua/${locale}` },
-      { '@type': 'ListItem', position: 2, name: t('breadcrumbCatalog'), item: `https://vitauto.ua/${locale}/cars` },
-      { '@type': 'ListItem', position: 3, name: lot.make.name, item: `https://vitauto.ua/${locale}/cars?makeId=${lot.make.id}` },
-      { '@type': 'ListItem', position: 4, name: lot.model.name, item: `https://vitauto.ua/${locale}/cars?makeId=${lot.make.id}&modelId=${lot.model.id}` },
-      { '@type': 'ListItem', position: 5, name: `#${lot.lotNumber}`, item: `https://vitauto.ua/${locale}/cars/${id}` },
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: t('breadcrumbHome'),
+        item: `https://vitauto.ua/${locale}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: t('breadcrumbCatalog'),
+        item: `https://vitauto.ua/${locale}/cars`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: lot.make.name,
+        item: `https://vitauto.ua/${locale}/cars?makeId=${lot.make.id}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
+        name: lot.model.name,
+        item: `https://vitauto.ua/${locale}/cars?makeId=${lot.make.id}&modelId=${lot.model.id}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 5,
+        name: `#${lot.lotNumber}`,
+        item: `https://vitauto.ua/${locale}/cars/${id}`,
+      },
     ],
   };
 
@@ -118,8 +144,14 @@ export default async function LotDetailPage({ params }: Props) {
 
   return (
     <main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(vehicleJsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(vehicleJsonLd) }}
+      />
       <DemoDataBanner />
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground">

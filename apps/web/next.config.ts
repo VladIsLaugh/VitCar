@@ -18,7 +18,19 @@ if (process.env.VERCEL && !process.env.NEXT_PUBLIC_API_URL) {
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'bidfax.info' },
+      { protocol: 'https', hostname: '**.bidfax.info' },
+      { protocol: 'https', hostname: 'cs.copart.com' },
+      { protocol: 'https', hostname: 'cs-img.copart.com' },
+      { protocol: 'https', hostname: 'pri.copart.com' },
+      { protocol: 'https', hostname: '**.copart.com' },
+      { protocol: 'https', hostname: '**.iaai.com' },
+    ],
+  },
+};
 
 const nextIntlConfig = withNextIntl(nextConfig);
 

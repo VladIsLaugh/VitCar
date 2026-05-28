@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, SaleStatus } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
+import { SaleStatus } from '@prisma/client';
 import * as crypto from 'crypto';
 import type {
   AvgPriceResponseDto,
@@ -10,8 +11,8 @@ import type {
   LotLookupNotFoundDto,
   LotLookupResponseDto,
 } from '@vitauto/shared-types';
-import { PrismaService } from '../prisma/prisma.service';
-import { RedisService } from '../redis/redis.service';
+import type { PrismaService } from '../prisma/prisma.service';
+import type { RedisService } from '../redis/redis.service';
 import type { LotQueryDto } from './dto/lot-query.dto';
 import { LotSortBy } from './dto/lot-query.dto';
 
@@ -36,14 +37,12 @@ function toLotCard(lot: LotWithRefs): LotCardDto {
     mileage: lot.mileage,
     mileageUnit: lot.mileageUnit,
     damageType: lot.damageType,
-    titleStatus: lot.titleStatus,
     saleStatus: lot.saleStatus,
     finalBid: lot.finalBid,
     currency: lot.currency,
     saleDate: lot.saleDate?.toISOString() ?? null,
     state: lot.state,
     photoUrls: lot.photoUrls,
-    externalUrl: lot.externalUrl,
   };
 }
 
@@ -58,11 +57,39 @@ function buildOrderBy(sortBy: LotSortBy): Prisma.LotOrderByWithRelationInput {
   return map[sortBy] ?? { saleDate: 'desc' };
 }
 
+function getSaleDateGte(range: string): Date | undefined {
+  const now = new Date();
+  switch (range) {
+    case 'week': {
+      const d = new Date(now);
+      d.setDate(d.getDate() - 7);
+      return d;
+    }
+    case 'month': {
+      const d = new Date(now);
+      d.setMonth(d.getMonth() - 1);
+      return d;
+    }
+    case 'threeMonths': {
+      const d = new Date(now);
+      d.setMonth(d.getMonth() - 3);
+      return d;
+    }
+    case 'year': {
+      const d = new Date(now);
+      d.setFullYear(d.getFullYear() - 1);
+      return d;
+    }
+    default:
+      return undefined;
+  }
+}
+
 @Injectable()
 export class LotsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly redis: RedisService,
+    private readonly redis: RedisService
   ) {}
 
   async getLots(query: LotQueryDto): Promise<LotListResponseDto> {
@@ -70,9 +97,14 @@ export class LotsService {
     const limit = query.limit ?? 24;
     const sortBy = query.sortBy ?? LotSortBy.SALE_DATE_DESC;
 
-    const cacheKey = `lots:${crypto.createHash('md5').update(JSON.stringify({ ...query, page, limit })).digest('hex')}`;
+    const cacheKey = `lots:${crypto
+      .createHash('md5')
+      .update(JSON.stringify({ ...query, page, limit }))
+      .digest('hex')}`;
     const cached = await this.redis.get(cacheKey).catch(() => null);
     if (cached) return JSON.parse(cached) as LotListResponseDto;
+
+    const saleDateGte = query.saleDateRange ? getSaleDateGte(query.saleDateRange) : undefined;
 
     const where: Prisma.LotWhereInput = {
       ...(query.makeId && { makeId: query.makeId }),
@@ -88,6 +120,7 @@ export class LotsService {
       ...(query.fuelType && { fuelType: query.fuelType }),
       ...(query.mileageMax && { mileage: { lte: query.mileageMax } }),
       ...(query.state && { state: query.state }),
+      ...(saleDateGte && { saleDate: { gte: saleDateGte } }),
       saleStatus: SaleStatus.SOLD,
     };
 
@@ -119,11 +152,11 @@ export class LotsService {
     ]);
 
     const facets: LotFacets = {
-      damageType: damageTypeCounts
+      damageTypes: damageTypeCounts
         .filter((r) => r.damageType !== null)
         .map((r) => ({ value: r.damageType!, count: r._count._all })),
-      source: sourceCounts.map((r) => ({ value: r.source, count: r._count._all })),
-      fuelType: fuelTypeCounts
+      sources: sourceCounts.map((r) => ({ value: r.source, count: r._count._all })),
+      fuelTypes: fuelTypeCounts
         .filter((r) => r.fuelType !== null)
         .map((r) => ({ value: r.fuelType!, count: r._count._all })),
     };
@@ -180,10 +213,11 @@ export class LotsService {
 
     return {
       ...toLotCard(lot),
+      titleStatus: lot.titleStatus,
       engineCC: lot.engineCC,
       location: lot.location,
-      scrapedAt: lot.scrapedAt.toISOString(),
-      avgPrice: avgResult._avg.finalBid ?? null,
+      externalUrl: lot.externalUrl,
+      avgPrice: avgResult._avg.finalBid ? Number(avgResult._avg.finalBid) : null,
       avgPriceSampleSize: avgResult._count._all,
       relatedLots: relatedLots.map(toLotCard),
     };
@@ -214,21 +248,22 @@ export class LotsService {
 
   async lookupLot(
     vin?: string,
-    lotNumber?: string,
+    lotNumber?: string
   ): Promise<LotLookupResponseDto | LotLookupNotFoundDto> {
     const lot = await this.prisma.lot.findFirst({
       where: {
-        OR: [
-          ...(vin ? [{ vin }] : []),
-          ...(lotNumber ? [{ lotNumber }] : []),
-        ],
+        OR: [...(vin ? [{ vin }] : []), ...(lotNumber ? [{ lotNumber }] : [])],
       },
       include: LOT_CARD_INCLUDE,
     });
 
-    if (lot) return { found: true, lot: toLotCard(lot) };
+    if (lot) return { found: true, lot: toLotCard(lot), bidfaxUrl: null };
 
     const query = vin ?? lotNumber ?? '';
-    return { found: false, bidfaxUrl: `https://bidfax.info/search/?q=${encodeURIComponent(query)}` };
+    return {
+      found: false,
+      lot: null,
+      bidfaxUrl: `https://bidfax.info/search/?q=${encodeURIComponent(query)}`,
+    };
   }
 }
