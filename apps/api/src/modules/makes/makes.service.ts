@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import type { MakeDto, ModelDto } from '@vitauto/shared-types';
-import { PrismaService } from '../prisma/prisma.service';
-import { RedisService } from '../redis/redis.service';
+import type { PrismaService } from '../prisma/prisma.service';
+import type { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class MakesService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly redis: RedisService,
+    private readonly redis: RedisService
   ) {}
 
   async getMakes(): Promise<MakeDto[]> {
@@ -54,6 +54,7 @@ export class MakesService {
 
     const result: ModelDto[] = models.map((m) => ({
       id: m.id,
+      makeId,
       name: m.name,
       slug: m.slug,
       lotCount: m._count.lots,
