@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ThemeToggle } from './theme-toggle';
 import { LanguageSwitcher } from './language-switcher';
 import { MobileNav } from './mobile-nav';
-import { VitAutoLogo } from './logo';hh
+import { VitAutoLogo } from './logo';
 import { VinLotLookupModal } from '@/components/lots/VinLotLookupModal';
 import { cn } from '@/lib/utils';
 
