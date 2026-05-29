@@ -147,8 +147,8 @@ async function seedTestLots() {
   for (let i = 0; i < 100; i++) {
     const make = randomItem(makes);
     const model = randomItem(make.models);
-    const source: AuctionSource = Math.random() > 0.5 ? AuctionSource.COPART : AuctionSource.IAAI;
-    const lotNumber = `TEST-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+    const source: AuctionSource = i % 2 === 0 ? AuctionSource.COPART : AuctionSource.IAAI;
+    const lotNumber = `TEST-${String(i + 1).padStart(4, '0')}`;
 
     lotsToCreate.push({
       source,
