@@ -182,10 +182,12 @@ export class BidfaxScraperService {
           rawState && /^[A-Z]{2}$/.test(rawState.toUpperCase()) ? rawState.toUpperCase() : null;
 
         const photoUrls = $el
-          .find('img[src]')
-          .map((_, img) => $(img).attr('src') ?? '')
+          .find('img[data-src], img[data-original], img[src]')
+          .map((_, img) =>
+            $(img).attr('data-src') ?? $(img).attr('data-original') ?? $(img).attr('src') ?? ''
+          )
           .get()
-          .filter(Boolean);
+          .filter((u) => u.startsWith('http'));
 
         const href = $el.find('a[href]').first().attr('href') ?? null;
         const externalUrl = href

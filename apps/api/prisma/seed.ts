@@ -166,7 +166,9 @@ async function seedTestLots() {
       mileage: randomInt(5000, 150000),
       mileageUnit: MileageUnit.MILES,
       currency: 'USD',
-      photoUrls: [],
+      photoUrls: Array.from({ length: randomInt(1, 4) }, (_, j) =>
+        `https://picsum.photos/seed/${lotNumber}-${j}/800/450`
+      ),
     });
   }
 

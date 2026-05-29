@@ -28,6 +28,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'pri.copart.com' },
       { protocol: 'https', hostname: '**.copart.com' },
       { protocol: 'https', hostname: '**.iaai.com' },
+      { protocol: 'https', hostname: 'picsum.photos' },
     ],
   },
 };
