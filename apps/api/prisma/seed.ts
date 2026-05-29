@@ -172,13 +172,18 @@ async function seedTestLots() {
     });
   }
 
-  // Use skipDuplicates for idempotency (lotNumber+source must be unique)
-  const result = await prisma.lot.createMany({
-    data: lotsToCreate,
-    skipDuplicates: true,
-  });
+  // Upsert so re-running seed updates photoUrls on existing lots too
+  let count = 0;
+  for (const lot of lotsToCreate) {
+    await prisma.lot.upsert({
+      where: { lotNumber_source: { lotNumber: lot.lotNumber!, source: lot.source! } },
+      create: lot,
+      update: { photoUrls: lot.photoUrls },
+    });
+    count++;
+  }
 
-  console.log(`Seeded ${result.count} test lots`);
+  console.log(`Seeded ${count} test lots`);
 }
 
 async function main() {
