@@ -5,7 +5,7 @@ import type { Job } from 'bullmq';
 import type { ScrapeMakeJobData } from './bidfax.scraper';
 import { BidfaxScraperService } from './bidfax.scraper';
 
-@Processor('scraper-queue', { concurrency: 2 })
+@Processor('scraper-queue', { concurrency: 1 })
 export class ScraperWorker extends WorkerHost {
   private readonly logger = new Logger(ScraperWorker.name);
 
