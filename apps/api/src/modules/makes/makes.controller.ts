@@ -1,7 +1,9 @@
 import { Controller, Get, Param } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import type { MakeDto, ModelDto } from '@vitauto/shared-types';
 import { MakesService } from './makes.service';
 
+@SkipThrottle()
 @Controller('makes')
 export class MakesController {
   constructor(private readonly makesService: MakesService) {}

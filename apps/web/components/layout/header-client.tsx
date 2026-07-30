@@ -41,6 +41,7 @@ export function HeaderClient() {
   const translatedItems = [
     { href: `/${locale}#how-it-works`, id: 'how', label: t('howItWorks') },
     { href: `/${locale}#cases`, id: 'cases', label: t('cases') },
+    { href: `/${locale}/cars`, id: 'catalog', label: t('catalog') },
     { href: '/calculator', id: 'calculator', label: t('calculator') },
     { href: `/${locale}#faq`, id: 'faq', label: t('faq') },
     { href: `/${locale}#contacts`, id: 'contacts', label: t('contacts') },

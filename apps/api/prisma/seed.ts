@@ -147,8 +147,8 @@ async function seedTestLots() {
   for (let i = 0; i < 100; i++) {
     const make = randomItem(makes);
     const model = randomItem(make.models);
-    const source: AuctionSource = Math.random() > 0.5 ? AuctionSource.COPART : AuctionSource.IAAI;
-    const lotNumber = `TEST-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+    const source: AuctionSource = i % 2 === 0 ? AuctionSource.COPART : AuctionSource.IAAI;
+    const lotNumber = `TEST-${String(i + 1).padStart(4, '0')}`;
 
     lotsToCreate.push({
       source,
@@ -166,17 +166,24 @@ async function seedTestLots() {
       mileage: randomInt(5000, 150000),
       mileageUnit: MileageUnit.MILES,
       currency: 'USD',
-      photoUrls: [],
+      photoUrls: Array.from({ length: randomInt(1, 4) }, (_, j) =>
+        `https://picsum.photos/seed/${lotNumber}-${j}/800/450`
+      ),
     });
   }
 
-  // Use skipDuplicates for idempotency (lotNumber+source must be unique)
-  const result = await prisma.lot.createMany({
-    data: lotsToCreate,
-    skipDuplicates: true,
-  });
+  // Upsert so re-running seed updates photoUrls on existing lots too
+  let count = 0;
+  for (const lot of lotsToCreate) {
+    await prisma.lot.upsert({
+      where: { lotNumber_source: { lotNumber: lot.lotNumber!, source: lot.source! } },
+      create: lot,
+      update: { photoUrls: lot.photoUrls },
+    });
+    count++;
+  }
 
-  console.log(`Seeded ${result.count} test lots`);
+  console.log(`Seeded ${count} test lots`);
 }
 
 async function main() {

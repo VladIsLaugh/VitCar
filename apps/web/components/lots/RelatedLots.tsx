@@ -1,3 +1,5 @@
+'use client';
+
 import { useTranslations } from 'next-intl';
 import type { LotCardDto } from '@vitauto/shared-types';
 import { LotCard } from './LotCard';

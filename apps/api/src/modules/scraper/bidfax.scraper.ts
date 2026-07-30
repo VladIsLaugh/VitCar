@@ -51,7 +51,19 @@ export class BidfaxScraperService {
   private async fetchPage(url: string, attempt = 1): Promise<string> {
     try {
       const { data } = await axios.get<string>(url, {
-        headers: { 'User-Agent': this.getRandomUserAgent() },
+        headers: {
+          'User-Agent': this.getRandomUserAgent(),
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Connection': 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
+          'Cache-Control': 'max-age=0',
+        },
         timeout: 15000,
         responseType: 'text',
       });
@@ -61,6 +73,12 @@ export class BidfaxScraperService {
       if ((status === 429 || status === 503) && attempt < 3) {
         await this.sleep(attempt * 5000);
         return this.fetchPage(url, attempt + 1);
+      }
+      // 403 may be a temporary IP/WAF block — back off 60s before one retry
+      if (status === 403 && attempt === 1) {
+        this.logger.warn(`Got 403 from ${url}, backing off 60s before retry`);
+        await this.sleep(60000);
+        return this.fetchPage(url, 2);
       }
       throw err;
     }
@@ -164,10 +182,12 @@ export class BidfaxScraperService {
           rawState && /^[A-Z]{2}$/.test(rawState.toUpperCase()) ? rawState.toUpperCase() : null;
 
         const photoUrls = $el
-          .find('img[src]')
-          .map((_, img) => $(img).attr('src') ?? '')
+          .find('img[data-src], img[data-original], img[src]')
+          .map((_, img) =>
+            $(img).attr('data-src') ?? $(img).attr('data-original') ?? $(img).attr('src') ?? ''
+          )
           .get()
-          .filter(Boolean);
+          .filter((u) => u.startsWith('http'));
 
         const href = $el.find('a[href]').first().attr('href') ?? null;
         const externalUrl = href
@@ -207,6 +227,8 @@ export class BidfaxScraperService {
     maxPages: number
   ): Promise<ScrapeResult> {
     this.logger.log(`Scraping bidfax.info/${makeSlug}/${modelSlug} up to ${maxPages} pages`);
+    // Stagger between jobs: 3-8s random delay to avoid simultaneous requests
+    await this.sleep(3000 + Math.random() * 5000);
     await this.checkRobots(makeSlug);
 
     const make = await this.prisma.make.findUnique({ where: { slug: makeSlug } });

@@ -6,7 +6,7 @@ import { DemoDataBanner } from '@/components/lots/DemoDataBanner';
 import { Link } from '@/i18n/routing';
 import { LotDetailClient } from './lot-detail-client';
 
-export const revalidate = 600;
+export const dynamic = 'force-dynamic';
 
 const isDemoMode = process.env.NEXT_PUBLIC_CATALOG_DEMO_MODE === 'true';
 
@@ -19,23 +19,11 @@ const API_URL =
 
 async function getLot(id: string): Promise<LotDetailDto | null> {
   try {
-    const res = await fetch(`${API_URL}/lots/${id}`, { next: { revalidate } });
-    if (res.status === 404) return null;
+    const res = await fetch(`${API_URL}/lots/${id}`);
     if (!res.ok) return null;
     return (await res.json()) as LotDetailDto;
   } catch {
     return null;
-  }
-}
-
-export async function generateStaticParams() {
-  try {
-    const res = await fetch(`${API_URL}/lots?limit=1000&sortBy=saleDate_desc`);
-    if (!res.ok) return [];
-    const data = (await res.json()) as { items: Array<{ id: string }> };
-    return data.items.map((lot) => ({ id: lot.id }));
-  } catch {
-    return [];
   }
 }
 
