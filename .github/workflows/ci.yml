@@ -51,6 +51,26 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+  check-i18n:
+    name: Check i18n
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Disable corepack
+        run: corepack disable
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check i18n key parity
+        run: pnpm check:i18n
+
   type-check:
     name: Type Check
     runs-on: ubuntu-latest
@@ -99,7 +119,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [lint, type-check]
+    needs: [lint, type-check, check-i18n]
     steps:
       - uses: actions/checkout@v4
 

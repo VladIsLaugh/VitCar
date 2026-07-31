@@ -1,0 +1,38 @@
+# Kimi Code MCP configuration — Atlassian (Jira + Confluence)
+#
+# CURRENT SETUP (working, OAuth-based): the Atlassian remote MCP server is
+# configured at USER level in ~/.kimi-code/mcp.json:
+#
+#   {
+#     "mcpServers": {
+#       "atlassian": {
+#         "url": "https://mcp.atlassian.com/v1/mcp/authv2"
+#       }
+#     }
+#   }
+#
+# Auth: OAuth browser flow. Run `/mcp-config login atlassian` in the Kimi Code
+# TUI (or let the agent trigger it) once per machine. No API tokens needed.
+# Verified working 2026-07-30 against the `CAR` (CarUSA) project at
+# vladvit19.atlassian.net — issue types: Epic / Story / Bug / Task / Subtask.
+#
+# To share with the team, the same block can go in project-level
+# .kimi-code/mcp.json (project overrides user on name conflicts).
+#
+# Tools are exposed as mcp__atlassian__* (getJiraIssue, transitionJiraIssue,
+# searchJiraIssuesUsingJql, addCommentToJiraIssue, ...). The `jira` skill and
+# the project's `working-a-jira-ticket` skill use this MCP backend.
+#
+# ---
+#
+# DEPRECATED alternative (API-token stdio server, kept for reference only —
+# use the OAuth setup above instead):
+#
+# [mcp_servers.atlassian]
+# command = "npx"
+# args = ["-y", "@aashari/mcp-server-atlassian-jira"]
+#
+# [mcp_servers.atlassian.env]
+# ATLASSIAN_SITE_NAME = "vladvit19"
+# ATLASSIAN_USER_EMAIL = "${ATLASSIAN_EMAIL}"
+# ATLASSIAN_API_TOKEN = "${ATLASSIAN_API_TOKEN}"
