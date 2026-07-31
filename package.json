@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky || true",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint --filter=*",
@@ -16,7 +16,8 @@
     "db:studio": "pnpm --filter=@vitauto/api db:studio",
     "db:generate": "pnpm --filter=@vitauto/api db:generate",
     "db:reset": "pnpm --filter=@vitauto/api db:reset",
-    "db:seed": "pnpm --filter=@vitauto/api db:seed"
+    "db:seed": "pnpm --filter=@vitauto/api db:seed",
+    "check-translations": "node scripts/check-translations.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

@@ -11,11 +11,20 @@
     }
   },
   "scripts": {
+    "prepare": "tsc",
     "build": "tsc",
     "dev": "tsc --watch",
     "clean": "rm -rf dist"
   },
+  "peerDependencies": {
+    "class-transformer": ">=0.5.0",
+    "class-validator": ">=0.14.0",
+    "reflect-metadata": ">=0.1.0"
+  },
   "devDependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "reflect-metadata": "^0.2.0",
     "typescript": "^5.8.3"
   }
 }

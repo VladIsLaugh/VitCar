@@ -1,71 +1,16 @@
-# VitAuto Platform
+# VitAuto — Cars from USA Auctions, Turnkey
 
-Car auction platform monorepo built with Turborepo, Next.js 15, and NestJS.
+Platform for importing cars from US auctions (Copart / IAAI) to Ukraine. Full cycle: selection → purchase → shipping → customs → restoration → registration.
 
 ## Live URLs
 
-| Service           | URL                                     |
-| ----------------- | --------------------------------------- |
-| Frontend (Vercel) | _configure in Vercel UI → update here_  |
-| API (Railway)     | _configure in Railway UI → update here_ |
-| API health check  | `GET <railway-url>/api/health`          |
+| Service           | URL                                      |
+| ----------------- | ---------------------------------------- |
+| Frontend (Vercel) | https://vit-car.vercel.app               |
+| API (Railway)     | https://vitcar-production.up.railway.app |
+| API health check  | `GET /api/health`                        |
 
-## Deployment
-
-### Vercel (Next.js frontend)
-
-1. Go to [vercel.com/new](https://vercel.com/new) → **Import Git Repository** → select `VladIsLaugh/VitCar`
-2. **Root Directory**: `apps/web`
-3. **Framework Preset**: Next.js (auto-detected)
-4. **Build Command**: leave blank (uses `vercel.json`)
-5. **Output Directory**: leave blank (uses `vercel.json`)
-6. **Environment Variables** → add:
-   - `NEXT_PUBLIC_API_URL` = your Railway API URL (e.g. `https://vitauto-api.up.railway.app`)
-7. Click **Deploy**
-
-Every push to `main` auto-deploys production. Every PR gets a unique preview URL.
-
-### Railway (NestJS API + PostgreSQL + Redis)
-
-1. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo** → select `VladIsLaugh/VitCar`
-2. In the created service → **Settings** → set **Root Directory** to `/` (repo root — `railway.json` handles everything)
-3. **Add Plugin** → **PostgreSQL** — Railway auto-sets `DATABASE_URL`
-4. **Add Plugin** → **Redis** — Railway auto-sets `REDIS_URL`
-5. In the API service **Variables**, add:
-   - `NODE_ENV` = `production`
-   - `JWT_ACCESS_SECRET` = _(generate with `openssl rand -hex 32`)_
-   - `JWT_REFRESH_SECRET` = _(generate with `openssl rand -hex 32`)_
-   - `FRONTEND_URL` = your Vercel URL
-6. **First deploy**: after the first build, run migrations once from your local machine:
-   ```bash
-   DATABASE_URL="<railway-postgres-url>" pnpm --filter=api migrate:prod
-   ```
-
-### GitHub Secrets (for CI/CD pipelines)
-
-Add these in **Settings → Secrets and variables → Actions**:
-
-| Secret                | Value                                                 |
-| --------------------- | ----------------------------------------------------- |
-| `RAILWAY_TOKEN`       | Railway dashboard → Account Settings → Tokens         |
-| `RAILWAY_SERVICE_ID`  | Railway project → API service → Settings → Service ID |
-| `API_URL`             | e.g. `https://vitauto-api.up.railway.app`             |
-| `NEXT_PUBLIC_API_URL` | same as `API_URL`                                     |
-
-## Structure
-
-```
-vitauto/
-├── apps/
-│   ├── web/          # Next.js 15 frontend
-│   └── api/          # NestJS backend
-├── packages/
-│   └── shared-types/ # Shared TypeScript types/interfaces/enums
-├── turbo.json
-├── package.json
-├── pnpm-workspace.yaml
-└── tsconfig.base.json
-```
+---
 
 ## Quick Start (5 minutes)
 
@@ -75,139 +20,335 @@ vitauto/
 - pnpm >= 9 (`npm install -g pnpm`)
 - Docker (for PostgreSQL + Redis)
 
-### Setup
-
 ```bash
-# Clone the repo
+# 1. Clone
 git clone https://github.com/vladislaugh/vitcar.git
 cd vitcar
 
-# Install all dependencies for all workspaces
+# 2. Install all workspace dependencies
 pnpm install
 
-# Start PostgreSQL + Redis
+# 3. Start PostgreSQL + Redis
 docker-compose up -d
 
-# Copy and fill environment variables
+# 4. Copy environment files and fill in secrets (see Environment Variables below)
 cp apps/api/.env.example apps/api/.env
-cp apps/web/.env.example apps/web/.env.local   # if exists
+cp apps/web/.env.example apps/web/.env.local
 
-# Run database migrations
-pnpm db:migrate
-
-# Run all apps in dev mode (web: :3000, api: :3001)
-pnpm dev
+# 5. Run database migrations and start everything
+pnpm db:migrate && pnpm dev
+# web → http://localhost:3000   api → http://localhost:3001
 ```
 
-### Individual apps
+---
 
-```bash
-# Run only the frontend
-pnpm --filter @vitauto/web dev
+## Project Structure
 
-# Run only the backend
-pnpm --filter @vitauto/api dev
-
-# Build shared types only
-pnpm --filter @vitauto/shared-types build
 ```
+vitauto/
+├── apps/
+│   ├── web/                          # Next.js 15 frontend
+│   │   ├── app/[locale]/             # i18n routing (uk / en)
+│   │   │   ├── (public)/             # Landing, calculator, cars catalog
+│   │   │   └── (dashboard)/         # Authenticated: garage, saved, finance
+│   │   ├── components/
+│   │   │   ├── ui/                   # shadcn/ui components (copy-in, Radix-based)
+│   │   │   ├── layout/               # Header, Footer, Sidebar
+│   │   │   └── landing/              # HeroSection, FAQ, etc.
+│   │   ├── lib/                      # api-client.ts, utils.ts, formatters.ts
+│   │   ├── stores/                   # Zustand client state
+│   │   ├── messages/                 # uk.json, en.json (i18n strings)
+│   │   ├── sentry.client.config.ts   # Sentry browser init
+│   │   ├── sentry.server.config.ts   # Sentry Node init (SSR)
+│   │   └── sentry.edge.config.ts     # Sentry Edge runtime init
+│   │
+│   └── api/                          # NestJS backend
+│       ├── src/
+│       │   ├── instrument.ts         # Sentry init — must be first import
+│       │   ├── main.ts               # Bootstrap (port, CORS, global pipes)
+│       │   ├── app.module.ts         # Root module
+│       │   ├── common/
+│       │   │   ├── decorators/       # @CurrentUser(), @Roles()
+│       │   │   ├── filters/          # HttpExceptionFilter (Sentry 5xx)
+│       │   │   ├── interceptors/     # LoggingInterceptor, AuditInterceptor
+│       │   │   └── pipes/            # Custom validation pipes
+│       │   ├── config/               # configuration.ts (env schema)
+│       │   └── modules/
+│       │       ├── auth/             # JWT + Google OAuth
+│       │       ├── users/            # User CRUD
+│       │       ├── calculator/       # Customs calculation engine
+│       │       ├── health/           # GET /api/health
+│       │       └── debug/            # Sentry test endpoints (dev/staging only)
+│       └── prisma/
+│           └── schema.prisma         # DB schema
+│
+└── packages/
+    └── shared-types/                 # DTOs and enums shared by web + api
+        └── src/
+            ├── auth.types.ts
+            ├── lot.types.ts
+            └── order.types.ts
+```
+
+---
+
+## Tech Stack
+
+| Layer          | Technology                                         |
+| -------------- | -------------------------------------------------- |
+| Frontend       | Next.js 15 (App Router), React 19, TypeScript      |
+| Styling        | Tailwind CSS v4 (`@theme` block), shadcn/ui, Radix |
+| State          | Zustand (client), TanStack Query (server)          |
+| Forms          | react-hook-form + zod                              |
+| i18n           | next-intl — locales: `uk` (default), `en`          |
+| Backend        | NestJS 11, TypeScript, Passport.js                 |
+| ORM            | Prisma 6                                           |
+| Database       | PostgreSQL 16                                      |
+| Cache / Queues | Redis 7 + BullMQ                                   |
+| Auth           | JWT (15 min, in-memory) + HttpOnly cookie (30 d)   |
+| Email          | Resend                                             |
+| Notifications  | Telegram Bot API                                   |
+| Monitoring     | Sentry (API + Web)                                 |
+| Hosting        | Vercel (web) + Railway (api + db + redis)          |
+| Build          | Turborepo + pnpm workspaces                        |
+
+---
 
 ## Available Scripts
 
-| Command             | Description                          |
-| ------------------- | ------------------------------------ |
-| `pnpm dev`          | Start all apps in development mode   |
-| `pnpm build`        | Build all packages and apps          |
-| `pnpm lint`         | Lint all packages via Turborepo      |
-| `pnpm type-check`   | Type-check all packages              |
-| `pnpm format`       | Format all files with Prettier       |
-| `pnpm format:check` | Check formatting without writing     |
-| `pnpm clean`        | Remove all build artifacts           |
-| `pnpm db:migrate`   | Run Prisma migrations                |
-| `pnpm db:studio`    | Open Prisma Studio (GUI on :5555)    |
-| `pnpm db:generate`  | Regenerate Prisma Client             |
-| `pnpm db:reset`     | Reset database and re-run migrations |
+Run from the repo root unless otherwise noted.
 
-## Database (Docker)
+| Command             | Description                                        |
+| ------------------- | -------------------------------------------------- |
+| `pnpm dev`          | Start all apps in development mode (web + api)     |
+| `pnpm build`        | Build all packages and apps via Turborepo          |
+| `pnpm lint`         | ESLint across all workspaces                       |
+| `pnpm type-check`   | `tsc --noEmit` across all workspaces               |
+| `pnpm format`       | Format all files with Prettier                     |
+| `pnpm format:check` | Check formatting without writing                   |
+| `pnpm clean`        | Remove all `dist/` and `.next/` build artifacts    |
+| `pnpm db:migrate`   | `prisma migrate dev` — apply and create migrations |
+| `pnpm db:studio`    | Open Prisma Studio GUI on `:5555`                  |
+| `pnpm db:generate`  | Regenerate Prisma Client after schema changes      |
+| `pnpm db:reset`     | Reset DB and re-run all migrations (wipes data)    |
+| `pnpm db:seed`      | Seed with auction fees + city delivery data        |
+| `pnpm test`         | Run Jest unit tests                                |
+
+Run a single workspace:
 
 ```bash
-# Start PostgreSQL + Redis
-docker-compose up -d
-
-# Check services
-docker-compose ps
-
-# Stop (data preserved)
-docker-compose stop
-
-# Stop and wipe all data
-docker-compose down -v
+pnpm --filter @vitauto/web dev
+pnpm --filter @vitauto/api dev
+pnpm --filter @vitauto/shared-types build
 ```
 
-## Packages
+---
 
-### `@vitauto/shared-types`
+## Environment Variables
 
-Shared TypeScript types used by both frontend and backend:
+### `apps/api/.env`
 
-- `auth.types.ts` — User, Auth tokens, Login/Register DTOs
-- `lot.types.ts` — Car lot, auction types, filters
-- `order.types.ts` — Orders, payments, shipping
+Copy from `apps/api/.env.example`.
 
-Import in any app:
+| Variable               | Required | Description                                                         |
+| ---------------------- | -------- | ------------------------------------------------------------------- |
+| `PORT`                 | No       | HTTP port (default: `3001`; Railway sets this automatically)        |
+| `NODE_ENV`             | Yes      | `development` or `production`                                       |
+| `DATABASE_URL`         | Yes      | PostgreSQL connection string — Railway links this automatically     |
+| `REDIS_URL`            | Yes      | Redis connection string — Railway links this automatically          |
+| `JWT_ACCESS_SECRET`    | Yes      | Random secret for access tokens — generate: `openssl rand -hex 32`  |
+| `JWT_REFRESH_SECRET`   | Yes      | Random secret for refresh tokens — generate: `openssl rand -hex 32` |
+| `FRONTEND_URL`         | Yes      | Allowed CORS origin, e.g. `https://vit-car.vercel.app`              |
+| `GOOGLE_CLIENT_ID`     | No       | Google OAuth app client ID (required for Google login)              |
+| `GOOGLE_CLIENT_SECRET` | No       | Google OAuth app secret                                             |
+| `RESEND_API_KEY`       | No       | Resend API key for transactional email                              |
+| `SENTRY_DSN`           | No       | Sentry DSN for API error tracking (only sends in production)        |
 
-```typescript
-import { User, CarLot, Order } from '@vitauto/shared-types';
+### `apps/web/.env.local`
+
+Copy from `apps/web/.env.example`.
+
+| Variable                 | Required | Description                                                       |
+| ------------------------ | -------- | ----------------------------------------------------------------- |
+| `NEXT_PUBLIC_API_URL`    | Yes      | API base URL, e.g. `http://localhost:3001/api` or Railway URL     |
+| `NEXT_PUBLIC_SENTRY_DSN` | No       | Sentry DSN for frontend error tracking (only sends in production) |
+| `SENTRY_ORG`             | No       | Sentry org slug — required for source map uploads during build    |
+| `SENTRY_PROJECT`         | No       | Sentry project name, e.g. `vitauto`                               |
+| `SENTRY_AUTH_TOKEN`      | No       | Sentry auth token — get from Sentry → Settings → Auth Tokens      |
+
+---
+
+## Git Workflow
+
+### Branch naming
+
+```
+feature/CAR-123-short-description    # new feature
+fix/CAR-456-fix-calculation-bug      # bug fix
+chore/CAR-789-update-dependencies    # maintenance
 ```
 
-## Commit Convention
-
-Commits follow [Conventional Commits](https://www.conventionalcommits.org/) and are enforced by commitlint:
+### Commit format (enforced by commitlint)
 
 ```
-feat(auth): add Google OAuth login
-fix(calculator): correct customs duty formula
-chore(deps): update next.js to 15.1.0
-CAR-29 feat(setup): init monorepo with Turborepo   ← Jira smart commit
+CAR-123 feat(scope): short description
+CAR-123 fix(auth): handle expired refresh token
+CAR-123 chore(deps): update prisma to 6.x
 ```
 
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`, `ci`, `revert`
+Types: `feat` · `fix` · `refactor` · `test` · `chore` · `docs` · `perf` · `ci`
 
-## CI/CD
+The `CAR-123` prefix is required and enables **Jira smart commits** — the ticket is linked automatically when you push.
 
-### PR Pipeline (`.github/workflows/ci.yml`)
+### PR flow
 
-Runs on every PR to `main`. Jobs run in parallel where possible:
+1. Branch off the active sprint branch (currently `phase-0`)
+2. Open a **draft PR** while work is in progress
+3. CI runs lint + type-check + build on every push
+4. Mark ready for review when CI is green
+5. Merge into the sprint branch (squash merge)
 
-| Job          | What it does                                                           |
-| ------------ | ---------------------------------------------------------------------- |
-| `lint`       | `pnpm lint` — ESLint across all workspaces                             |
-| `type-check` | `pnpm type-check` — TypeScript across all workspaces                   |
-| `build`      | `pnpm build` — full monorepo build (runs after lint + type-check pass) |
+### Jira smart commits
 
-### Deploy Pipeline (`.github/workflows/deploy.yml`)
+Smart commits let you transition Jira tickets directly from your commit message:
+
+```bash
+# Link a commit to a ticket (status stays unchanged)
+git commit -m "CAR-29 feat(setup): init turbo monorepo"
+
+# Move ticket to In Progress
+git commit -m "CAR-29 #in-progress feat(setup): wip monorepo"
+
+# Move ticket to Done
+git commit -m "CAR-29 #done feat(setup): turbo monorepo complete"
+```
+
+**Setup (one-time, done by project owner):**
+
+1. In Jira → **Project Settings → Integrations → GitHub**
+2. Connect the `VladIsLaugh/VitCar` repository
+3. After connection, every push with a `CAR-NNN` prefix will appear on the Jira ticket automatically
+
+---
+
+## Deployment
+
+### Vercel (Next.js frontend)
+
+1. [vercel.com/new](https://vercel.com/new) → Import `VladIsLaugh/VitCar`
+2. **Root Directory**: `apps/web`
+3. **Framework**: Next.js (auto-detected)
+4. **Build / Output**: leave blank — `vercel.json` handles both
+5. **Environment Variables** — add at minimum:
+   - `NEXT_PUBLIC_API_URL` = Railway API URL
+   - `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`
+
+Every push to `phase-0` / `main` triggers a production deploy. Every PR gets a unique preview URL.
+
+### Railway (NestJS API + PostgreSQL + Redis)
+
+1. [railway.app](https://railway.app) → New Project → Deploy from GitHub → `VladIsLaugh/VitCar`
+2. Add **PostgreSQL** and **Redis** plugins — Railway sets `DATABASE_URL` and `REDIS_URL` automatically
+3. In the API service Variables, add:
+
+   | Variable             | Value                          |
+   | -------------------- | ------------------------------ |
+   | `NODE_ENV`           | `production`                   |
+   | `JWT_ACCESS_SECRET`  | `openssl rand -hex 32`         |
+   | `JWT_REFRESH_SECRET` | `openssl rand -hex 32`         |
+   | `FRONTEND_URL`       | Vercel production URL          |
+   | `SENTRY_DSN`         | Sentry DSN for the API project |
+
+4. First deploy — run migrations once from your local machine:
+   ```bash
+   DATABASE_URL="<railway-postgres-url>" pnpm --filter=api migrate:prod
+   ```
+
+### GitHub Secrets (CI/CD)
+
+Add in **Settings → Secrets and variables → Actions**:
+
+| Secret                | How to get it                                                           |
+| --------------------- | ----------------------------------------------------------------------- |
+| `RAILWAY_TOKEN`       | Railway → Account Settings → Tokens                                     |
+| `RAILWAY_SERVICE_ID`  | Railway project → API service → Settings → Service ID                   |
+| `API_URL`             | Railway API public URL, e.g. `https://vitcar-production.up.railway.app` |
+| `NEXT_PUBLIC_API_URL` | Same as `API_URL`                                                       |
+
+---
+
+## CI/CD Pipelines
+
+### PR pipeline (`.github/workflows/ci.yml`)
+
+Runs on every PR. Jobs run in parallel:
+
+| Job          | What it checks                                     |
+| ------------ | -------------------------------------------------- |
+| `lint`       | ESLint across all workspaces                       |
+| `type-check` | TypeScript across all workspaces                   |
+| `build`      | Full monorepo build (runs after lint + type-check) |
+
+### Deploy pipeline (`.github/workflows/deploy.yml`)
 
 Runs on every push to `main`:
 
-- **API** → deploys to Railway via Railway CLI
-- **Web** → deploys automatically via Vercel GitHub integration (no action needed)
-- **Smoke test** → `curl` to `/api/health` after Railway deploy
+- API → Railway (via Railway CLI)
+- Web → Vercel (automatic via GitHub integration)
+- Smoke test → `curl GET /api/health` after Railway deploy
 
-### Required GitHub Secrets
+---
 
-Add these in **Settings → Secrets and variables → Actions**:
+## Troubleshooting
 
-| Secret                | Description                                                                  |
-| --------------------- | ---------------------------------------------------------------------------- |
-| `RAILWAY_TOKEN`       | Railway API token — get from Railway dashboard → Account Settings → Tokens   |
-| `RAILWAY_SERVICE_ID`  | Railway service ID for the API — get from Railway project → service settings |
-| `API_URL`             | Production API base URL, e.g. `https://api.vitauto.com`                      |
-| `NEXT_PUBLIC_API_URL` | Public API URL used during Next.js build, e.g. `https://api.vitauto.com`     |
+### PostgreSQL won't start
 
-### Branch Protection (main)
+```bash
+# Check if port 5432 is already in use
+lsof -i :5432
 
-Configure in **Settings → Branches → Add rule** for `main`:
+# Remove old container and volume, then restart
+docker-compose down -v
+docker-compose up -d
+```
 
-- ✅ Require status checks to pass: `Lint`, `Type Check`, `Build`
-- ✅ Require branches to be up to date before merging
-- ✅ Require pull request reviews before merging
+### `pnpm install` fails with lockfile error
+
+```bash
+# Regenerate the lockfile
+pnpm install --no-frozen-lockfile
+```
+
+### Prisma Client not found / out of sync
+
+```bash
+# Regenerate after any schema change
+pnpm db:generate
+
+# If migrations are out of sync with schema
+pnpm db:reset      # warning: wipes all local data
+```
+
+### NestJS `nest: command not found` during build
+
+Make sure you are installing dev dependencies. In local dev this should not happen. On Railway, `nixpacks.toml` uses `--prod=false` to include devDependencies (like `@nestjs/cli`) during the build phase.
+
+### `ERR_PNPM_NO_LOCKFILE` in CI
+
+The `pnpm-lock.yaml` must be committed. Run `pnpm install` locally and commit the lockfile.
+
+### Port already in use
+
+```bash
+# Find and kill the process on port 3001 (api) or 3000 (web)
+lsof -ti :3001 | xargs kill -9
+lsof -ti :3000 | xargs kill -9
+```
+
+### CORS errors in browser
+
+Check that `FRONTEND_URL` in `apps/api/.env` exactly matches the origin your browser is using (including protocol and port).
+
+### `next-intl` middleware redirect loop
+
+Ensure `NEXT_PUBLIC_API_URL` does not end with a trailing slash, and that `middleware.ts` matcher excludes `_next/`, `api/`, and static assets.

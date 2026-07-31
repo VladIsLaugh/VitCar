@@ -1,11 +1,7 @@
-import { useTranslations } from 'next-intl'
+import { redirect } from '@/i18n/routing';
+import { getLocale } from 'next-intl/server';
 
-export default function AuthPage() {
-  const t = useTranslations('Auth')
-
-  return (
-    <main>
-      <h1>{t('signIn')}</h1>
-    </main>
-  )
+export default async function AuthPage() {
+  const locale = await getLocale();
+  redirect({ href: '/auth/login', locale });
 }

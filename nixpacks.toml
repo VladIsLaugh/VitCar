@@ -1,16 +1,11 @@
 # Railway Nixpacks configuration for NestJS API
-# This file is used by Railway when deploying from the monorepo root.
-# The railway.json build/start commands take precedence over this file.
+# pnpm is installed via Nix so it is available system-wide in all phases.
 
 [phases.setup]
-nixPkgs = ["nodejs_20"]
+nixPkgs = ["nodejs_20", "nodePackages_latest.pnpm"]
 
 [phases.install]
-cmds = [
-  "corepack disable",
-  "npm install -g pnpm@9.15.0",
-  "pnpm install --frozen-lockfile"
-]
+cmds = ["pnpm install --frozen-lockfile --prod=false"]
 
 [phases.build]
 cmds = ["pnpm turbo run build --filter=@vitauto/api"]

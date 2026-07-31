@@ -8,6 +8,7 @@ dist
 out
 build
 *.tsbuildinfo
+node-compile-cache
 
 # Turborepo
 .turbo
@@ -36,6 +37,12 @@ pnpm-debug.log*
 coverage
 .nyc_output
 
+# Claude Code — local session state (credentials, per-session permissions)
+.claude/settings.local.json
+
 # Prisma
 *.db
 *.db-journal
+
+# Node.js compile cache
+node-compile-cache/

@@ -1,11 +1,33 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
+import { Suspense } from 'react';
+import CalculatorClient from './calculator-client';
 
-export default function CalculatorPage() {
-  const t = useTranslations('Calculator')
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Calculator' });
+  return {
+    title: t('metaTitle'),
+    description: t('metaDescription'),
+  };
+}
+
+export default async function CalculatorPage({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Calculator' });
 
   return (
-    <main>
-      <h1>{t('title')}</h1>
+    <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+      <h1 className="mb-8 text-3xl font-bold tracking-tight text-foreground">
+        {t('title')}
+      </h1>
+      <Suspense>
+        <CalculatorClient />
+      </Suspense>
     </main>
-  )
+  );
 }
